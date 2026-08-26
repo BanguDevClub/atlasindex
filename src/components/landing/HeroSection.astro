@@ -1,0 +1,73 @@
+---
+import { Button } from "../ui/button";
+import { Badge } from "../ui/badge";
+import { ArrowRight, BarChart2, Scale, Compass, CheckCircle2 } from "lucide-react";
+---
+
+<section class="relative pt-12 pb-16 md:pt-20 md:pb-24 overflow-hidden">
+  <div class="container mx-auto px-4 sm:px-8">
+    <div class="flex flex-col items-center text-center max-w-4xl mx-auto gap-6">
+      <!-- Tag badge -->
+      <div class="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 text-xs font-semibold text-primary">
+        <Scale class="size-3.5" />
+        <span>Beyond GDP & The Big Mac Index</span>
+      </div>
+
+      <!-- Headline -->
+      <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-foreground leading-[1.1]">
+        How Much of Your Life Goes Into <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary via-chart-4 to-chart-1">Feeding Yourself?</span>
+      </h1>
+
+      <!-- Subheading -->
+      <p class="text-base sm:text-lg text-muted-foreground max-w-2xl leading-relaxed">
+        AtlasIndex compares national economies through the lens of real nutritional labor: measuring how many hours a median-wage earner must work to afford a standardized 13-item monthly food basket across 26 countries.
+      </p>
+
+      <!-- CTA Action Buttons -->
+      <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+        <a href="/ranking">
+          <Button size="lg" className="gap-2 font-semibold shadow-lg glow-primary">
+            <span>Explore 2025 Rankings</span>
+            <ArrowRight class="size-4" />
+          </Button>
+        </a>
+        <a href="/compare">
+          <Button variant="outline" size="lg" className="gap-2 font-medium bg-card/60 backdrop-blur">
+            <Compass class="size-4" />
+            <span>Compare Any Two Countries</span>
+          </Button>
+        </a>
+        <a href="/methodology">
+          <Button variant="ghost" size="lg" className="gap-2 font-medium">
+            <BarChart2 class="size-4" />
+            <span>Read Methodology</span>
+          </Button>
+        </a>
+      </div>
+
+      <!-- Live Feature Pills -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-6 w-full max-w-3xl text-left">
+        <div class="rounded-xl border border-border/60 bg-card/40 p-3.5 backdrop-blur flex flex-col gap-1">
+          <span class="text-[11px] font-semibold text-muted-foreground uppercase">Countries Audited</span>
+          <span class="text-xl font-bold text-foreground">26 Nations</span>
+          <span class="text-[10px] text-muted-foreground">All major regions & incomes</span>
+        </div>
+        <div class="rounded-xl border border-border/60 bg-card/40 p-3.5 backdrop-blur flex flex-col gap-1">
+          <span class="text-[11px] font-semibold text-muted-foreground uppercase">Monthly Standard</span>
+          <span class="text-xl font-bold text-foreground">13 Food Items</span>
+          <span class="text-[10px] text-muted-foreground">2,300 kcal/day nutritional basket</span>
+        </div>
+        <div class="rounded-xl border border-border/60 bg-card/40 p-3.5 backdrop-blur flex flex-col gap-1">
+          <span class="text-[11px] font-semibold text-muted-foreground uppercase">Best Affordability</span>
+          <span class="text-xl font-bold text-emerald-500">5.8% Wage</span>
+          <span class="text-[10px] text-muted-foreground">Switzerland (9.3h work)</span>
+        </div>
+        <div class="rounded-xl border border-border/60 bg-card/40 p-3.5 backdrop-blur flex flex-col gap-1">
+          <span class="text-[11px] font-semibold text-muted-foreground uppercase">Extreme Labor Burden</span>
+          <span class="text-xl font-bold text-rose-500">62.8% Wage</span>
+          <span class="text-[10px] text-muted-foreground">Egypt / Nigeria (&gt;80h work)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

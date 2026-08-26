@@ -1,0 +1,13 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { CountryComparator } from "../components/compare/CountryComparator";
+---
+
+<Layout
+  title="Side-by-Side Country Comparator — AtlasIndex"
+  description="Compare 2 to 4 countries head-to-head. Analyze food labor minutes, category burdens, and test your own salary in our purchasing power simulator."
+>
+  <div class="container mx-auto px-4 sm:px-8 py-8">
+    <CountryComparator client:load />
+  </div>
+</Layout>

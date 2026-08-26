@@ -1,0 +1,13 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { DashboardContainer } from "../components/dashboard/DashboardContainer";
+---
+
+<Layout
+  title="Global Economic Dashboard — AtlasIndex"
+  description="Explore interactive charts and economic labor visualizations across 26 countries. Analyze category labor decomposition, wage vs basket relationships, and continental trends."
+>
+  <div class="container mx-auto px-4 sm:px-8 py-8">
+    <DashboardContainer client:load />
+  </div>
+</Layout>

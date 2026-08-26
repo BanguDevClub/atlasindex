@@ -1,0 +1,335 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* ========================================================
+     1. DEFAULT LIGHT THEME
+     ======================================================== */
+  :root {
+    --background: 210 40% 98%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 93%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --success: 142 76% 36%;
+    --success-foreground: 355 100% 100%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 48 96% 12%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+
+    --radius: 0.75rem;
+
+    --chart-1: 221.2 83.2% 53.3%;
+    --chart-2: 142 76% 36%;
+    --chart-3: 38 92% 50%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+
+  /* ========================================================
+     2. DEFAULT DARK THEME
+     ======================================================== */
+  .dark {
+    --background: 224 71% 4%;
+    --foreground: 213 31% 91%;
+
+    --card: 224 71% 7%;
+    --card-foreground: 213 31% 91%;
+
+    --popover: 224 71% 7%;
+    --popover-foreground: 213 31% 91%;
+
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 222.2 47.4% 14.2%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 223 47% 12%;
+    --muted-foreground: 215.4 16.3% 60%;
+
+    --accent: 216 34% 17%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --success: 142 71% 45%;
+    --success-foreground: 144 61% 10%;
+
+    --warning: 48 96% 53%;
+    --warning-foreground: 48 96% 12%;
+
+    --border: 216 34% 18%;
+    --input: 216 34% 18%;
+    --ring: 217.2 91.2% 59.8%;
+
+    --chart-1: 217.2 91.2% 59.8%;
+    --chart-2: 142 71% 45%;
+    --chart-3: 48 96% 53%;
+    --chart-4: 280 65% 65%;
+    --chart-5: 340 75% 65%;
+  }
+
+  /* ========================================================
+     3. CATPPUCCIN LATTE (Light)
+     ======================================================== */
+  .theme-latte {
+    --background: 240 29% 97%; /* #eff1f5 base */
+    --foreground: 234 16% 35%; /* #4c4f69 text */
+
+    --card: 240 23% 94%; /* #e6e9ef mantle */
+    --card-foreground: 234 16% 35%;
+
+    --popover: 240 23% 94%;
+    --popover-foreground: 234 16% 35%;
+
+    --primary: 220 91% 54%; /* #1e66f5 blue */
+    --primary-foreground: 240 29% 97%;
+
+    --secondary: 228 17% 88%; /* #ccd0da surface0 */
+    --secondary-foreground: 234 16% 35%;
+
+    --muted: 228 17% 88%;
+    --muted-foreground: 232 10% 50%; /* #6c6f85 subtext0 */
+
+    --accent: 230 16% 83%; /* #bcc0cc surface1 */
+    --accent-foreground: 234 16% 35%;
+
+    --destructive: 347 87% 44%; /* #d20f39 red */
+    --destructive-foreground: 240 29% 97%;
+
+    --success: 109 58% 40%; /* #40a02b green */
+    --success-foreground: 240 29% 97%;
+
+    --warning: 23 99% 52%; /* #fe640b peach */
+    --warning-foreground: 240 29% 97%;
+
+    --border: 228 17% 82%;
+    --input: 228 17% 82%;
+    --ring: 220 91% 54%;
+
+    --chart-1: 220 91% 54%; /* Blue */
+    --chart-2: 109 58% 40%; /* Green */
+    --chart-3: 23 99% 52%;  /* Peach */
+    --chart-4: 266 85% 58%; /* Mauve #8839ef */
+    --chart-5: 347 87% 44%; /* Red */
+  }
+
+  /* ========================================================
+     4. CATPPUCCIN FRAPPÉ (Medium Dark)
+     ======================================================== */
+  .theme-frappe {
+    --background: 229 19% 23%; /* #303446 base */
+    --foreground: 228 71% 87%; /* #c6d0f5 text */
+
+    --card: 230 19% 20%; /* #292c3c mantle */
+    --card-foreground: 228 71% 87%;
+
+    --popover: 230 19% 20%;
+    --popover-foreground: 228 71% 87%;
+
+    --primary: 221 69% 74%; /* #8caaee sapphire */
+    --primary-foreground: 231 23% 18%;
+
+    --secondary: 226 15% 30%; /* #414559 surface0 */
+    --secondary-foreground: 228 71% 87%;
+
+    --muted: 226 15% 30%;
+    --muted-foreground: 229 24% 73%; /* #a5adce subtext0 */
+
+    --accent: 226 14% 37%; /* #51576d surface1 */
+    --accent-foreground: 228 71% 87%;
+
+    --destructive: 359 68% 71%; /* #e78284 red */
+    --destructive-foreground: 231 23% 18%;
+
+    --success: 95 44% 68%; /* #a6d189 green */
+    --success-foreground: 231 23% 18%;
+
+    --warning: 20 79% 70%; /* #ef9f76 peach */
+    --warning-foreground: 231 23% 18%;
+
+    --border: 226 15% 33%;
+    --input: 226 15% 33%;
+    --ring: 221 69% 74%;
+
+    --chart-1: 221 69% 74%; /* Sapphire */
+    --chart-2: 95 44% 68%;  /* Green */
+    --chart-3: 20 79% 70%;  /* Peach */
+    --chart-4: 277 59% 76%; /* Mauve #ca9ee6 */
+    --chart-5: 359 68% 71%; /* Red */
+  }
+
+  /* ========================================================
+     5. CATPPUCCIN MACCHIATO (Dark)
+     ======================================================== */
+  .theme-macchiato {
+    --background: 233 23% 19%; /* #24273a base */
+    --foreground: 227 70% 88%; /* #cad3f5 text */
+
+    --card: 234 23% 15%; /* #1e2030 mantle */
+    --card-foreground: 227 70% 88%;
+
+    --popover: 234 23% 15%;
+    --popover-foreground: 227 70% 88%;
+
+    --primary: 220 83% 75%; /* #8aadf4 blue */
+    --primary-foreground: 234 23% 12%;
+
+    --secondary: 231 18% 26%; /* #363a4f surface0 */
+    --secondary-foreground: 227 70% 88%;
+
+    --muted: 231 18% 26%;
+    --muted-foreground: 228 24% 72%; /* #a5adcb subtext0 */
+
+    --accent: 231 16% 34%; /* #494d64 surface1 */
+    --accent-foreground: 227 70% 88%;
+
+    --destructive: 351 74% 73%; /* #ed8796 red */
+    --destructive-foreground: 234 23% 12%;
+
+    --success: 100 48% 72%; /* #a6da95 green */
+    --success-foreground: 234 23% 12%;
+
+    --warning: 21 86% 73%; /* #f5a97f peach */
+    --warning-foreground: 234 23% 12%;
+
+    --border: 231 18% 30%;
+    --input: 231 18% 30%;
+    --ring: 220 83% 75%;
+
+    --chart-1: 220 83% 75%; /* Blue */
+    --chart-2: 100 48% 72%; /* Green */
+    --chart-3: 21 86% 73%;  /* Peach */
+    --chart-4: 267 83% 80%; /* Mauve #c6a0f6 */
+    --chart-5: 351 74% 73%; /* Red */
+  }
+
+  /* ========================================================
+     6. CATPPUCCIN MOCHA (Deep Dark)
+     ======================================================== */
+  .theme-mocha {
+    --background: 240 21% 15%; /* #1e1e2e base */
+    --foreground: 226 64% 88%; /* #cdd6f4 text */
+
+    --card: 240 21% 12%; /* #181825 mantle */
+    --card-foreground: 226 64% 88%;
+
+    --popover: 240 21% 12%;
+    --popover-foreground: 226 64% 88%;
+
+    --primary: 217 92% 76%; /* #89b4fa blue */
+    --primary-foreground: 240 23% 9%;
+
+    --secondary: 237 16% 23%; /* #313244 surface0 */
+    --secondary-foreground: 226 64% 88%;
+
+    --muted: 237 16% 23%;
+    --muted-foreground: 228 20% 72%; /* #a6adc8 subtext0 */
+
+    --accent: 237 13% 31%; /* #45475a surface1 */
+    --accent-foreground: 226 64% 88%;
+
+    --destructive: 343 81% 75%; /* #f38ba8 red */
+    --destructive-foreground: 240 23% 9%;
+
+    --success: 115 54% 76%; /* #a6e3a1 green */
+    --success-foreground: 240 23% 9%;
+
+    --warning: 23 92% 75%; /* #fab387 peach */
+    --warning-foreground: 240 23% 9%;
+
+    --border: 237 16% 27%;
+    --input: 237 16% 27%;
+    --ring: 217 92% 76%;
+
+    --chart-1: 217 92% 76%; /* Blue */
+    --chart-2: 115 54% 76%; /* Green */
+    --chart-3: 23 92% 75%;  /* Peach */
+    --chart-4: 267 84% 81%; /* Mauve #cba6f7 */
+    --chart-5: 343 81% 75%; /* Red */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    min-height: 100vh;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading tracking-tight;
+  }
+}
+
+/* Glassmorphism & Surface Utilities */
+.glass-panel {
+  background: hsl(var(--card) / 0.82);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid hsl(var(--border) / 0.7);
+}
+
+.glass-nav {
+  background: hsl(var(--background) / 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid hsl(var(--border) / 0.6);
+}
+
+/* Subtle glowing and badge accents */
+.glow-primary {
+  box-shadow: 0 0 25px -5px hsl(var(--primary) / 0.25);
+}
+
+.glow-success {
+  box-shadow: 0 0 25px -5px hsl(var(--success) / 0.25);
+}
+
+.glow-destructive {
+  box-shadow: 0 0 25px -5px hsl(var(--destructive) / 0.25);
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted) / 0.5);
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}

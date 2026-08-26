@@ -1,0 +1,312 @@
+---
+import { BASKET_ITEMS, BASKET_NUTRITION_EXPLANATION } from "../../data/basketDefinition";
+import { RAW_COUNTRIES } from "../../data/countries";
+import { Badge } from "../ui/badge";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../ui/card";
+import { BookOpen, Scale, CheckCircle2, AlertTriangle, ExternalLink, HelpCircle, FileText } from "lucide-react";
+---
+
+<div class="flex flex-col gap-12 max-w-4xl mx-auto pb-16">
+  <!-- Header -->
+  <div class="flex flex-col gap-3">
+    <div class="flex items-center gap-2">
+      <Badge variant="outline" class="text-xs bg-primary/10 border-primary/20 text-primary">
+        Documentation & Whitepaper
+      </Badge>
+      <span class="text-xs text-muted-foreground">• Open Scientific Methodology</span>
+    </div>
+    <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-foreground">
+      AtlasIndex Methodology & Data Sources
+    </h1>
+    <p class="text-sm sm:text-base text-muted-foreground leading-relaxed">
+      A transparent framework for measuring real food purchasing power through median wages and standardized nutritional labor effort.
+    </p>
+  </div>
+
+  <!-- Section 1: Executive Summary & Rationale -->
+  <section class="flex flex-col gap-4 border-t border-border/40 pt-8">
+    <div class="flex items-center gap-2 text-primary font-bold text-sm uppercase tracking-wider">
+      <Scale class="size-4" />
+      <span>1. The Problem with Conventional Metrics</span>
+    </div>
+    <h2 class="text-2xl font-bold tracking-tight text-foreground">Why GDP & The Big Mac Index Fall Short</h2>
+    <div class="prose dark:prose-invert max-w-none text-xs sm:text-sm text-muted-foreground leading-relaxed flex flex-col gap-3">
+      <p>
+        Traditional macroeconomic comparisons rely heavily on <strong>Gross Domestic Product (GDP) per capita</strong>. However, GDP per capita aggregates corporate revenues, capital investments, government spending, and top-percentile wealth—frequently masking severe domestic income inequality. A country can boast a high GDP per capita while the median worker struggles to afford daily necessities.
+      </p>
+      <p>
+        Conversely, informal metrics like <em>The Economist's Big Mac Index</em> measure currency valuation through a single franchised fast-food item. A Big Mac involves brand positioning, franchise royalties, local real estate rents, and specific supply chain contracts, making it unrepresentative of genuine household grocery staples.
+      </p>
+      <div class="rounded-xl border border-primary/20 bg-primary/5 p-4 text-foreground">
+        <strong>The AtlasIndex Approach:</strong> We measure the exact <strong>hours and minutes of labor</strong> a median-wage worker must perform to purchase a nutritionally complete 13-item monthly grocery basket in their domestic retail market.
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 2: Mathematical Formulation -->
+  <section class="flex flex-col gap-4 border-t border-border/40 pt-8">
+    <div class="flex items-center gap-2 text-primary font-bold text-sm uppercase tracking-wider">
+      <BookOpen class="size-4" />
+      <span>2. Mathematical Formulation</span>
+    </div>
+    <h2 class="text-2xl font-bold tracking-tight text-foreground">Equations & Definitions</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+      <!-- Formula 1: Basket Cost -->
+      <Card class="border-border/80 bg-card/60">
+        <CardHeader class="pb-2">
+          <CardTitle class="text-sm font-bold">Standard Monthly Basket Cost ($B$)</CardTitle>
+        </CardHeader>
+        <CardContent class="text-xs space-y-2">
+          <div class="rounded-lg bg-muted/60 p-3 font-mono text-center text-sm font-semibold text-primary">
+            B = ∑ ( pᵢ × qᵢ )
+          </div>
+          <p class="text-muted-foreground text-[11px]">
+            Where <code class="text-foreground font-mono">pᵢ</code> is the local retail price of item <code class="text-foreground font-mono">i</code> and <code class="text-foreground font-mono">qᵢ</code> is its monthly reference quantity across all 13 staple categories.
+          </p>
+        </CardContent>
+      </Card>
+
+      <!-- Formula 2: Wage Burden -->
+      <Card class="border-border/80 bg-card/60">
+        <CardHeader class="pb-2">
+          <CardTitle class="text-sm font-bold">Wage Burden Share ($\beta$)</CardTitle>
+        </CardHeader>
+        <CardContent class="text-xs space-y-2">
+          <div class="rounded-lg bg-muted/60 p-3 font-mono text-center text-sm font-semibold text-primary">
+            β = ( B / W_median ) × 100%
+          </div>
+          <p class="text-muted-foreground text-[11px]">
+            Where <code class="text-foreground font-mono">W_median</code> is the median monthly take-home/net wage from official national labor surveys.
+          </p>
+        </CardContent>
+      </Card>
+
+      <!-- Formula 3: Labor Hours -->
+      <Card class="border-border/80 bg-card/60">
+        <CardHeader class="pb-2">
+          <CardTitle class="text-sm font-bold">Labor Hours for Food Basket ($H$)</CardTitle>
+        </CardHeader>
+        <CardContent class="text-xs space-y-2">
+          <div class="rounded-lg bg-muted/60 p-3 font-mono text-center text-sm font-semibold text-primary">
+            H = B / ( W_median / 160 )
+          </div>
+          <p class="text-muted-foreground text-[11px]">
+            Assuming a standardized full-time labor benchmark of 160 working hours per month (40 hours/week × 4 weeks).
+          </p>
+        </CardContent>
+      </Card>
+
+      <!-- Formula 4: Item Labor Minutes -->
+      <Card class="border-border/80 bg-card/60">
+        <CardHeader class="pb-2">
+          <CardTitle class="text-sm font-bold">Granular Item Labor Minutes ($Mᵢ$)</CardTitle>
+        </CardHeader>
+        <CardContent class="text-xs space-y-2">
+          <div class="rounded-lg bg-muted/60 p-3 font-mono text-center text-sm font-semibold text-primary">
+            Mᵢ = ( pᵢ / W_hourly ) × 60
+          </div>
+          <p class="text-muted-foreground text-[11px]">
+            Calculates the exact minutes of physical labor required to purchase 1 kilogram (or unit) of an individual grocery item.
+          </p>
+        </CardContent>
+      </Card>
+    </div>
+
+    <!-- Dietary Stress Tiers -->
+    <div class="rounded-xl border border-border/80 bg-card/60 p-5 mt-2">
+      <h3 class="font-bold text-sm text-foreground mb-3">Dietary Stress Classification Scale</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+        <div class="rounded-lg bg-emerald-500/10 border border-emerald-500/20 p-3 flex flex-col gap-1">
+          <span class="font-bold text-emerald-500">Tier 1: Low Stress (&lt;10%)</span>
+          <span class="text-muted-foreground text-[11px]">Food basket requires under 16 hours of labor per month. High dietary diversity.</span>
+        </div>
+        <div class="rounded-lg bg-amber-500/10 border border-amber-500/20 p-3 flex flex-col gap-1">
+          <span class="font-bold text-amber-500">Tier 2: Moderate (10–20%)</span>
+          <span class="text-muted-foreground text-[11px]">Food requires 16 to 32 hours of labor. Balanced staple access with moderate strain.</span>
+        </div>
+        <div class="rounded-lg bg-orange-500/10 border border-orange-500/20 p-3 flex flex-col gap-1">
+          <span class="font-bold text-orange-500">Tier 3: High Stress (20–35%)</span>
+          <span class="text-muted-foreground text-[11px]">Food requires 32 to 56 hours of labor. High vulnerability to price inflation.</span>
+        </div>
+        <div class="rounded-lg bg-rose-500/10 border border-rose-500/20 p-3 flex flex-col gap-1">
+          <span class="font-bold text-rose-500">Tier 4: Severe Stress (&gt;35%)</span>
+          <span class="text-muted-foreground text-[11px]">Over 56 hours of labor per month. Severe food security pressure on median households.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 3: Standard Food Basket Composition -->
+  <section class="flex flex-col gap-4 border-t border-border/40 pt-8">
+    <div class="flex items-center gap-2 text-primary font-bold text-sm uppercase tracking-wider">
+      <FileText class="size-4" />
+      <span>3. Standardized Monthly Food Basket Composition</span>
+    </div>
+    <h2 class="text-2xl font-bold tracking-tight text-foreground">Nutritional Specifications</h2>
+    <p class="text-xs sm:text-sm text-muted-foreground">
+      The standard monthly basket represents an adult caloric baseline of ~2,300 kcal/day adhering to WHO/FAO dietary guidelines with balanced macronutrient distributions.
+    </p>
+
+    <div class="rounded-xl border border-border/80 bg-card/60 overflow-hidden mt-2">
+      <div class="overflow-x-auto">
+        <table class="w-full text-xs">
+          <thead class="bg-muted/50 border-b border-border/60">
+            <tr>
+              <th class="p-3 text-left font-semibold text-foreground">Food Item</th>
+              <th class="p-3 text-left font-semibold text-foreground">Category</th>
+              <th class="p-3 text-right font-semibold text-foreground">Reference Unit</th>
+              <th class="p-3 text-right font-semibold text-foreground">Monthly Quantity</th>
+              <th class="p-3 text-left font-semibold text-foreground">Nutritional Rationale</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-border/40">
+            {BASKET_ITEMS.map((item) => (
+              <tr class="hover:bg-muted/20 transition-colors">
+                <td class="p-3 font-medium text-foreground">{item.name}</td>
+                <td class="p-3">
+                  <Badge variant="outline" class="text-[10px] capitalize">
+                    {item.category}
+                  </Badge>
+                </td>
+                <td class="p-3 text-right text-muted-foreground">{item.unit}</td>
+                <td class="p-3 text-right font-bold text-foreground">{item.quantityInMonthlyBasket} {item.unit.includes("kg") ? "kg" : item.unit.includes("Liter") ? "L" : "doz"}</td>
+                <td class="p-3 text-muted-foreground text-[11px]">
+                  {item.id === "rice" && "Primary complex carbohydrate baseline"}
+                  {item.id === "beans" && "Plant-based protein, fiber, and essential minerals"}
+                  {item.id === "bread" && "Wheat staple carbohydrate and B-vitamins"}
+                  {item.id === "potatoes" && "High-potassium root starch and vitamin C"}
+                  {item.id === "chicken" && "Lean animal protein and amino acid profile"}
+                  {item.id === "beef" && "Bioavailable iron, zinc, and vitamin B12"}
+                  {item.id === "eggs" && "Complete protein, choline, and micronutrients"}
+                  {item.id === "milk" && "Calcium, vitamin D, and hydration"}
+                  {item.id === "cheese" && "Concentrated dairy fats, protein, and calcium"}
+                  {item.id === "tomatoes" && "Lycopene, vitamin C, and fresh antioxidants"}
+                  {item.id === "onions" && "Prebiotic fibers and culinary essential"}
+                  {item.id === "apples" && "Dietary fruit fiber, pectin, and vitamin C"}
+                  {item.id === "oil" && "Essential dietary fatty acids and cooking medium"}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 4: Data Sources Directory -->
+  <section class="flex flex-col gap-4 border-t border-border/40 pt-8">
+    <div class="flex items-center gap-2 text-primary font-bold text-sm uppercase tracking-wider">
+      <CheckCircle2 class="size-4" />
+      <span>4. Primary Data Sources & Auditing</span>
+    </div>
+    <h2 class="text-2xl font-bold tracking-tight text-foreground">Institutional Citations & Verification</h2>
+    <p class="text-xs sm:text-sm text-muted-foreground">
+      AtlasIndex pulls exclusively from verified national statistical institutes, international labor organizations, and rigorous price monitoring censuses:
+    </p>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
+      {RAW_COUNTRIES.map((c) => (
+        <div class="rounded-xl border border-border/60 bg-card/60 p-3.5 backdrop-blur flex flex-col justify-between text-xs gap-2">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-foreground flex items-center gap-1.5">
+              <span>{c.flag}</span>
+              <span>{c.name}</span>
+            </span>
+            <span class="text-[10px] text-muted-foreground">{c.dataYear} Data</span>
+          </div>
+
+          <div class="space-y-1 text-[11px]">
+            <div class="text-muted-foreground">
+              <span class="font-semibold text-foreground">Wage Authority:</span> {c.wageSource}
+            </div>
+            <div class="text-muted-foreground">
+              <span class="font-semibold text-foreground">Price Benchmark:</span> {c.priceSource}
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between pt-1 border-t border-border/40 text-[10px]">
+            <a href={c.wageSourceUrl} target="_blank" rel="noreferrer" class="text-primary hover:underline flex items-center gap-1">
+              <span>Wage Report</span>
+              <ExternalLink class="size-2.5" />
+            </a>
+            <a href={c.priceSourceUrl} target="_blank" rel="noreferrer" class="text-primary hover:underline flex items-center gap-1">
+              <span>Price Index</span>
+              <ExternalLink class="size-2.5" />
+            </a>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Section 5: Limitations & Known Caveats -->
+  <section id="limitations" class="flex flex-col gap-4 border-t border-border/40 pt-8">
+    <div class="flex items-center gap-2 text-amber-500 font-bold text-sm uppercase tracking-wider">
+      <AlertTriangle class="size-4" />
+      <span>5. Known Limitations & Research Scope</span>
+    </div>
+    <h2 class="text-2xl font-bold tracking-tight text-foreground">Methodological Constraints</h2>
+
+    <div class="space-y-3 text-xs sm:text-sm text-muted-foreground leading-relaxed">
+      <div class="rounded-xl border border-border/80 bg-card/60 p-4">
+        <h4 class="font-bold text-foreground mb-1">1. Regional & Urban/Rural Variance</h4>
+        <p>
+          Prices represent national weighted averages. Food prices in capital cities (e.g. New York, London, Tokyo, São Paulo) may be 10–25% higher than in agricultural regions, although metropolitan wages are also typically higher.
+        </p>
+      </div>
+
+      <div class="rounded-xl border border-border/80 bg-card/60 p-4">
+        <h4 class="font-bold text-foreground mb-1">2. Net vs Gross Wage Adjustments</h4>
+        <p>
+          Where available, take-home (net) median earnings are utilized. For countries where statistical agencies only publish gross earnings, standard single-earner tax wedges (OECD Taxing Wages model) are applied to arrive at disposable purchasing power.
+        </p>
+      </div>
+
+      <div class="rounded-xl border border-border/80 bg-card/60 p-4">
+        <h4 class="font-bold text-foreground mb-1">3. Informal Sector Dynamics</h4>
+        <p>
+          In emerging economies with large informal sectors (e.g., India, Nigeria, Indonesia), official survey median wages may underestimate informal cash labor or agricultural subsistence production.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 6: FAQ Accordion -->
+  <section id="faq" class="flex flex-col gap-4 border-t border-border/40 pt-8">
+    <div class="flex items-center gap-2 text-primary font-bold text-sm uppercase tracking-wider">
+      <HelpCircle class="size-4" />
+      <span>6. Frequently Asked Questions</span>
+    </div>
+    <h2 class="text-2xl font-bold tracking-tight text-foreground">Frequently Asked Questions</h2>
+
+    <div class="space-y-3 text-xs sm:text-sm">
+      <Card class="border-border/80 bg-card/60">
+        <CardHeader class="pb-2">
+          <CardTitle class="text-sm font-bold">Why not use the Mean Average Wage?</CardTitle>
+        </CardHeader>
+        <CardContent class="text-muted-foreground text-xs leading-relaxed">
+          Mean average wages are heavily skewed upwards by ultra-high earners (CEOs, tech executives, financiers). Median wage reflects the 50th percentile—exactly where the middle worker sits in society.
+        </CardContent>
+      </Card>
+
+      <Card class="border-border/80 bg-card/60">
+        <CardHeader class="pb-2">
+          <CardTitle class="text-sm font-bold">How often is the dataset refreshed?</CardTitle>
+        </CardHeader>
+        <CardContent class="text-muted-foreground text-xs leading-relaxed">
+          AtlasIndex is audited bi-annually against newly released quarterly labor surveys (BLS, Eurostat, IBGE, ONS) and inflation reports. The current dataset reflects the 2025 release.
+        </CardContent>
+      </Card>
+
+      <Card class="border-border/80 bg-card/60">
+        <CardHeader class="pb-2">
+          <CardTitle class="text-sm font-bold">Can I use this data for academic research or publications?</CardTitle>
+        </CardHeader>
+        <CardContent class="text-muted-foreground text-xs leading-relaxed">
+          Yes! All AtlasIndex data is open and licensed under Creative Commons Attribution 4.0 International (CC BY 4.0). You can export raw CSV and JSON datasets directly from the Rankings page.
+        </CardContent>
+      </Card>
+    </div>
+  </section>
+</div>

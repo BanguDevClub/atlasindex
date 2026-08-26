@@ -1,0 +1,86 @@
+---
+import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer.astro";
+import "../styles/globals.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+}
+
+const {
+  title = "AtlasIndex — Global Economy, Median Wage & Food Purchasing Power",
+  description = "Compare global economies by real purchasing power. Measure how many hours and minutes of labor a median wage earner needs to afford essential food baskets across 25+ countries.",
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" class="theme-mocha dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- SEO Meta Tags -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
+    <!-- Google Fonts: Outfit & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Zero-Flash Theme Script -->
+    <script is:inline>
+      (function () {
+        try {
+          var theme = localStorage.getItem("atlasindex-theme") || "theme-mocha";
+          var root = document.documentElement;
+          root.classList.remove(
+            "dark",
+            "theme-latte",
+            "theme-frappe",
+            "theme-macchiato",
+            "theme-mocha"
+          );
+          if (theme === "dark") {
+            root.classList.add("dark");
+          } else if (theme.startsWith("theme-")) {
+            root.classList.add(theme);
+            if (theme !== "theme-latte") {
+              root.classList.add("dark");
+            }
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      })();
+    </script>
+  </head>
+  <body class="min-h-screen flex flex-col bg-background text-foreground selection:bg-primary/20 selection:text-primary">
+    <!-- Background subtle gradient decor -->
+    <div class="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
+      <div class="absolute -top-[30%] -left-[10%] w-[50vw] h-[50vw] rounded-full bg-primary/5 blur-[120px]"></div>
+      <div class="absolute -bottom-[20%] -right-[10%] w-[40vw] h-[40vw] rounded-full bg-chart-4/5 blur-[120px]"></div>
+    </div>
+
+    <Navbar />
+
+    <main class="flex-1">
+      <slot />
+    </main>
+
+    <Footer />
+  </body>
+</html>
