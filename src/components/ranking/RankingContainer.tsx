@@ -14,7 +14,8 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import { formatCurrency, formatHours, formatPercent, formatMinutes } from "@/lib/utils";
+import { formatCurrency, formatHours, formatPercent, formatMinutes, getBasePath } from "@/lib/utils";
+
 import {
   Search,
   Download,
@@ -408,7 +409,7 @@ export function RankingContainer() {
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-1.5">
-                          <a href={`/compare?c1=${country.id}&c2=usa`}>
+                          <a href={getBasePath(`compare?c1=${country.id}&c2=usa`)}>
                             <Button variant="ghost" size="sm" className="h-7 px-2 text-[11px]">
                               Compare
                             </Button>

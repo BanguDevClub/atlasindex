@@ -1,22 +1,24 @@
 ---
 import { ThemeToggle } from "./ThemeToggle";
+import { getBasePath } from "../lib/utils";
 
-const pathname = new URL(Astro.request.url).pathname;
-const normalizedPath = pathname.endsWith("/") && pathname !== "/" ? pathname.slice(0, -1) : pathname;
+const rawPathname = new URL(Astro.request.url).pathname;
+const normalize = (p: string) => (p.length > 1 && p.endsWith("/") ? p.slice(0, -1) : p);
+const currentNormalized = normalize(rawPathname);
 
 const navLinks = [
-  { name: "Overview", href: "/" },
-  { name: "Dashboard", href: "/dashboard" },
-  { name: "Global Ranking", href: "/ranking" },
-  { name: "Compare Countries", href: "/compare" },
-  { name: "Methodology & Sources", href: "/methodology" },
+  { name: "Overview", href: getBasePath("/") },
+  { name: "Dashboard", href: getBasePath("/dashboard") },
+  { name: "Global Ranking", href: getBasePath("/ranking") },
+  { name: "Compare Countries", href: getBasePath("/compare") },
+  { name: "Methodology & Sources", href: getBasePath("/methodology") },
 ];
 ---
 
 <header class="sticky top-0 z-40 w-full glass-nav">
   <div class="container mx-auto flex h-16 items-center justify-between px-4 sm:px-8">
     <!-- Brand -->
-    <a href="/" class="flex items-center gap-3 group">
+    <a href={getBasePath("/")} class="flex items-center gap-3 group">
       <div class="size-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary group-hover:scale-105 group-hover:bg-primary/20 transition-all duration-300">
         <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="10"></circle>
@@ -36,7 +38,7 @@ const navLinks = [
     <!-- Navigation links (Desktop) -->
     <nav class="hidden md:flex items-center gap-1">
       {navLinks.map((link) => {
-        const isActive = normalizedPath === link.href;
+        const isActive = currentNormalized === normalize(link.href);
         return (
           <a
             href={link.href}
@@ -53,15 +55,16 @@ const navLinks = [
     </nav>
 
     <!-- Theme and Actions -->
-    <div class="flex items-center gap-3">
+    <div class="flex items-center gap-2 sm:gap-3">
       <ThemeToggle client:load />
 
       <a
-        href="https://github.com"
+        href="https://github.com/BanguDevClub/atlasindex"
         target="_blank"
         rel="noreferrer"
-        class="hidden lg:flex size-9 items-center justify-center rounded-md border border-input bg-card/60 text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
-        aria-label="GitHub Repository"
+        class="flex size-9 items-center justify-center rounded-md border border-input bg-card/60 text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+        aria-label="GitHub Repository: BanguDevClub/atlasindex"
+        title="View source on GitHub"
       >
         <svg xmlns="http://www.w3.org/2000/svg" class="size-4" viewBox="0 0 24 24" fill="currentColor">
           <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
@@ -73,7 +76,7 @@ const navLinks = [
   <!-- Mobile navigation bar -->
   <div class="flex md:hidden overflow-x-auto border-t border-border/40 px-4 py-2 gap-2 scrollbar-none">
     {navLinks.map((link) => {
-      const isActive = normalizedPath === link.href;
+      const isActive = currentNormalized === normalize(link.href);
       return (
         <a
           href={link.href}

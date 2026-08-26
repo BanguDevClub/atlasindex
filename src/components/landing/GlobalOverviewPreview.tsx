@@ -3,7 +3,7 @@ import { RAW_COUNTRIES } from "@/data/countries";
 import { getAllProcessedCountries } from "@/lib/methodology";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Cell } from "recharts";
-import { formatHours, formatPercent } from "@/lib/utils";
+import { formatHours, formatPercent, getBasePath } from "@/lib/utils";
 import { BarChart3, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -48,7 +48,7 @@ export function GlobalOverviewPreview() {
             </CardDescription>
           </div>
         </div>
-        <a href="/dashboard">
+        <a href={getBasePath("/dashboard")}>
           <Button variant="ghost" size="sm" className="text-xs gap-1">
             <span>Explore Full Dashboard</span>
             <ArrowUpRight className="size-3.5" />

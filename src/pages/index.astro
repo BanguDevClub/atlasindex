@@ -6,9 +6,14 @@ import HighlightsGrid from "../components/landing/HighlightsGrid.astro";
 import { GlobalOverviewPreview } from "../components/landing/GlobalOverviewPreview";
 import { Button } from "../components/ui/button";
 import { ArrowRight, BookOpen, Compass, Trophy } from "lucide-react";
+import { getBasePath } from "../lib/utils";
 ---
 
-<Layout title="AtlasIndex — Global Economy, Median Wage & Food Purchasing Power">
+<Layout
+  title="AtlasIndex — Global Economy, Median Wage & Food Purchasing Power"
+  description="Compare global economies by real purchasing power. Measure how many hours and minutes of labor a median wage earner needs to afford essential food baskets across 26 countries."
+  keywords="food purchasing power, purchasing power parity, median wage, global economy, cost of living index, nutrition index, real wage comparison, labor effort index, Big Mac index alternative, AtlasIndex, BanguDevClub"
+>
   <!-- Hero Section -->
   <HeroSection />
 
@@ -28,7 +33,7 @@ import { ArrowRight, BookOpen, Compass, Trophy } from "lucide-react";
               Gross Domestic Product (GDP) per capita divides entire economic output across population, inflating figures with corporate profits, financial wealth, and ultra-high earners. Median wage reflects what a typical working person actually takes home.
             </p>
             <div class="pt-1">
-              <a href="/methodology">
+              <a href={getBasePath("/methodology")}>
                 <Button variant="link" size="sm" className="p-0 text-xs text-primary gap-1">
                   <span>Read our full methodology and peer review notes</span>
                   <ArrowRight class="size-3.5" />
@@ -57,7 +62,7 @@ import { ArrowRight, BookOpen, Compass, Trophy } from "lucide-react";
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-5xl mx-auto">
-        <a href="/dashboard" class="group rounded-2xl border border-border/80 bg-card/70 p-6 backdrop-blur hover:border-primary transition-all duration-300 flex flex-col justify-between">
+        <a href={getBasePath("/dashboard")} class="group rounded-2xl border border-border/80 bg-card/70 p-6 backdrop-blur hover:border-primary transition-all duration-300 flex flex-col justify-between">
           <div>
             <div class="size-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary mb-4 group-hover:scale-110 transition-transform">
               <Compass class="size-5" />
@@ -72,7 +77,7 @@ import { ArrowRight, BookOpen, Compass, Trophy } from "lucide-react";
           </span>
         </a>
 
-        <a href="/ranking" class="group rounded-2xl border border-border/80 bg-card/70 p-6 backdrop-blur hover:border-primary transition-all duration-300 flex flex-col justify-between">
+        <a href={getBasePath("/ranking")} class="group rounded-2xl border border-border/80 bg-card/70 p-6 backdrop-blur hover:border-primary transition-all duration-300 flex flex-col justify-between">
           <div>
             <div class="size-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary mb-4 group-hover:scale-110 transition-transform">
               <Trophy class="size-5" />
@@ -87,7 +92,7 @@ import { ArrowRight, BookOpen, Compass, Trophy } from "lucide-react";
           </span>
         </a>
 
-        <a href="/compare" class="group rounded-2xl border border-border/80 bg-card/70 p-6 backdrop-blur hover:border-primary transition-all duration-300 flex flex-col justify-between">
+        <a href={getBasePath("/compare")} class="group rounded-2xl border border-border/80 bg-card/70 p-6 backdrop-blur hover:border-primary transition-all duration-300 flex flex-col justify-between">
           <div>
             <div class="size-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary mb-4 group-hover:scale-110 transition-transform">
               <BookOpen class="size-5" />

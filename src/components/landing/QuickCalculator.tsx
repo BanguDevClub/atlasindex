@@ -5,8 +5,9 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { formatCurrency, formatHours, formatMinutes, formatPercent } from "@/lib/utils";
+import { formatCurrency, formatHours, formatMinutes, formatPercent, getBasePath } from "@/lib/utils";
 import { Calculator, Clock, ArrowRight, Sparkles, TrendingDown, TrendingUp, Info } from "lucide-react";
+
 
 export function QuickCalculator() {
   const allCountries = useMemo(() => getAllProcessedCountries(RAW_COUNTRIES), []);
@@ -196,7 +197,7 @@ export function QuickCalculator() {
           <Info className="size-3.5" />
           Global rank: #{currentCountry.rank} of {allCountries.length} countries
         </span>
-        <a href={`/compare?c1=${selectedCountryId}&c2=usa`} className="inline-flex">
+        <a href={getBasePath(`compare?c1=${selectedCountryId}&c2=usa`)} className="inline-flex">
           <Button variant="outline" size="sm" className="text-xs gap-1">
             <span>Compare with USA</span>
             <ArrowRight className="size-3.5" />

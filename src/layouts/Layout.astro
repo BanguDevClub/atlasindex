@@ -2,17 +2,77 @@
 import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
 import "../styles/globals.css";
+import { getBasePath } from "../lib/utils";
 
 interface Props {
   title?: string;
   description?: string;
   image?: string;
+  type?: string;
+  keywords?: string;
 }
 
 const {
   title = "AtlasIndex — Global Economy, Median Wage & Food Purchasing Power",
-  description = "Compare global economies by real purchasing power. Measure how many hours and minutes of labor a median wage earner needs to afford essential food baskets across 25+ countries.",
+  description = "Compare global economies by real purchasing power. Measure how many hours and minutes of labor a median wage earner needs to afford essential food baskets across 26 countries.",
+  image,
+  type = "website",
+  keywords = "food purchasing power, purchasing power parity, median wage, global economy, cost of living index, nutrition index, real wage comparison, labor effort index, Big Mac index alternative, AtlasIndex, BanguDevClub",
 } = Astro.props;
+
+const siteUrl = Astro.site ? Astro.site.href.replace(/\/$/, "") : "https://bangudevclub.github.io";
+const pathname = Astro.url.pathname;
+const canonicalURL = new URL(pathname, Astro.site || "https://bangudevclub.github.io");
+
+const ogImageURL = image
+  ? new URL(image, Astro.site || "https://bangudevclub.github.io").href
+  : `${siteUrl}${getBasePath("/og-image.png")}`;
+
+const schemaData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": `${siteUrl}${getBasePath("/#website")}`,
+      "url": `${siteUrl}${getBasePath("/")}`,
+      "name": "AtlasIndex",
+      "description": "Global purchasing power and nutritional food labor effort index across 26 countries.",
+      "publisher": {
+        "@type": "Organization",
+        "name": "BanguDevClub",
+        "url": "https://github.com/BanguDevClub"
+      }
+    },
+    {
+      "@type": "WebApplication",
+      "@id": `${siteUrl}${getBasePath("/#webapp")}`,
+      "url": `${siteUrl}${getBasePath("/")}`,
+      "name": "AtlasIndex Economic Comparator & Food Labor Calculator",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "All",
+      "browserRequirements": "Requires JavaScript",
+      "creator": {
+        "@type": "Organization",
+        "name": "BanguDevClub",
+        "url": "https://github.com/BanguDevClub"
+      }
+    },
+    {
+      "@type": "Dataset",
+      "@id": `${siteUrl}${getBasePath("/#dataset")}`,
+      "name": "AtlasIndex 2025 Global Food Purchasing Power & Median Wage Dataset",
+      "description": "Cross-national dataset of median net wages, grocery prices for 13 standardized nutritional items, and labor minutes per food group across 26 countries.",
+      "license": "https://creativecommons.org/licenses/by/4.0/",
+      "creator": {
+        "@type": "Organization",
+        "name": "BanguDevClub",
+        "url": "https://github.com/BanguDevClub"
+      },
+      "temporalCoverage": "2024/2025",
+      "spatialCoverage": "Global"
+    }
+  ]
+};
 ---
 
 <!doctype html>
@@ -20,18 +80,47 @@ const {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href={getBasePath("/favicon.svg")} />
+    <link rel="manifest" href={getBasePath("/site.webmanifest")} />
+    <meta name="theme-color" content="#89b4fa" />
     <meta name="generator" content={Astro.generator} />
 
-    <!-- SEO Meta Tags -->
+    <!-- SEO Primary Meta Tags -->
     <title>{title}</title>
+    <meta name="title" content={title} />
     <meta name="description" content={description} />
+    <meta name="keywords" content={keywords} />
+    <meta name="author" content="BanguDevClub" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href={canonicalURL.href} />
+    <link rel="alternate" hreflang="x-default" href={canonicalURL.href} />
+    <link rel="alternate" hreflang="en" href={canonicalURL.href} />
+
+    <!-- Open Graph / Facebook / LinkedIn / Discord -->
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={canonicalURL.href} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
+    <meta property="og:image" content={ogImageURL} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="AtlasIndex — Global Economy & Food Purchasing Power Parity" />
+    <meta property="og:site_name" content="AtlasIndex" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter Cards -->
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalURL.href} />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageURL} />
+    <meta name="twitter:image:alt" content="AtlasIndex — Global Economy & Food Purchasing Power Parity" />
+    <meta name="twitter:creator" content="@BanguDevClub" />
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(schemaData)} />
 
     <!-- Google Fonts: Outfit & Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />

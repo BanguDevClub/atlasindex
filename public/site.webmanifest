@@ -1,0 +1,16 @@
+{
+  "name": "AtlasIndex — Global Food Purchasing Power & Median Wage Parity",
+  "short_name": "AtlasIndex",
+  "description": "Compare global economies by real purchasing power. Measure how many hours and minutes of labor a median wage earner needs to afford essential food baskets.",
+  "start_url": "/atlasindex/",
+  "display": "standalone",
+  "background_color": "#1e1e2e",
+  "theme_color": "#89b4fa",
+  "icons": [
+    {
+      "src": "/atlasindex/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

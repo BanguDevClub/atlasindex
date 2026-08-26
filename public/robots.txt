@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://bangudevclub.github.io/atlasindex/sitemap-index.xml
