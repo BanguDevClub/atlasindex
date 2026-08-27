@@ -22,9 +22,9 @@ AtlasIndex replaces abstract macroeconomic indicators (such as GDP per capita or
 
 | Layer | Technology | Key Libraries & Purpose |
 | :--- | :--- | :--- |
-| **Framework** | **Astro 5.x** | Static site generation (SSG) with zero JS by default (`output: "static"`). |
-| **UI Components** | **React 19** | Interactive client islands (`client:load`, `client:visible`). |
-| **Styling** | **Tailwind CSS 3.x** | Semantic HSL design tokens, responsive layouts, glassmorphism. |
+| **Framework** | **Astro 7.x** | Static site generation (SSG) with Vite 8 (`output: "static"`). |
+| **UI Components** | **React 19** | Interactive client islands via `@astrojs/react@6.0.4`. |
+| **Styling** | **Tailwind CSS 3.x (PostCSS)** | Semantic HSL design tokens, responsive layouts, glassmorphism. |
 | **Component Primitives**| **shadcn/ui + Radix UI** | Accessible dialogs, tabs, sliders, tooltips, select dropdowns, tables. |
 | **Mathematical Rendering**| **KaTeX** | Fast, server-rendered LaTeX equations via `<Latex formula={String.raw`...`} />`. |
 | **Data Visualization** | **Recharts 3.x** | Multi-pillar bar charts, stacked nutritional decomposition, scatter plots. |
@@ -166,7 +166,8 @@ npm run build
 ```
 
 ### 2. Dependency Stability Notice
-- **Do NOT upgrade `@astrojs/react` to `6.x`**: The project runs on Astro 5 / Vite 6. `@astrojs/react@4.4.2` is required for stable React component compilation and client hydration.
+- The project runs on **Astro 7.x** with **Vite 8** and **`@astrojs/react@6.0.4`**.
+- Tailwind CSS is powered natively via Vite/PostCSS (`postcss.config.mjs`) for optimal performance with shadcn/ui and HSL color tokens.
 
 ### 3. LaTeX Formatting in Astro Templates
 - Always use the `<Latex />` component with `String.raw` template strings to prevent JavaScript from misinterpreting LaTeX backslashes (`\t`, `\f`, `\r`) as control characters:
