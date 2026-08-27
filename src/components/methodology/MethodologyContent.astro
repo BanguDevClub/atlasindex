@@ -1,16 +1,16 @@
 ---
-import { BASKET_ITEMS, BASKET_NUTRITION_EXPLANATION } from "../../data/basketDefinition";
+import { BASKET_ITEMS } from "../../data/basketDefinition";
 import { RAW_COUNTRIES } from "../../data/countries";
 import { Badge } from "../ui/badge";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../ui/card";
-import { BookOpen, Scale, CheckCircle2, AlertTriangle, ExternalLink, HelpCircle, FileText } from "lucide-react";
+import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
+import { BookOpen, Scale, CheckCircle2, AlertTriangle, ExternalLink, HelpCircle, FileText, Sparkles } from "lucide-react";
 ---
 
 <div class="flex flex-col gap-12 max-w-4xl mx-auto pb-16">
   <!-- Header -->
   <div class="flex flex-col gap-3">
     <div class="flex items-center gap-2">
-      <Badge variant="outline" class="text-xs bg-primary/10 border-primary/20 text-primary">
+      <Badge variant="outline" className="text-xs bg-primary/10 border-primary/20 text-primary">
         Documentation & Whitepaper
       </Badge>
       <span class="text-xs text-muted-foreground">• Open Scientific Methodology</span>
@@ -26,7 +26,7 @@ import { BookOpen, Scale, CheckCircle2, AlertTriangle, ExternalLink, HelpCircle,
   <!-- Section 1: Executive Summary & Rationale -->
   <section class="flex flex-col gap-4 border-t border-border/40 pt-8">
     <div class="flex items-center gap-2 text-primary font-bold text-sm uppercase tracking-wider">
-      <Scale class="size-4" />
+      <Scale className="size-4" />
       <span>1. The Problem with Conventional Metrics</span>
     </div>
     <h2 class="text-2xl font-bold tracking-tight text-foreground">Why GDP & The Big Mac Index Fall Short</h2>
@@ -46,18 +46,18 @@ import { BookOpen, Scale, CheckCircle2, AlertTriangle, ExternalLink, HelpCircle,
   <!-- Section 2: Mathematical Formulation -->
   <section class="flex flex-col gap-4 border-t border-border/40 pt-8">
     <div class="flex items-center gap-2 text-primary font-bold text-sm uppercase tracking-wider">
-      <BookOpen class="size-4" />
+      <BookOpen className="size-4" />
       <span>2. Mathematical Formulation</span>
     </div>
     <h2 class="text-2xl font-bold tracking-tight text-foreground">Equations & Definitions</h2>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
       <!-- Formula 1: Basket Cost -->
-      <Card class="border-border/80 bg-card/60">
-        <CardHeader class="pb-2">
-          <CardTitle class="text-sm font-bold">Standard Monthly Basket Cost ($B$)</CardTitle>
+      <Card className="border-border/80 bg-card/60">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-bold">Standard Monthly Basket Cost ($B$)</CardTitle>
         </CardHeader>
-        <CardContent class="text-xs space-y-2">
+        <CardContent className="text-xs space-y-2">
           <div class="rounded-lg bg-muted/60 p-3 font-mono text-center text-sm font-semibold text-primary">
             B = ∑ ( pᵢ × qᵢ )
           </div>
@@ -68,11 +68,11 @@ import { BookOpen, Scale, CheckCircle2, AlertTriangle, ExternalLink, HelpCircle,
       </Card>
 
       <!-- Formula 2: Wage Burden -->
-      <Card class="border-border/80 bg-card/60">
-        <CardHeader class="pb-2">
-          <CardTitle class="text-sm font-bold">Wage Burden Share ($\beta$)</CardTitle>
+      <Card className="border-border/80 bg-card/60">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-bold">Wage Burden Share ($\beta$)</CardTitle>
         </CardHeader>
-        <CardContent class="text-xs space-y-2">
+        <CardContent className="text-xs space-y-2">
           <div class="rounded-lg bg-muted/60 p-3 font-mono text-center text-sm font-semibold text-primary">
             β = ( B / W_median ) × 100%
           </div>
@@ -83,11 +83,11 @@ import { BookOpen, Scale, CheckCircle2, AlertTriangle, ExternalLink, HelpCircle,
       </Card>
 
       <!-- Formula 3: Labor Hours -->
-      <Card class="border-border/80 bg-card/60">
-        <CardHeader class="pb-2">
-          <CardTitle class="text-sm font-bold">Labor Hours for Food Basket ($H$)</CardTitle>
+      <Card className="border-border/80 bg-card/60">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-bold">Labor Hours for Food Basket ($H$)</CardTitle>
         </CardHeader>
-        <CardContent class="text-xs space-y-2">
+        <CardContent className="text-xs space-y-2">
           <div class="rounded-lg bg-muted/60 p-3 font-mono text-center text-sm font-semibold text-primary">
             H = B / ( W_median / 160 )
           </div>
@@ -98,11 +98,11 @@ import { BookOpen, Scale, CheckCircle2, AlertTriangle, ExternalLink, HelpCircle,
       </Card>
 
       <!-- Formula 4: Item Labor Minutes -->
-      <Card class="border-border/80 bg-card/60">
-        <CardHeader class="pb-2">
-          <CardTitle class="text-sm font-bold">Granular Item Labor Minutes ($Mᵢ$)</CardTitle>
+      <Card className="border-border/80 bg-card/60">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-bold">Granular Item Labor Minutes ($Mᵢ$)</CardTitle>
         </CardHeader>
-        <CardContent class="text-xs space-y-2">
+        <CardContent className="text-xs space-y-2">
           <div class="rounded-lg bg-muted/60 p-3 font-mono text-center text-sm font-semibold text-primary">
             Mᵢ = ( pᵢ / W_hourly ) × 60
           </div>
@@ -140,7 +140,7 @@ import { BookOpen, Scale, CheckCircle2, AlertTriangle, ExternalLink, HelpCircle,
   <!-- Section 3: Standard Food Basket Composition -->
   <section class="flex flex-col gap-4 border-t border-border/40 pt-8">
     <div class="flex items-center gap-2 text-primary font-bold text-sm uppercase tracking-wider">
-      <FileText class="size-4" />
+      <FileText className="size-4" />
       <span>3. Standardized Monthly Food Basket Composition</span>
     </div>
     <h2 class="text-2xl font-bold tracking-tight text-foreground">Nutritional Specifications</h2>
@@ -165,7 +165,7 @@ import { BookOpen, Scale, CheckCircle2, AlertTriangle, ExternalLink, HelpCircle,
               <tr class="hover:bg-muted/20 transition-colors">
                 <td class="p-3 font-medium text-foreground">{item.name}</td>
                 <td class="p-3">
-                  <Badge variant="outline" class="text-[10px] capitalize">
+                  <Badge variant="outline" className="text-[10px] capitalize">
                     {item.category}
                   </Badge>
                 </td>
@@ -197,7 +197,7 @@ import { BookOpen, Scale, CheckCircle2, AlertTriangle, ExternalLink, HelpCircle,
   <!-- Section 4: Data Sources Directory -->
   <section class="flex flex-col gap-4 border-t border-border/40 pt-8">
     <div class="flex items-center gap-2 text-primary font-bold text-sm uppercase tracking-wider">
-      <CheckCircle2 class="size-4" />
+      <CheckCircle2 className="size-4" />
       <span>4. Primary Data Sources & Auditing</span>
     </div>
     <h2 class="text-2xl font-bold tracking-tight text-foreground">Institutional Citations & Verification</h2>
@@ -228,11 +228,11 @@ import { BookOpen, Scale, CheckCircle2, AlertTriangle, ExternalLink, HelpCircle,
           <div class="flex items-center justify-between pt-1 border-t border-border/40 text-[10px]">
             <a href={c.wageSourceUrl} target="_blank" rel="noreferrer" class="text-primary hover:underline flex items-center gap-1">
               <span>Wage Report</span>
-              <ExternalLink class="size-2.5" />
+              <ExternalLink className="size-2.5" />
             </a>
             <a href={c.priceSourceUrl} target="_blank" rel="noreferrer" class="text-primary hover:underline flex items-center gap-1">
               <span>Price Index</span>
-              <ExternalLink class="size-2.5" />
+              <ExternalLink className="size-2.5" />
             </a>
           </div>
         </div>
@@ -243,7 +243,7 @@ import { BookOpen, Scale, CheckCircle2, AlertTriangle, ExternalLink, HelpCircle,
   <!-- Section 5: Limitations & Known Caveats -->
   <section id="limitations" class="flex flex-col gap-4 border-t border-border/40 pt-8">
     <div class="flex items-center gap-2 text-amber-500 font-bold text-sm uppercase tracking-wider">
-      <AlertTriangle class="size-4" />
+      <AlertTriangle className="size-4" />
       <span>5. Known Limitations & Research Scope</span>
     </div>
     <h2 class="text-2xl font-bold tracking-tight text-foreground">Methodological Constraints</h2>
@@ -272,38 +272,73 @@ import { BookOpen, Scale, CheckCircle2, AlertTriangle, ExternalLink, HelpCircle,
     </div>
   </section>
 
+  <!-- Section 5B: Estimation Methodology for Data-Sparse & Closed Economies -->
+  <section id="estimations" class="flex flex-col gap-4 border-t border-border/40 pt-8">
+    <div class="flex items-center gap-2 text-primary font-bold text-sm uppercase tracking-wider">
+      <Sparkles className="size-4" />
+      <span>6. Econometric Estimations for Closed & Conflict Economies</span>
+    </div>
+    <h2 class="text-2xl font-bold tracking-tight text-foreground">Estimating Data for Nations with Restricted Reporting</h2>
+
+    <div class="prose dark:prose-invert max-w-none text-xs sm:text-sm text-muted-foreground leading-relaxed flex flex-col gap-3">
+      <p>
+        To ensure complete global coverage across all <strong>195 sovereign nations</strong>, AtlasIndex provides rigorous econometric estimates for 19 states where official statistical agencies do not publish standard consumer price indexes or regular labor surveys (such as <strong>North Korea, Eritrea, Syria, Afghanistan, Cuba, Haiti, Somalia, Yemen, and South Sudan</strong>).
+      </p>
+      <p>
+        For these economies, data is derived using a multi-source triangulation framework:
+      </p>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 my-2 text-xs">
+        <div class="p-3 rounded-lg border border-border/60 bg-background/50">
+          <strong class="text-foreground block mb-1">1. UN Humanitarian Monitoring</strong>
+          <span class="text-muted-foreground">Market price surveillance and vulnerability assessments by the UN World Food Programme (WFP VAM) and UN FAO GIEWS.</span>
+        </div>
+        <div class="p-3 rounded-lg border border-border/60 bg-background/50">
+          <strong class="text-foreground block mb-1">2. Regional PPP Parity Models</strong>
+          <span class="text-muted-foreground">World Bank International Comparison Program (ICP) purchasing power parity regression benchmarks and neighboring country baskets.</span>
+        </div>
+        <div class="p-3 rounded-lg border border-border/60 bg-background/50">
+          <strong class="text-foreground block mb-1">3. Cross-Border & Informal Data</strong>
+          <span class="text-muted-foreground">For closed economies like North Korea, informal market surveys (Jangmadang market basket reports from Daily NK / Asia Press) and Bank of Korea models.</span>
+        </div>
+      </div>
+      <p>
+        All estimated economies are explicitly labeled with an <span class="text-amber-500 font-semibold">"Est." badge</span> and detailed disclaimers across all tables, charts, and comparison tools.
+      </p>
+    </div>
+  </section>
+
   <!-- Section 6: FAQ Accordion -->
   <section id="faq" class="flex flex-col gap-4 border-t border-border/40 pt-8">
     <div class="flex items-center gap-2 text-primary font-bold text-sm uppercase tracking-wider">
-      <HelpCircle class="size-4" />
+      <HelpCircle className="size-4" />
       <span>6. Frequently Asked Questions</span>
     </div>
     <h2 class="text-2xl font-bold tracking-tight text-foreground">Frequently Asked Questions</h2>
 
     <div class="space-y-3 text-xs sm:text-sm">
-      <Card class="border-border/80 bg-card/60">
-        <CardHeader class="pb-2">
-          <CardTitle class="text-sm font-bold">Why not use the Mean Average Wage?</CardTitle>
+      <Card className="border-border/80 bg-card/60">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-bold">Why not use the Mean Average Wage?</CardTitle>
         </CardHeader>
-        <CardContent class="text-muted-foreground text-xs leading-relaxed">
+        <CardContent className="text-muted-foreground text-xs leading-relaxed">
           Mean average wages are heavily skewed upwards by ultra-high earners (CEOs, tech executives, financiers). Median wage reflects the 50th percentile—exactly where the middle worker sits in society.
         </CardContent>
       </Card>
 
-      <Card class="border-border/80 bg-card/60">
-        <CardHeader class="pb-2">
-          <CardTitle class="text-sm font-bold">How often is the dataset refreshed?</CardTitle>
+      <Card className="border-border/80 bg-card/60">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-bold">How often is the dataset refreshed?</CardTitle>
         </CardHeader>
-        <CardContent class="text-muted-foreground text-xs leading-relaxed">
+        <CardContent className="text-muted-foreground text-xs leading-relaxed">
           AtlasIndex is audited bi-annually against newly released quarterly labor surveys (BLS, Eurostat, IBGE, ONS) and inflation reports. The current dataset reflects the 2025 release.
         </CardContent>
       </Card>
 
-      <Card class="border-border/80 bg-card/60">
-        <CardHeader class="pb-2">
-          <CardTitle class="text-sm font-bold">Can I use this data for academic research or publications?</CardTitle>
+      <Card className="border-border/80 bg-card/60">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-bold">Can I use this data for academic research or publications?</CardTitle>
         </CardHeader>
-        <CardContent class="text-muted-foreground text-xs leading-relaxed">
+        <CardContent className="text-muted-foreground text-xs leading-relaxed">
           Yes! All AtlasIndex data is open and licensed under Creative Commons Attribution 4.0 International (CC BY 4.0). You can export raw CSV and JSON datasets directly from the Rankings page.
         </CardContent>
       </Card>

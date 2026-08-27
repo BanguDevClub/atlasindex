@@ -38,7 +38,7 @@ export function QuickCalculator() {
   const eggsItem = currentCountry.items.find((i) => i.itemId === "eggs");
   const chickenItem = currentCountry.items.find((i) => i.itemId === "chicken");
 
-  const tierBadgeVariant = (tier: string) => {
+  const tierBadgeVariant = (tier?: string) => {
     switch (tier) {
       case "Low": return "tierLow";
       case "Moderate": return "tierModerate";
@@ -70,8 +70,13 @@ export function QuickCalculator() {
         {/* Country Selector & Wage Input */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-              Select Country
+            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center justify-between">
+              <span>Select Country (195 Nations)</span>
+              {currentCountry.isEstimated && (
+                <Badge variant="outline" className="text-[10px] bg-amber-500/10 border-amber-500/30 text-amber-500 py-0">
+                  Estimated
+                </Badge>
+              )}
             </label>
             <select
               value={selectedCountryId}
@@ -80,7 +85,7 @@ export function QuickCalculator() {
             >
               {allCountries.map((c) => (
                 <option key={c.id} value={c.id}>
-                  {c.flag} {c.name} (Median: {formatCurrency(c.monthlyMedianWageUSD, "USD")}/mo)
+                  {c.flag} {c.name} {c.isEstimated ? "(Est.)" : ""} (Median: {formatCurrency(c.monthlyMedianWageUSD, "USD")}/mo)
                 </option>
               ))}
             </select>
@@ -102,7 +107,7 @@ export function QuickCalculator() {
               <span className="absolute left-3 top-2.5 text-muted-foreground text-sm font-semibold">$</span>
               <Input
                 type="number"
-                placeholder={`Default median: ${currentCountry.monthlyMedianWageUSD}`}
+                placeholder={`Default median: ${Math.round(currentCountry.monthlyMedianWageUSD)}`}
                 value={customWageInput}
                 onChange={(e) => setCustomWageInput(e.target.value)}
                 className="pl-7 bg-background/80 text-sm"
@@ -110,6 +115,14 @@ export function QuickCalculator() {
             </div>
           </div>
         </div>
+
+        {/* Estimation Notice */}
+        {currentCountry.isEstimated && (
+          <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-600 dark:text-amber-400 space-y-0.5">
+            <span className="font-bold">⚠️ Econometric Estimate for {currentCountry.name}:</span>
+            <p className="text-[11px] leading-relaxed text-muted-foreground">{currentCountry.estimationDisclaimer}</p>
+          </div>
+        )}
 
         {/* Primary Metric Output Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">

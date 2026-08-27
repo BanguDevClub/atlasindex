@@ -1,11 +1,10 @@
 import React, { useState, useMemo } from "react";
 import { RAW_COUNTRIES } from "@/data/countries";
 import { getAllProcessedCountries } from "@/lib/methodology";
-import type { Continent, StressTier, ProcessedCountryEconomy } from "@/lib/types";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { formatCurrency, formatHours, formatPercent } from "@/lib/utils";
+import { formatCurrency, formatHours, formatPercent, getBasePath } from "@/lib/utils";
 import {
   ResponsiveContainer,
   BarChart,
@@ -91,25 +90,34 @@ export function DashboardContainer() {
     }));
   }, [filteredCountries]);
 
-  const continents = ["All", "Americas", "Europe", "Asia-Pacific", "Africa & Middle East"];
+  const continents = ["All", "Europe", "Americas", "Asia", "Oceania", "Africa"];
   const tiers = ["All", "Low", "Moderate", "High", "Severe"];
 
   return (
     <div className="flex flex-col gap-8 pb-16">
       {/* Header Summary */}
-      <div className="flex flex-col gap-2">
-        <div className="flex items-center gap-2">
-          <Badge variant="outline" className="text-xs bg-primary/10 border-primary/20 text-primary">
-            AtlasIndex Global Analytics
-          </Badge>
-          <span className="text-xs text-muted-foreground">• 2025 Comprehensive Audit</span>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-2">
+            <Badge variant="outline" className="text-xs bg-primary/10 border-primary/20 text-primary">
+              AtlasIndex Global Analytics
+            </Badge>
+            <span className="text-xs text-muted-foreground">• 195 Sovereign Nations Audit</span>
+          </div>
+          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
+            Global Economy & Labor Effort Dashboard
+          </h1>
+          <p className="text-sm text-muted-foreground max-w-3xl">
+            Visualizing nutritional purchasing power across {allCountries.length} countries. Filter by continent, examine category labor breakdowns, and inspect the structural disconnect between median income and baseline nourishment.
+          </p>
         </div>
-        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
-          Global Economy & Labor Effort Dashboard
-        </h1>
-        <p className="text-sm text-muted-foreground max-w-3xl">
-          Visualizing nutritional purchasing power across {allCountries.length} countries. Filter by continent, examine category labor breakdowns, and inspect the structural disconnect between median income and baseline nourishment.
-        </p>
+
+        <a href={getBasePath("/continents")} className="shrink-0">
+          <Button variant="outline" size="sm" className="text-xs gap-1.5 border-primary/30 hover:bg-primary/10 text-primary font-semibold">
+            <span>Continent Breakdown</span>
+            <span>→</span>
+          </Button>
+        </a>
       </div>
 
       {/* Aggregate KPI Stat Cards */}

@@ -144,6 +144,8 @@ export function processCountryEconomy(raw: CountryRawData): ProcessedCountryEcon
     priceSource: raw.priceSource,
     priceSourceUrl: raw.priceSourceUrl,
     notes: raw.notes,
+    isEstimated: raw.isEstimated,
+    estimationDisclaimer: raw.estimationDisclaimer,
   };
 }
 
@@ -170,4 +172,58 @@ export function calculateCustomWageEffort(
     laborHours,
     stressTier: getStressTier(basketPercent),
   };
+}
+
+import type { Continent, ContinentEconomySummary } from "./types";
+
+export function getContinentalSummaries(processedCountries: ProcessedCountryEconomy[]): ContinentEconomySummary[] {
+  const continents: Continent[] = ["Europe", "Americas", "Asia", "Oceania", "Africa"];
+
+  return continents.map((continent) => {
+    const countries = processedCountries.filter((c) => c.continent === continent);
+    if (countries.length === 0) {
+      throw new Error(`No countries found for continent: ${continent}`);
+    }
+
+    const countryCount = countries.length;
+    const avgMonthlyWageUSD = countries.reduce((acc, c) => acc + c.monthlyMedianWageUSD, 0) / countryCount;
+    const avgBasketCostUSD = countries.reduce((acc, c) => acc + c.monthlyBasketCostUSD, 0) / countryCount;
+    const avgLaborHours = countries.reduce((acc, c) => acc + c.laborHoursForBasket, 0) / countryCount;
+    const avgBasketPercentOfWage = countries.reduce((acc, c) => acc + c.basketPercentOfWage, 0) / countryCount;
+    const avgAppiScore = Math.round(countries.reduce((acc, c) => acc + c.appiScore, 0) / countryCount);
+
+    const categoryLaborHours = {
+      staples: countries.reduce((acc, c) => acc + c.categoryLaborHours.staples, 0) / countryCount,
+      meat: countries.reduce((acc, c) => acc + c.categoryLaborHours.meat, 0) / countryCount,
+      dairy: countries.reduce((acc, c) => acc + c.categoryLaborHours.dairy, 0) / countryCount,
+      produce: countries.reduce((acc, c) => acc + c.categoryLaborHours.produce, 0) / countryCount,
+      oil: countries.reduce((acc, c) => acc + c.categoryLaborHours.oil, 0) / countryCount,
+    };
+
+    const tierDistribution = {
+      Low: countries.filter((c) => c.stressTier === "Low").length,
+      Moderate: countries.filter((c) => c.stressTier === "Moderate").length,
+      High: countries.filter((c) => c.stressTier === "High").length,
+      Severe: countries.filter((c) => c.stressTier === "Severe").length,
+    };
+
+    // Countries are already sorted by rank / basket percent
+    const bestCountry = countries[0];
+    const worstCountry = countries[countries.length - 1];
+
+    return {
+      continent,
+      countryCount,
+      avgMonthlyWageUSD,
+      avgBasketCostUSD,
+      avgLaborHours,
+      avgBasketPercentOfWage,
+      avgAppiScore,
+      categoryLaborHours,
+      tierDistribution,
+      bestCountry,
+      worstCountry,
+      countries,
+    };
+  }).sort((a, b) => a.avgLaborHours - b.avgLaborHours);
 }

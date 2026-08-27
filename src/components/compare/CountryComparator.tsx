@@ -183,10 +183,28 @@ export function CountryComparator() {
           </div>
 
           <div className="text-xs text-muted-foreground">
-            Comparing <span className="font-semibold text-foreground">{selectedCountries.length}</span> countries
+            Comparing <span className="font-semibold text-foreground">{selectedCountries.length}</span> of {allCountries.length} countries
           </div>
         </div>
       </Card>
+
+      {/* Econometric Estimation Notice if any selected country is estimated */}
+      {selectedCountries.some((c) => c.isEstimated) && (
+        <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-xs text-amber-700 dark:text-amber-300 space-y-2">
+          <div className="font-bold flex items-center gap-2 text-sm">
+            <span>⚠️ Econometric Data Estimation Notice</span>
+          </div>
+          <div className="space-y-1 text-xs">
+            {selectedCountries
+              .filter((c) => c.isEstimated)
+              .map((c) => (
+                <p key={c.id}>
+                  <strong>{c.flag} {c.name}:</strong> {c.estimationDisclaimer || "Data is estimated based on regional purchasing power models."}
+                </p>
+              ))}
+          </div>
+        </div>
+      )}
 
       {/* Side-by-Side Scorecards Grid */}
       <div
@@ -210,9 +228,16 @@ export function CountryComparator() {
             <CardHeader className="pb-3 pt-4">
               <div className="flex items-center justify-between">
                 <span className="text-3xl">{country.flag}</span>
-                <Badge variant={tierBadgeVariant(country.stressTier)} className="text-xs">
-                  {country.stressTier} Stress
-                </Badge>
+                <div className="flex items-center gap-1">
+                  {country.isEstimated && (
+                    <Badge variant="outline" className="text-[10px] bg-amber-500/10 border-amber-500/30 text-amber-500 font-semibold">
+                      Estimated
+                    </Badge>
+                  )}
+                  <Badge variant={tierBadgeVariant(country.stressTier)} className="text-xs">
+                    {country.stressTier} Stress
+                  </Badge>
+                </div>
               </div>
               <CardTitle className="text-lg font-bold mt-2">{country.name}</CardTitle>
               <CardDescription className="text-xs">

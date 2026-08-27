@@ -1,4 +1,4 @@
-export type Continent = "Americas" | "Europe" | "Asia-Pacific" | "Africa & Middle East";
+export type Continent = "Africa" | "Americas" | "Asia" | "Europe" | "Oceania";
 
 export type StressTier = "Low" | "Moderate" | "High" | "Severe";
 
@@ -30,6 +30,8 @@ export interface CountryRawData {
   priceSource: string;
   priceSourceUrl: string;
   notes?: string;
+  isEstimated?: boolean; // true for economies with restricted reporting (e.g. North Korea)
+  estimationDisclaimer?: string; // transparent explanation of econometric estimation
 }
 
 export interface ProcessedItemBurden {
@@ -103,6 +105,34 @@ export interface ProcessedCountryEconomy {
   priceSource: string;
   priceSourceUrl: string;
   notes?: string;
+  isEstimated?: boolean;
+  estimationDisclaimer?: string;
+}
+
+export interface ContinentEconomySummary {
+  continent: Continent;
+  countryCount: number;
+  avgMonthlyWageUSD: number;
+  avgBasketCostUSD: number;
+  avgLaborHours: number;
+  avgBasketPercentOfWage: number;
+  avgAppiScore: number;
+  categoryLaborHours: {
+    staples: number;
+    meat: number;
+    dairy: number;
+    produce: number;
+    oil: number;
+  };
+  tierDistribution: {
+    Low: number;
+    Moderate: number;
+    High: number;
+    Severe: number;
+  };
+  bestCountry: ProcessedCountryEconomy;
+  worstCountry: ProcessedCountryEconomy;
+  countries: ProcessedCountryEconomy[];
 }
 
 export type ThemeName = "light" | "dark" | "theme-latte" | "theme-frappe" | "theme-macchiato" | "theme-mocha";

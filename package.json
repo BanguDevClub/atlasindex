@@ -6,10 +6,11 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "check": "astro check && tsc --noEmit"
   },
   "dependencies": {
-    "@astrojs/react": "^6.0.4",
+    "@astrojs/react": "^4.4.2",
     "@astrojs/sitemap": "^3.7.3",
     "@astrojs/tailwind": "^6.0.2",
     "@radix-ui/react-dialog": "^1.1.23",
@@ -33,6 +34,7 @@
     "tailwindcss": "^3.4.19"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.10",
     "@types/node": "^26.3.0",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.5",

@@ -10,7 +10,7 @@ import { getBasePath } from "../../lib/utils";
     <div class="flex flex-col items-center text-center max-w-4xl mx-auto gap-6">
       <!-- Tag badge -->
       <div class="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 text-xs font-semibold text-primary">
-        <Scale class="size-3.5" />
+        <Scale className="size-3.5" />
         <span>Beyond GDP & The Big Mac Index</span>
       </div>
 
@@ -21,27 +21,27 @@ import { getBasePath } from "../../lib/utils";
 
       <!-- Subheading -->
       <p class="text-base sm:text-lg text-muted-foreground max-w-2xl leading-relaxed">
-        AtlasIndex compares national economies through the lens of real nutritional labor: measuring how many hours a median-wage earner must work to afford a standardized 13-item monthly food basket across 26 countries.
+        AtlasIndex compares national economies through the lens of real nutritional labor: measuring how many hours a median-wage earner must work to afford a standardized 13-item monthly food basket across all 195 countries of the world.
       </p>
 
       <!-- CTA Action Buttons -->
       <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
         <a href={getBasePath("/ranking")}>
           <Button size="lg" className="gap-2 font-semibold shadow-lg glow-primary">
-            <span>Explore 2025 Rankings</span>
-            <ArrowRight class="size-4" />
+            <span>Explore 195 Nations</span>
+            <ArrowRight className="size-4" />
+          </Button>
+        </a>
+        <a href={getBasePath("/continents")}>
+          <Button variant="outline" size="lg" className="gap-2 font-medium bg-card/60 backdrop-blur">
+            <Compass className="size-4" />
+            <span>Continent Breakdown</span>
           </Button>
         </a>
         <a href={getBasePath("/compare")}>
-          <Button variant="outline" size="lg" className="gap-2 font-medium bg-card/60 backdrop-blur">
-            <Compass class="size-4" />
-            <span>Compare Any Two Countries</span>
-          </Button>
-        </a>
-        <a href={getBasePath("/methodology")}>
           <Button variant="ghost" size="lg" className="gap-2 font-medium">
-            <BarChart2 class="size-4" />
-            <span>Read Methodology</span>
+            <BarChart2 className="size-4" />
+            <span>Compare Economies</span>
           </Button>
         </a>
       </div>
@@ -49,9 +49,9 @@ import { getBasePath } from "../../lib/utils";
       <!-- Live Feature Pills -->
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-6 w-full max-w-3xl text-left">
         <div class="rounded-xl border border-border/60 bg-card/40 p-3.5 backdrop-blur flex flex-col gap-1">
-          <span class="text-[11px] font-semibold text-muted-foreground uppercase">Countries Audited</span>
-          <span class="text-xl font-bold text-foreground">26 Nations</span>
-          <span class="text-[10px] text-muted-foreground">All major regions & incomes</span>
+          <span class="text-[11px] font-semibold text-muted-foreground uppercase">Global Coverage</span>
+          <span class="text-xl font-bold text-foreground">195 Nations</span>
+          <span class="text-[10px] text-muted-foreground">All 5 continents & island states</span>
         </div>
         <div class="rounded-xl border border-border/60 bg-card/40 p-3.5 backdrop-blur flex flex-col gap-1">
           <span class="text-[11px] font-semibold text-muted-foreground uppercase">Monthly Standard</span>
@@ -61,12 +61,12 @@ import { getBasePath } from "../../lib/utils";
         <div class="rounded-xl border border-border/60 bg-card/40 p-3.5 backdrop-blur flex flex-col gap-1">
           <span class="text-[11px] font-semibold text-muted-foreground uppercase">Best Affordability</span>
           <span class="text-xl font-bold text-emerald-500">5.8% Wage</span>
-          <span class="text-[10px] text-muted-foreground">Switzerland (9.3h work)</span>
+          <span class="text-[10px] text-muted-foreground">Top European economies (&lt;10h)</span>
         </div>
         <div class="rounded-xl border border-border/60 bg-card/40 p-3.5 backdrop-blur flex flex-col gap-1">
-          <span class="text-[11px] font-semibold text-muted-foreground uppercase">Extreme Labor Burden</span>
-          <span class="text-xl font-bold text-rose-500">62.8% Wage</span>
-          <span class="text-[10px] text-muted-foreground">Egypt / Nigeria (&gt;80h work)</span>
+          <span class="text-[11px] font-semibold text-muted-foreground uppercase">Highest Strain</span>
+          <span class="text-xl font-bold text-rose-500">&gt;60% Wage</span>
+          <span class="text-[10px] text-muted-foreground">Fragile & low-income markets</span>
         </div>
       </div>
     </div>

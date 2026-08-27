@@ -1,0 +1,14 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { ContinentComparator } from "../components/continents/ContinentComparator";
+---
+
+<Layout
+  title="Continent Comparison & Regional Economics — AtlasIndex"
+  description="Compare global purchasing power across Africa, the Americas, Asia, Europe, and Oceania. Analyze regional food affordability, median wages, and labor hours across 195 sovereign countries."
+  keywords="continent comparison, regional economic comparison, Africa food prices, Europe median wage, Asia purchasing power, Americas food affordability, Oceania cost of living, AtlasIndex, BanguDevClub"
+>
+  <div class="container mx-auto px-4 sm:px-8 py-8">
+    <ContinentComparator client:load />
+  </div>
+</Layout>

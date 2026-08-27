@@ -1,8 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { RAW_COUNTRIES } from "@/data/countries";
 import { getAllProcessedCountries } from "@/lib/methodology";
-import type { ProcessedCountryEconomy, StressTier } from "@/lib/types";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -40,7 +39,7 @@ export function RankingContainer() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedContinent, setSelectedContinent] = useState<string>("All");
   const [selectedTier, setSelectedTier] = useState<string>("All");
-  const [basketFocus, setBasketFocus] = useState<"all" | "meat" | "staples" | "dairy">("all");
+  const [dataFilter, setDataFilter] = useState<"all" | "official" | "estimated">("all");
   const [sortField, setSortField] = useState<SortField>("rank");
   const [sortAsc, setSortAsc] = useState<boolean>(true);
   const [expandedCountryId, setExpandedCountryId] = useState<string | null>(null);
@@ -58,11 +57,15 @@ export function RankingContainer() {
     const list = allCountries.filter((c) => {
       const matchContinent = selectedContinent === "All" || c.continent === selectedContinent;
       const matchTier = selectedTier === "All" || c.stressTier === selectedTier;
+      const matchDataType =
+        dataFilter === "all" ||
+        (dataFilter === "official" && !c.isEstimated) ||
+        (dataFilter === "estimated" && c.isEstimated);
       const matchSearch =
         c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         c.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
         c.currencyCode.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchContinent && matchTier && matchSearch;
+      return matchContinent && matchTier && matchDataType && matchSearch;
     });
 
     list.sort((a, b) => {
@@ -110,7 +113,7 @@ export function RankingContainer() {
     });
 
     return list;
-  }, [allCountries, searchQuery, selectedContinent, selectedTier, sortField, sortAsc]);
+  }, [allCountries, searchQuery, selectedContinent, selectedTier, dataFilter, sortField, sortAsc]);
 
   const tierBadgeVariant = (tier: string) => {
     switch (tier) {
@@ -139,6 +142,7 @@ export function RankingContainer() {
       "Remaining_Labor_Hours",
       "APPI_Score",
       "Stress_Tier",
+      "Is_Estimated",
       "Wage_Source",
       "Price_Source",
     ];
@@ -160,6 +164,7 @@ export function RankingContainer() {
       c.remainingLaborHours.toFixed(2),
       c.appiScore,
       c.stressTier,
+      c.isEstimated ? "YES" : "NO",
       `"${c.wageSource}"`,
       `"${c.priceSource}"`,
     ]);
@@ -186,7 +191,7 @@ export function RankingContainer() {
     document.body.removeChild(link);
   };
 
-  const continents = ["All", "Americas", "Europe", "Asia-Pacific", "Africa & Middle East"];
+  const continents = ["All", "Europe", "Americas", "Asia", "Oceania", "Africa"];
   const tiers = ["All", "Low", "Moderate", "High", "Severe"];
 
   return (
@@ -198,18 +203,24 @@ export function RankingContainer() {
             <Badge variant="outline" className="text-xs bg-primary/10 border-primary/20 text-primary">
               Global Benchmark
             </Badge>
-            <span className="text-xs text-muted-foreground">• Complete 26-Country League Table</span>
+            <span className="text-xs text-muted-foreground">• Complete 195 Sovereign Nations League Table</span>
           </div>
           <h1 className="text-3xl font-extrabold tracking-tight text-foreground mt-1">
             Global Food Labor & Purchasing Power Rankings
           </h1>
           <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-            Ranked from highest purchasing power (#1 Lowest Effort) to highest nutritional burden.
+            Every country in the world ranked from highest purchasing power (#1 Lowest Labor Effort) to highest nutritional strain.
           </p>
         </div>
 
-        {/* Export Buttons */}
+        {/* Action Buttons */}
         <div className="flex items-center gap-2">
+          <a href={getBasePath("/continents")}>
+            <Button variant="outline" size="sm" className="text-xs gap-1 bg-card text-primary border-primary/30 hover:bg-primary/10">
+              <span>View Continents</span>
+              <span>→</span>
+            </Button>
+          </a>
           <Button variant="outline" size="sm" onClick={exportCSV} className="text-xs gap-1.5 bg-card">
             <Download className="size-3.5" />
             <span>Export CSV</span>
@@ -229,7 +240,7 @@ export function RankingContainer() {
             <Search className="size-4 absolute left-3 top-2.5 text-muted-foreground" />
             <Input
               type="text"
-              placeholder="Search by country, code (US, BR, DE) or currency..."
+              placeholder="Search country (e.g. North Korea, Brazil, Japan)..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-9 bg-background/80 text-xs h-9"
@@ -239,7 +250,7 @@ export function RankingContainer() {
           {/* Filters */}
           <div className="flex flex-wrap items-center gap-3">
             <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <span>Region:</span>
+              <span>Continent:</span>
               <select
                 value={selectedContinent}
                 onChange={(e) => setSelectedContinent(e.target.value)}
@@ -254,7 +265,7 @@ export function RankingContainer() {
             </div>
 
             <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <span>Tier:</span>
+              <span>Stress Tier:</span>
               <select
                 value={selectedTier}
                 onChange={(e) => setSelectedTier(e.target.value)}
@@ -265,6 +276,19 @@ export function RankingContainer() {
                     {t}
                   </option>
                 ))}
+              </select>
+            </div>
+
+            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <span>Data Source:</span>
+              <select
+                value={dataFilter}
+                onChange={(e) => setDataFilter(e.target.value as any)}
+                className="h-8 rounded-md border border-input bg-background px-2 text-xs focus:outline-none focus:ring-1 focus:ring-primary"
+              >
+                <option value="all">All (195 Nations)</option>
+                <option value="official">Official Reports Only (176)</option>
+                <option value="estimated">Econometric Estimates Only (19)</option>
               </select>
             </div>
           </div>
@@ -354,7 +378,18 @@ export function RankingContainer() {
                           </button>
                           <span className="text-base">{country.flag}</span>
                           <div>
-                            <span className="font-semibold text-foreground text-xs block">{country.name}</span>
+                            <div className="flex items-center gap-1.5">
+                              <span className="font-semibold text-foreground text-xs">{country.name}</span>
+                              {country.isEstimated && (
+                                <Badge
+                                  variant="outline"
+                                  className="text-[9px] px-1 py-0 bg-amber-500/10 border-amber-500/30 text-amber-500 font-semibold"
+                                  title="Econometrically estimated due to restricted public reporting"
+                                >
+                                  Est.
+                                </Badge>
+                              )}
+                            </div>
                             <span className="text-[10px] text-muted-foreground">{country.continent}</span>
                           </div>
                         </div>
@@ -418,7 +453,7 @@ export function RankingContainer() {
                       </TableCell>
                     </TableRow>
 
-                    {/* EXPANDED ROW: Granular Item Breakdown */}
+                    {/* EXPANDED ROW: Granular Item Breakdown & Estimation Disclaimer */}
                     {isExpanded && (
                       <TableRow className="bg-muted/15">
                         <TableCell colSpan={10} className="p-4">
@@ -436,6 +471,18 @@ export function RankingContainer() {
                                 Source: {country.wageSource} & {country.priceSource}
                               </span>
                             </div>
+
+                            {/* Estimation Disclaimer Callout */}
+                            {country.isEstimated && country.estimationDisclaimer && (
+                              <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-600 dark:text-amber-400 space-y-1">
+                                <div className="font-bold flex items-center gap-1.5">
+                                  <span>⚠️ Econometric Estimation Disclaimer</span>
+                                </div>
+                                <p className="text-[11px] leading-relaxed">
+                                  {country.estimationDisclaimer}
+                                </p>
+                              </div>
+                            )}
 
                             <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-2.5 text-xs">
                               {country.items.map((item) => (
@@ -460,6 +507,17 @@ export function RankingContainer() {
             )}
           </TableBody>
         </Table>
+      </Card>
+
+      {/* Dataset & Estimation Transparency Banner */}
+      <Card className="border-border/80 bg-card/60 p-4 rounded-xl text-xs text-muted-foreground space-y-1">
+        <div className="flex items-center gap-2 text-foreground font-semibold">
+          <span className="size-2 rounded-full bg-primary" />
+          <span>Global 195 Nations Coverage & Estimation Transparency</span>
+        </div>
+        <p className="leading-relaxed">
+          AtlasIndex standardizes nutritional purchasing power across all 193 UN member nations plus 2 permanent observer states. For 176 nations, data is compiled from official government statistical bureaus (e.g. BLS, Destatis, IBGE, Stats SA) and verified consumer price surveys. For 19 nations with restricted state statistics or ongoing conflict (e.g. North Korea, Syria, Eritrea), econometric estimates are calculated using UN WFP/FAO regional price monitoring and purchasing power parity regressions.
+        </p>
       </Card>
     </div>
   );
