@@ -1,16 +1,17 @@
 import React, { useState, useMemo } from "react";
 import { RAW_COUNTRIES } from "@/data/countries";
-import { getAllProcessedCountries, calculateCustomWageEffort } from "@/lib/methodology";
+import { getAllProcessedCountries, getGlobalSummary, calculateCustomWageEffort } from "@/lib/methodology";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { formatCurrency, formatHours, formatMinutes, formatPercent, getBasePath } from "@/lib/utils";
-import { Calculator, Clock, ArrowRight, Sparkles, TrendingDown, TrendingUp, Info } from "lucide-react";
-
+import { Calculator, Clock, ArrowRight, Utensils, Home, Car, Stethoscope, Info } from "lucide-react";
 
 export function QuickCalculator() {
   const allCountries = useMemo(() => getAllProcessedCountries(RAW_COUNTRIES), []);
+  const globalSummary = useMemo(() => getGlobalSummary(allCountries), [allCountries]);
+
   const [selectedCountryId, setSelectedCountryId] = useState<string>("usa");
   const [customWageInput, setCustomWageInput] = useState<string>("");
 
@@ -28,6 +29,13 @@ export function QuickCalculator() {
     return {
       basketPercent: currentCountry.basketPercentOfWage,
       laborHours: currentCountry.laborHoursForBasket,
+      rentPercent: currentCountry.rentPercentOfWage,
+      rentHours: currentCountry.rentLaborHours,
+      carMonths: currentCountry.carLaborMonths,
+      medicalPercent: currentCountry.medicalCheckupPercentOfWage,
+      medicalHours: currentCountry.medicalCheckupLaborHours,
+      totalEssentialPercent: currentCountry.totalEssentialPercentOfWage,
+      totalEssentialHours: currentCountry.totalEssentialLaborHours,
       stressTier: currentCountry.stressTier,
     };
   }, [currentCountry, isCustomWage, customWageUSD]);
@@ -56,8 +64,8 @@ export function QuickCalculator() {
               <Calculator className="size-4" />
             </div>
             <div>
-              <CardTitle className="text-base font-bold">Live Food Labor Calculator</CardTitle>
-              <CardDescription className="text-xs">Estimate real nutritional burden for any country or salary</CardDescription>
+              <CardTitle className="text-base font-bold">Multi-Pillar Labor & Living Cost Calculator</CardTitle>
+              <CardDescription className="text-xs">Estimate real nutritional, housing, and healthcare effort for any country or salary</CardDescription>
             </div>
           </div>
           <Badge variant={tierBadgeVariant(result.stressTier)} className="text-xs px-2.5 py-1">
@@ -99,7 +107,7 @@ export function QuickCalculator() {
                   onClick={() => setCustomWageInput("")}
                   className="text-[10px] text-primary hover:underline"
                 >
-                  Reset to Median
+                  Reset to Median (${Math.round(currentCountry.monthlyMedianWageUSD)})
                 </button>
               )}
             </label>
@@ -124,49 +132,78 @@ export function QuickCalculator() {
           </div>
         )}
 
-        {/* Primary Metric Output Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div className="rounded-xl border border-border/60 bg-background/50 p-4 flex flex-col justify-between">
-            <span className="text-xs text-muted-foreground font-medium">Monthly Food Basket Cost</span>
-            <div className="my-1">
-              <span className="text-2xl font-bold tracking-tight text-foreground">
-                {formatCurrency(currentCountry.monthlyBasketCostUSD, "USD")}
-              </span>
-              <div className="text-[11px] text-muted-foreground">
-                ≈ {formatCurrency(currentCountry.monthlyBasketCostLocal, currentCountry.currencyCode)}
+        {/* 4 Pillars Output Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          {/* Pillar 1: Food Basket */}
+          <div className="rounded-xl border border-border/60 bg-background/50 p-3.5 flex flex-col justify-between">
+            <span className="text-xs text-muted-foreground font-semibold flex items-center gap-1.5">
+              <Utensils className="size-3.5 text-primary" /> Monthly Food Basket
+            </span>
+            <div className="my-2">
+              <div className="text-xl font-bold tracking-tight text-foreground">
+                ${currentCountry.monthlyBasketCostUSD.toFixed(1)}
+              </div>
+              <div className="text-xs text-primary font-semibold">
+                {formatHours(result.laborHours)} ({formatPercent(result.basketPercent)})
               </div>
             </div>
-            <span className="text-[10px] text-muted-foreground">Standard 13-item basic nutrition</span>
+            <div className="text-[10px] text-muted-foreground pt-1 border-t border-border/40">
+              World Avg: {globalSummary.avgLaborHoursFood.toFixed(1)}h
+            </div>
           </div>
 
-          <div className="rounded-xl border border-border/60 bg-background/50 p-4 flex flex-col justify-between">
-            <span className="text-xs text-muted-foreground font-medium">Labor Time Required</span>
-            <div className="my-1 flex items-baseline gap-1.5">
-              <span className="text-2xl font-bold tracking-tight text-primary">
-                {formatHours(result.laborHours)}
-              </span>
-              <span className="text-xs text-muted-foreground">/ month</span>
-            </div>
-            <div className="w-full bg-secondary/50 rounded-full h-1.5 overflow-hidden">
-              <div
-                className="bg-primary h-full transition-all duration-500"
-                style={{ width: `${Math.min(100, (result.laborHours / 160) * 100)}%` }}
-              />
-            </div>
-            <span className="text-[10px] text-muted-foreground mt-1">Out of 160 monthly work hours</span>
-          </div>
-
-          <div className="rounded-xl border border-border/60 bg-background/50 p-4 flex flex-col justify-between">
-            <span className="text-xs text-muted-foreground font-medium">Share of Total Wage</span>
-            <div className="my-1 flex items-baseline gap-1.5">
-              <span className="text-2xl font-bold tracking-tight text-foreground">
-                {formatPercent(result.basketPercent)}
-              </span>
-              <span className="text-xs text-muted-foreground">of income</span>
-            </div>
-            <span className="text-[10px] text-muted-foreground">
-              {result.basketPercent < 15 ? "🟢 High purchasing power" : result.basketPercent < 30 ? "🟡 Moderate food burden" : "🔴 Significant wage drain"}
+          {/* Pillar 2: 1-BR Rent */}
+          <div className="rounded-xl border border-border/60 bg-background/50 p-3.5 flex flex-col justify-between">
+            <span className="text-xs text-muted-foreground font-semibold flex items-center gap-1.5">
+              <Home className="size-3.5 text-chart-2" /> 1-BR Apartment Rent
             </span>
+            <div className="my-2">
+              <div className="text-xl font-bold tracking-tight text-foreground">
+                ${currentCountry.rentMonthlyUSD.toFixed(0)}/mo
+              </div>
+              <div className="text-xs text-chart-2 font-semibold">
+                {formatHours(result.rentHours)} ({formatPercent(result.rentPercent)})
+              </div>
+            </div>
+            <div className="text-[10px] text-muted-foreground pt-1 border-t border-border/40">
+              World Avg: ${globalSummary.avgRentUSD.toFixed(0)}/mo
+            </div>
+          </div>
+
+          {/* Pillar 3: Passenger Car */}
+          <div className="rounded-xl border border-border/60 bg-background/50 p-3.5 flex flex-col justify-between">
+            <span className="text-xs text-muted-foreground font-semibold flex items-center gap-1.5">
+              <Car className="size-3.5 text-chart-4" /> Standard New Car
+            </span>
+            <div className="my-2">
+              <div className="text-xl font-bold tracking-tight text-foreground">
+                ${currentCountry.carPriceUSD.toFixed(0)}
+              </div>
+              <div className="text-xs text-chart-4 font-semibold">
+                {result.carMonths.toFixed(1)} months of wage
+              </div>
+            </div>
+            <div className="text-[10px] text-muted-foreground pt-1 border-t border-border/40">
+              World Avg: {globalSummary.avgCarLaborMonths.toFixed(1)} mos
+            </div>
+          </div>
+
+          {/* Pillar 4: Medical Checkup */}
+          <div className="rounded-xl border border-border/60 bg-background/50 p-3.5 flex flex-col justify-between">
+            <span className="text-xs text-muted-foreground font-semibold flex items-center gap-1.5">
+              <Stethoscope className="size-3.5 text-rose-500" /> Medical Checkup
+            </span>
+            <div className="my-2">
+              <div className="text-xl font-bold tracking-tight text-foreground">
+                ${currentCountry.medicalCheckupUSD.toFixed(1)}
+              </div>
+              <div className="text-xs text-rose-500 font-semibold">
+                {formatHours(result.medicalHours)} ({formatPercent(result.medicalPercent)})
+              </div>
+            </div>
+            <div className="text-[10px] text-muted-foreground pt-1 border-t border-border/40">
+              World Avg: ${globalSummary.avgMedicalCheckupUSD.toFixed(1)}
+            </div>
           </div>
         </div>
 
@@ -210,9 +247,9 @@ export function QuickCalculator() {
           <Info className="size-3.5" />
           Global rank: #{currentCountry.rank} of {allCountries.length} countries
         </span>
-        <a href={getBasePath(`compare?c1=${selectedCountryId}&c2=usa`)} className="inline-flex">
+        <a href={getBasePath(`compare?c1=${selectedCountryId}&c2=world-average`)} className="inline-flex">
           <Button variant="outline" size="sm" className="text-xs gap-1">
-            <span>Compare with USA</span>
+            <span>Compare vs World Average</span>
             <ArrowRight className="size-3.5" />
           </Button>
         </a>

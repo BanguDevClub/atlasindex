@@ -24,6 +24,12 @@ export interface CountryRawData {
   monthlyMedianWageUSD: number;
   workHoursPerMonth: number; // standard 160h
   foodPricesLocal: Record<string, number>; // itemId -> local price per unit
+  
+  // Non-Food Pillars (Local Currency)
+  rentMonthlyLocal?: number; // Standard 1-Bedroom Apartment monthly rent
+  carPriceLocal?: number; // Standard new entry-level compact passenger car (e.g. Toyota Corolla / VW Golf equivalent)
+  medicalCheckupLocal?: number; // Standard routine comprehensive medical checkup (doctor consultation + CBC + lipid + metabolic panel)
+
   dataYear: number;
   wageSource: string;
   wageSourceUrl: string;
@@ -63,11 +69,34 @@ export interface ProcessedCountryEconomy {
   hourlyMedianWageLocal: number;
   hourlyMedianWageUSD: number;
   
-  // Total Basket Calculations
+  // Total Food Basket Calculations
   monthlyBasketCostLocal: number;
   monthlyBasketCostUSD: number;
   basketPercentOfWage: number;
   laborHoursForBasket: number;
+
+  // Pillar 2: Housing (1-Bedroom Apartment Monthly Rent)
+  rentMonthlyLocal: number;
+  rentMonthlyUSD: number;
+  rentPercentOfWage: number;
+  rentLaborHours: number;
+
+  // Pillar 3: Transport (Standard New Car Purchase)
+  carPriceLocal: number;
+  carPriceUSD: number;
+  carLaborMonths: number;
+  carLaborHours: number;
+
+  // Pillar 4: Healthcare (Comprehensive Routine Medical Checkup)
+  medicalCheckupLocal: number;
+  medicalCheckupUSD: number;
+  medicalCheckupPercentOfWage: number;
+  medicalCheckupLaborHours: number;
+
+  // Combined Essential Living (Food Basket + Rent)
+  totalEssentialMonthlyCostUSD: number;
+  totalEssentialPercentOfWage: number;
+  totalEssentialLaborHours: number;
 
   // Value & Effort Remaining After Food
   remainingDisposableWageLocal: number;
@@ -98,6 +127,10 @@ export interface ProcessedCountryEconomy {
   appiScore: number; // 0-100 Atlas Purchasing Power Index
   stressTier: StressTier;
   rank?: number;
+  rentRank?: number;
+  carRank?: number;
+  medicalRank?: number;
+  combinedRank?: number;
 
   dataYear: number;
   wageSource: string;
@@ -109,6 +142,47 @@ export interface ProcessedCountryEconomy {
   estimationDisclaimer?: string;
 }
 
+export interface GlobalEconomySummary {
+  countryCount: number; // 195
+  avgMonthlyWageUSD: number;
+  avgBasketCostUSD: number;
+  avgLaborHoursFood: number;
+  avgBasketPercentOfWage: number;
+  
+  avgRentUSD: number;
+  avgRentLaborHours: number;
+  avgRentPercentOfWage: number;
+
+  avgCarPriceUSD: number;
+  avgCarLaborMonths: number;
+
+  avgMedicalCheckupUSD: number;
+  avgMedicalCheckupLaborHours: number;
+  avgMedicalCheckupPercentOfWage: number;
+
+  avgTotalEssentialCostUSD: number;
+  avgTotalEssentialLaborHours: number;
+  avgTotalEssentialPercentOfWage: number;
+
+  avgAppiScore: number;
+
+  tierDistribution: {
+    Low: number;
+    Moderate: number;
+    High: number;
+    Severe: number;
+  };
+
+  bestFoodCountry: ProcessedCountryEconomy;
+  worstFoodCountry: ProcessedCountryEconomy;
+  bestRentCountry: ProcessedCountryEconomy;
+  worstRentCountry: ProcessedCountryEconomy;
+  bestCarCountry: ProcessedCountryEconomy;
+  worstCarCountry: ProcessedCountryEconomy;
+  bestMedicalCountry: ProcessedCountryEconomy;
+  worstMedicalCountry: ProcessedCountryEconomy;
+}
+
 export interface ContinentEconomySummary {
   continent: Continent;
   countryCount: number;
@@ -116,6 +190,18 @@ export interface ContinentEconomySummary {
   avgBasketCostUSD: number;
   avgLaborHours: number;
   avgBasketPercentOfWage: number;
+  
+  avgRentUSD: number;
+  avgRentLaborHours: number;
+  avgRentPercentOfWage: number;
+
+  avgCarPriceUSD: number;
+  avgCarLaborMonths: number;
+
+  avgMedicalCheckupUSD: number;
+  avgMedicalCheckupLaborHours: number;
+  avgMedicalCheckupPercentOfWage: number;
+
   avgAppiScore: number;
   categoryLaborHours: {
     staples: number;

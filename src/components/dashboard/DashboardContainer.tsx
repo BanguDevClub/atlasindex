@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { RAW_COUNTRIES } from "@/data/countries";
-import { getAllProcessedCountries } from "@/lib/methodology";
+import { getAllProcessedCountries, getGlobalSummary } from "@/lib/methodology";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -21,19 +21,27 @@ import {
 } from "recharts";
 import {
   TrendingDown,
-  TrendingUp,
   Clock,
   Filter,
   BarChart3,
-  Sparkles,
   Search,
+  Home,
+  Car,
+  Stethoscope,
+  Globe,
+  Utensils,
+  Layers,
 } from "lucide-react";
+
+type ChartTab = "food" | "rent" | "car" | "medical" | "categories" | "scatter";
 
 export function DashboardContainer() {
   const allCountries = useMemo(() => getAllProcessedCountries(RAW_COUNTRIES), []);
+  const globalSummary = useMemo(() => getGlobalSummary(allCountries), [allCountries]);
+
   const [selectedContinent, setSelectedContinent] = useState<string>("All");
   const [selectedTier, setSelectedTier] = useState<string>("All");
-  const [activeChartTab, setActiveChartTab] = useState<"burden" | "categories" | "scatter">("burden");
+  const [activeChartTab, setActiveChartTab] = useState<ChartTab>("food");
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   // Filtered countries
@@ -48,20 +56,34 @@ export function DashboardContainer() {
     });
   }, [allCountries, selectedContinent, selectedTier, searchQuery]);
 
-  // Aggregate Metrics
-  const stats = useMemo(() => {
-    if (allCountries.length === 0) return { avgHours: 0, avgPercent: 0, best: null, worst: null };
-    const totalHours = allCountries.reduce((sum, c) => sum + c.laborHoursForBasket, 0);
-    const totalPercent = allCountries.reduce((sum, c) => sum + c.basketPercentOfWage, 0);
-    const best = allCountries[0];
-    const worst = allCountries[allCountries.length - 1];
+  // Aggregate Metrics for current filtered set
+  const filteredStats = useMemo(() => {
+    if (filteredCountries.length === 0) {
+      return {
+        avgWage: 0,
+        avgFoodHours: 0,
+        avgFoodPercent: 0,
+        avgRentUSD: 0,
+        avgRentHours: 0,
+        avgRentPercent: 0,
+        avgCarMonths: 0,
+        avgMedHours: 0,
+        avgMedPercent: 0,
+      };
+    }
+    const count = filteredCountries.length;
     return {
-      avgHours: totalHours / allCountries.length,
-      avgPercent: totalPercent / allCountries.length,
-      best,
-      worst,
+      avgWage: filteredCountries.reduce((sum, c) => sum + c.monthlyMedianWageUSD, 0) / count,
+      avgFoodHours: filteredCountries.reduce((sum, c) => sum + c.laborHoursForBasket, 0) / count,
+      avgFoodPercent: filteredCountries.reduce((sum, c) => sum + c.basketPercentOfWage, 0) / count,
+      avgRentUSD: filteredCountries.reduce((sum, c) => sum + c.rentMonthlyUSD, 0) / count,
+      avgRentHours: filteredCountries.reduce((sum, c) => sum + c.rentLaborHours, 0) / count,
+      avgRentPercent: filteredCountries.reduce((sum, c) => sum + c.rentPercentOfWage, 0) / count,
+      avgCarMonths: filteredCountries.reduce((sum, c) => sum + c.carLaborMonths, 0) / count,
+      avgMedHours: filteredCountries.reduce((sum, c) => sum + c.medicalCheckupLaborHours, 0) / count,
+      avgMedPercent: filteredCountries.reduce((sum, c) => sum + c.medicalCheckupPercentOfWage, 0) / count,
     };
-  }, [allCountries]);
+  }, [filteredCountries]);
 
   // Data formatted for Category Stacked Chart
   const categoryChartData = useMemo(() => {
@@ -83,6 +105,9 @@ export function DashboardContainer() {
       name: `${c.flag} ${c.name}`,
       wageUSD: Math.round(c.monthlyMedianWageUSD),
       basketUSD: Math.round(c.monthlyBasketCostUSD),
+      rentUSD: Math.round(c.rentMonthlyUSD),
+      carPriceUSD: Math.round(c.carPriceUSD),
+      medicalUSD: Math.round(c.medicalCheckupUSD),
       laborHours: parseFloat(c.laborHoursForBasket.toFixed(1)),
       wagePercent: parseFloat(c.basketPercentOfWage.toFixed(1)),
       continent: c.continent,
@@ -100,15 +125,15 @@ export function DashboardContainer() {
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
             <Badge variant="outline" className="text-xs bg-primary/10 border-primary/20 text-primary">
-              AtlasIndex Global Analytics
+              AtlasIndex Multi-Pillar Analytics
             </Badge>
-            <span className="text-xs text-muted-foreground">• 195 Sovereign Nations Audit</span>
+            <span className="text-xs text-muted-foreground">• Universal 195 Sovereign Nations Audit</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
-            Global Economy & Labor Effort Dashboard
+            Global Labor Effort & Living Pillars Dashboard
           </h1>
           <p className="text-sm text-muted-foreground max-w-3xl">
-            Visualizing nutritional purchasing power across {allCountries.length} countries. Filter by continent, examine category labor breakdowns, and inspect the structural disconnect between median income and baseline nourishment.
+            Compare median purchasing power across Food, Housing (1-BR Rent), Transport (Car Purchase), and Healthcare (Medical Checkups) across all {allCountries.length} countries against the <strong>Global Average benchmark</strong>.
           </p>
         </div>
 
@@ -120,74 +145,128 @@ export function DashboardContainer() {
         </a>
       </div>
 
+      {/* Global Average Benchmark Banner */}
+      <div className="rounded-2xl border border-primary/30 bg-primary/5 p-5 backdrop-blur">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-primary/20 pb-4 mb-4">
+          <div className="flex items-center gap-2.5">
+            <div className="size-9 rounded-xl bg-primary/20 flex items-center justify-center text-primary font-bold">
+              <Globe className="size-5" />
+            </div>
+            <div>
+              <div className="text-sm font-bold text-foreground flex items-center gap-2">
+                <span>Global Average Baseline (195 Nations Synthesis)</span>
+                <Badge variant="secondary" className="text-[10px] bg-primary/20 text-primary font-mono">
+                  World Avg
+                </Badge>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Arithmetic benchmark across all sovereign UN member states. Median Monthly Wage: <strong>${globalSummary.avgMonthlyWageUSD.toFixed(0)}/mo</strong>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+          <div className="p-3 rounded-xl bg-background/60 border border-border/60">
+            <span className="text-muted-foreground flex items-center gap-1 mb-1 font-semibold">
+              <Utensils className="size-3 text-primary" /> Food Basket (Mo.)
+            </span>
+            <div className="text-base font-extrabold text-foreground">${globalSummary.avgBasketCostUSD.toFixed(1)}</div>
+            <div className="text-[11px] text-muted-foreground">{globalSummary.avgLaborHoursFood.toFixed(1)}h ({globalSummary.avgBasketPercentOfWage.toFixed(1)}% of wage)</div>
+          </div>
+
+          <div className="p-3 rounded-xl bg-background/60 border border-border/60">
+            <span className="text-muted-foreground flex items-center gap-1 mb-1 font-semibold">
+              <Home className="size-3 text-chart-2" /> 1-BR Rent (Mo.)
+            </span>
+            <div className="text-base font-extrabold text-foreground">${globalSummary.avgRentUSD.toFixed(1)}</div>
+            <div className="text-[11px] text-muted-foreground">{globalSummary.avgRentLaborHours.toFixed(1)}h ({globalSummary.avgRentPercentOfWage.toFixed(1)}% of wage)</div>
+          </div>
+
+          <div className="p-3 rounded-xl bg-background/60 border border-border/60">
+            <span className="text-muted-foreground flex items-center gap-1 mb-1 font-semibold">
+              <Car className="size-3 text-chart-4" /> Standard Car
+            </span>
+            <div className="text-base font-extrabold text-foreground">${globalSummary.avgCarPriceUSD.toFixed(0)}</div>
+            <div className="text-[11px] text-muted-foreground">{globalSummary.avgCarLaborMonths.toFixed(1)} months of work</div>
+          </div>
+
+          <div className="p-3 rounded-xl bg-background/60 border border-border/60">
+            <span className="text-muted-foreground flex items-center gap-1 mb-1 font-semibold">
+              <Stethoscope className="size-3 text-rose-500" /> Medical Checkup
+            </span>
+            <div className="text-base font-extrabold text-foreground">${globalSummary.avgMedicalCheckupUSD.toFixed(1)}</div>
+            <div className="text-[11px] text-muted-foreground">{globalSummary.avgMedicalCheckupLaborHours.toFixed(1)}h ({globalSummary.avgMedicalCheckupPercentOfWage.toFixed(1)}% of wage)</div>
+          </div>
+        </div>
+      </div>
+
       {/* Aggregate KPI Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="border-border/80 bg-card/60 backdrop-blur p-5 flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-muted-foreground uppercase">Global Average Effort</span>
+            <span className="text-xs font-semibold text-muted-foreground uppercase">Filtered Food Effort</span>
             <div className="size-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
               <Clock className="size-4" />
             </div>
           </div>
           <div className="my-2">
-            <div className="text-2xl font-extrabold text-foreground">{formatHours(stats.avgHours)}</div>
-            <div className="text-xs text-muted-foreground">≈ {formatPercent(stats.avgPercent)} of median monthly wage</div>
+            <div className="text-2xl font-extrabold text-foreground">{formatHours(filteredStats.avgFoodHours)}</div>
+            <div className="text-xs text-muted-foreground">≈ {formatPercent(filteredStats.avgFoodPercent)} of median monthly wage</div>
           </div>
-          <span className="text-[10px] text-muted-foreground">Based on 160h standard working month</span>
+          <span className="text-[10px] text-muted-foreground">Global Avg: {formatHours(globalSummary.avgLaborHoursFood)}</span>
         </Card>
 
         <Card className="border-border/80 bg-card/60 backdrop-blur p-5 flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-muted-foreground uppercase">Highest Purchasing Power</span>
+            <span className="text-xs font-semibold text-muted-foreground uppercase">Top Food Power</span>
             <div className="size-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500">
               <TrendingDown className="size-4" />
             </div>
           </div>
-          {stats.best && (
-            <div className="my-2">
-              <div className="text-2xl font-extrabold text-emerald-500">
-                {stats.best.flag} {stats.best.name}
-              </div>
-              <div className="text-xs text-muted-foreground">
-                Only {formatHours(stats.best.laborHoursForBasket)} ({formatPercent(stats.best.basketPercentOfWage)})
-              </div>
+          <div className="my-2">
+            <div className="text-2xl font-extrabold text-emerald-500">
+              {globalSummary.bestFoodCountry.flag} {globalSummary.bestFoodCountry.name}
             </div>
-          )}
-          <span className="text-[10px] text-muted-foreground">Top global APPI score #{stats.best?.rank}</span>
-        </Card>
-
-        <Card className="border-border/80 bg-card/60 backdrop-blur p-5 flex flex-col justify-between">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-muted-foreground uppercase">Severe Labor Drain</span>
-            <div className="size-8 rounded-lg bg-rose-500/10 flex items-center justify-center text-rose-500">
-              <TrendingUp className="size-4" />
+            <div className="text-xs text-muted-foreground">
+              Only {formatHours(globalSummary.bestFoodCountry.laborHoursForBasket)} ({formatPercent(globalSummary.bestFoodCountry.basketPercentOfWage)})
             </div>
           </div>
-          {stats.worst && (
-            <div className="my-2">
-              <div className="text-2xl font-extrabold text-rose-500">
-                {stats.worst.flag} {stats.worst.name}
-              </div>
-              <div className="text-xs text-muted-foreground">
-                {formatHours(stats.worst.laborHoursForBasket)} ({formatPercent(stats.worst.basketPercentOfWage)})
-              </div>
-            </div>
-          )}
-          <span className="text-[10px] text-muted-foreground">High staple & import inflation</span>
+          <span className="text-[10px] text-muted-foreground">Top global APPI rank #{globalSummary.bestFoodCountry.rank}</span>
         </Card>
 
         <Card className="border-border/80 bg-card/60 backdrop-blur p-5 flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-muted-foreground uppercase">Protein vs Grain Ratio</span>
-            <div className="size-8 rounded-lg bg-chart-4/10 flex items-center justify-center text-chart-4">
-              <Sparkles className="size-4" />
+            <span className="text-xs font-semibold text-muted-foreground uppercase">Top Rent Affordability</span>
+            <div className="size-8 rounded-lg bg-chart-2/10 flex items-center justify-center text-chart-2">
+              <Home className="size-4" />
             </div>
           </div>
           <div className="my-2">
-            <div className="text-2xl font-extrabold text-foreground">4.2x</div>
-            <div className="text-xs text-muted-foreground">Global labor hours for meat vs rice</div>
+            <div className="text-2xl font-extrabold text-chart-2">
+              {globalSummary.bestRentCountry.flag} {globalSummary.bestRentCountry.name}
+            </div>
+            <div className="text-xs text-muted-foreground">
+              Rent is {formatPercent(globalSummary.bestRentCountry.rentPercentOfWage)} of median wage (${globalSummary.bestRentCountry.rentMonthlyUSD.toFixed(0)}/mo)
+            </div>
           </div>
-          <span className="text-[10px] text-muted-foreground">Animal protein creates steepest divergence</span>
+          <span className="text-[10px] text-muted-foreground">Top Housing Purchasing Power</span>
+        </Card>
+
+        <Card className="border-border/80 bg-card/60 backdrop-blur p-5 flex flex-col justify-between">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-muted-foreground uppercase">Top Vehicle Purchasing</span>
+            <div className="size-8 rounded-lg bg-chart-4/10 flex items-center justify-center text-chart-4">
+              <Car className="size-4" />
+            </div>
+          </div>
+          <div className="my-2">
+            <div className="text-2xl font-extrabold text-foreground">
+              {globalSummary.bestCarCountry.flag} {globalSummary.bestCarCountry.name}
+            </div>
+            <div className="text-xs text-muted-foreground">{globalSummary.bestCarCountry.carLaborMonths.toFixed(1)} months of median wage</div>
+          </div>
+          <span className="text-[10px] text-muted-foreground">Fastest labor accumulation for new car</span>
         </Card>
       </div>
 
@@ -243,48 +322,77 @@ export function DashboardContainer() {
 
       {/* Interactive Visualizations Panel */}
       <Card className="border-border/80 bg-card/60 backdrop-blur shadow-lg">
-        <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border/40 pb-4">
+        <CardHeader className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border/40 pb-4">
           <div>
             <CardTitle className="text-lg font-bold flex items-center gap-2">
               <BarChart3 className="size-5 text-primary" />
-              <span>Interactive Data Visualizations</span>
+              <span>Interactive Multi-Pillar Visualizations</span>
             </CardTitle>
             <CardDescription className="text-xs">
               Showing {filteredCountries.length} countries matching active filters
             </CardDescription>
           </div>
 
-          <div className="flex items-center gap-1 rounded-lg bg-muted/60 p-1">
+          <div className="flex flex-wrap items-center gap-1 rounded-lg bg-muted/60 p-1">
             <Button
-              variant={activeChartTab === "burden" ? "default" : "ghost"}
+              variant={activeChartTab === "food" ? "default" : "ghost"}
               size="sm"
-              onClick={() => setActiveChartTab("burden")}
-              className="text-xs h-7 px-3"
+              onClick={() => setActiveChartTab("food")}
+              className="text-xs h-7 px-2.5 gap-1"
             >
-              Labor Hours
+              <Utensils className="size-3" />
+              <span>Food Labor</span>
+            </Button>
+            <Button
+              variant={activeChartTab === "rent" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setActiveChartTab("rent")}
+              className="text-xs h-7 px-2.5 gap-1"
+            >
+              <Home className="size-3" />
+              <span>1-BR Rent</span>
+            </Button>
+            <Button
+              variant={activeChartTab === "car" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setActiveChartTab("car")}
+              className="text-xs h-7 px-2.5 gap-1"
+            >
+              <Car className="size-3" />
+              <span>Car (Months)</span>
+            </Button>
+            <Button
+              variant={activeChartTab === "medical" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setActiveChartTab("medical")}
+              className="text-xs h-7 px-2.5 gap-1"
+            >
+              <Stethoscope className="size-3" />
+              <span>Medical Exam</span>
             </Button>
             <Button
               variant={activeChartTab === "categories" ? "default" : "ghost"}
               size="sm"
               onClick={() => setActiveChartTab("categories")}
-              className="text-xs h-7 px-3"
+              className="text-xs h-7 px-2.5 gap-1"
             >
-              Category Stack
+              <Layers className="size-3" />
+              <span>Nutritional Stack</span>
             </Button>
             <Button
               variant={activeChartTab === "scatter" ? "default" : "ghost"}
               size="sm"
               onClick={() => setActiveChartTab("scatter")}
-              className="text-xs h-7 px-3"
+              className="text-xs h-7 px-2.5"
             >
-              Wage vs Basket
+              Wage vs Cost
             </Button>
           </div>
         </CardHeader>
 
         <CardContent className="p-6">
-          {/* TAB 1: Labor Hours Total Bar Chart */}
-          {activeChartTab === "burden" && (
+          {/* TAB 1: Food Labor Hours Bar Chart */}
+          {activeChartTab === "food" && (
             <div className="flex flex-col gap-4">
               <div className="h-[420px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
@@ -341,7 +449,7 @@ export function DashboardContainer() {
                     <Bar dataKey="hours" radius={[4, 4, 0, 0]}>
                       {filteredCountries.map((c, idx) => (
                         <Cell
-                          key={`bar-${idx}`}
+                          key={`food-bar-${idx}`}
                           fill={
                             c.stressTier === "Low"
                               ? "hsl(var(--success))"
@@ -358,12 +466,202 @@ export function DashboardContainer() {
                 </ResponsiveContainer>
               </div>
               <div className="text-xs text-muted-foreground text-center">
-                Countries sorted from highest purchasing power (left) to highest labor drain (right).
+                Labor hours required for monthly food basket. Global Average: <strong>{globalSummary.avgLaborHoursFood.toFixed(1)}h</strong>.
               </div>
             </div>
           )}
 
-          {/* TAB 2: Food Category Stacked Bar Chart */}
+          {/* TAB 2: Housing Rent Labor Hours Bar Chart */}
+          {activeChartTab === "rent" && (
+            <div className="flex flex-col gap-4">
+              <div className="h-[420px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={filteredCountries.map((c) => ({
+                      name: `${c.flag} ${c.name}`,
+                      code: c.code,
+                      hours: parseFloat(c.rentLaborHours.toFixed(1)),
+                      percent: parseFloat(c.rentPercentOfWage.toFixed(1)),
+                      usd: Math.round(c.rentMonthlyUSD),
+                    }))}
+                    margin={{ top: 10, right: 10, left: -10, bottom: 60 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border) / 0.5)" vertical={false} />
+                    <XAxis
+                      dataKey="code"
+                      angle={-45}
+                      textAnchor="end"
+                      interval={0}
+                      tickLine={false}
+                      tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }}
+                    />
+                    <YAxis
+                      tickLine={false}
+                      axisLine={false}
+                      tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }}
+                      unit="h"
+                    />
+                    <Tooltip
+                      content={({ active, payload }) => {
+                        if (active && payload && payload.length) {
+                          const item = payload[0].payload;
+                          return (
+                            <div className="rounded-lg border border-border/80 bg-popover p-3 shadow-md text-xs">
+                              <div className="font-bold text-popover-foreground mb-1.5">{item.name}</div>
+                              <div className="flex justify-between gap-4 text-muted-foreground">
+                                <span>Monthly 1-BR Rent:</span>
+                                <span className="font-semibold text-foreground">${item.usd}/mo</span>
+                              </div>
+                              <div className="flex justify-between gap-4 text-muted-foreground">
+                                <span>Labor Hours:</span>
+                                <span className="font-semibold text-primary">{item.hours} hours</span>
+                              </div>
+                              <div className="flex justify-between gap-4 text-muted-foreground">
+                                <span>Share of Median Wage:</span>
+                                <span className="font-semibold text-foreground">{item.percent}%</span>
+                              </div>
+                            </div>
+                          );
+                        }
+                        return null;
+                      }}
+                    />
+                    <Bar dataKey="hours" radius={[4, 4, 0, 0]} fill="hsl(var(--chart-2))" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+              <div className="text-xs text-muted-foreground text-center">
+                Labor hours required for 1-Bedroom apartment monthly rent. Global Average: <strong>${globalSummary.avgRentUSD.toFixed(0)}/mo ({globalSummary.avgRentLaborHours.toFixed(1)}h)</strong>.
+              </div>
+            </div>
+          )}
+
+          {/* TAB 3: Car Purchase (Labor Months) Bar Chart */}
+          {activeChartTab === "car" && (
+            <div className="flex flex-col gap-4">
+              <div className="h-[420px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={filteredCountries.map((c) => ({
+                      name: `${c.flag} ${c.name}`,
+                      code: c.code,
+                      months: parseFloat(c.carLaborMonths.toFixed(1)),
+                      usd: Math.round(c.carPriceUSD),
+                    }))}
+                    margin={{ top: 10, right: 10, left: -10, bottom: 60 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border) / 0.5)" vertical={false} />
+                    <XAxis
+                      dataKey="code"
+                      angle={-45}
+                      textAnchor="end"
+                      interval={0}
+                      tickLine={false}
+                      tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }}
+                    />
+                    <YAxis
+                      tickLine={false}
+                      axisLine={false}
+                      tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }}
+                      unit=" mo"
+                    />
+                    <Tooltip
+                      content={({ active, payload }) => {
+                        if (active && payload && payload.length) {
+                          const item = payload[0].payload;
+                          return (
+                            <div className="rounded-lg border border-border/80 bg-popover p-3 shadow-md text-xs">
+                              <div className="font-bold text-popover-foreground mb-1.5">{item.name}</div>
+                              <div className="flex justify-between gap-4 text-muted-foreground">
+                                <span>Vehicle Retail Price:</span>
+                                <span className="font-semibold text-foreground">${item.usd}</span>
+                              </div>
+                              <div className="flex justify-between gap-4 text-muted-foreground">
+                                <span>Labor Months Required:</span>
+                                <span className="font-semibold text-primary">{item.months} months</span>
+                              </div>
+                            </div>
+                          );
+                        }
+                        return null;
+                      }}
+                    />
+                    <Bar dataKey="months" radius={[4, 4, 0, 0]} fill="hsl(var(--chart-4))" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+              <div className="text-xs text-muted-foreground text-center">
+                Months of 100% median labor required to purchase a standard new passenger car. Global Average: <strong>{globalSummary.avgCarLaborMonths.toFixed(1)} months (${globalSummary.avgCarPriceUSD.toFixed(0)})</strong>.
+              </div>
+            </div>
+          )}
+
+          {/* TAB 4: Medical Checkup Labor Hours Bar Chart */}
+          {activeChartTab === "medical" && (
+            <div className="flex flex-col gap-4">
+              <div className="h-[420px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={filteredCountries.map((c) => ({
+                      name: `${c.flag} ${c.name}`,
+                      code: c.code,
+                      hours: parseFloat(c.medicalCheckupLaborHours.toFixed(1)),
+                      percent: parseFloat(c.medicalCheckupPercentOfWage.toFixed(1)),
+                      usd: Math.round(c.medicalCheckupUSD),
+                    }))}
+                    margin={{ top: 10, right: 10, left: -10, bottom: 60 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border) / 0.5)" vertical={false} />
+                    <XAxis
+                      dataKey="code"
+                      angle={-45}
+                      textAnchor="end"
+                      interval={0}
+                      tickLine={false}
+                      tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }}
+                    />
+                    <YAxis
+                      tickLine={false}
+                      axisLine={false}
+                      tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }}
+                      unit="h"
+                    />
+                    <Tooltip
+                      content={({ active, payload }) => {
+                        if (active && payload && payload.length) {
+                          const item = payload[0].payload;
+                          return (
+                            <div className="rounded-lg border border-border/80 bg-popover p-3 shadow-md text-xs">
+                              <div className="font-bold text-popover-foreground mb-1.5">{item.name}</div>
+                              <div className="flex justify-between gap-4 text-muted-foreground">
+                                <span>Checkup & Lab Exam Cost:</span>
+                                <span className="font-semibold text-foreground">${item.usd}</span>
+                              </div>
+                              <div className="flex justify-between gap-4 text-muted-foreground">
+                                <span>Labor Hours Required:</span>
+                                <span className="font-semibold text-primary">{item.hours} hours</span>
+                              </div>
+                              <div className="flex justify-between gap-4 text-muted-foreground">
+                                <span>Share of Median Wage:</span>
+                                <span className="font-semibold text-foreground">{item.percent}%</span>
+                              </div>
+                            </div>
+                          );
+                        }
+                        return null;
+                      }}
+                    />
+                    <Bar dataKey="hours" radius={[4, 4, 0, 0]} fill="hsl(var(--chart-5))" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+              <div className="text-xs text-muted-foreground text-center">
+                Labor hours required for a routine preventive medical checkup (doctor consultation + CBC + lipid + metabolic panel). Global Average: <strong>${globalSummary.avgMedicalCheckupUSD.toFixed(1)} ({globalSummary.avgMedicalCheckupLaborHours.toFixed(1)}h)</strong>.
+              </div>
+            </div>
+          )}
+
+          {/* TAB 5: Food Category Stacked Bar Chart */}
           {activeChartTab === "categories" && (
             <div className="flex flex-col gap-4">
               <div className="h-[420px] w-full">
@@ -436,7 +734,7 @@ export function DashboardContainer() {
             </div>
           )}
 
-          {/* TAB 3: Wage vs Basket Scatter Plot */}
+          {/* TAB 6: Wage vs Basket Scatter Plot */}
           {activeChartTab === "scatter" && (
             <div className="flex flex-col gap-4">
               <div className="h-[420px] w-full">
@@ -485,16 +783,24 @@ export function DashboardContainer() {
                                 <span className="font-semibold text-foreground">${data.wageUSD}/mo</span>
                               </div>
                               <div className="flex justify-between gap-4 text-muted-foreground">
-                                <span>Basket Cost:</span>
+                                <span>Food Basket:</span>
                                 <span className="font-semibold text-foreground">${data.basketUSD}/mo</span>
                               </div>
                               <div className="flex justify-between gap-4 text-muted-foreground">
-                                <span>Labor Hours:</span>
-                                <span className="font-semibold text-primary">{data.laborHours}h</span>
+                                <span>1-BR Rent:</span>
+                                <span className="font-semibold text-foreground">${data.rentUSD}/mo</span>
                               </div>
                               <div className="flex justify-between gap-4 text-muted-foreground">
-                                <span>Wage Share:</span>
-                                <span className="font-semibold text-foreground">{data.wagePercent}%</span>
+                                <span>Car Purchase:</span>
+                                <span className="font-semibold text-foreground">${data.carPriceUSD}</span>
+                              </div>
+                              <div className="flex justify-between gap-4 text-muted-foreground">
+                                <span>Medical Exam:</span>
+                                <span className="font-semibold text-foreground">${data.medicalUSD}</span>
+                              </div>
+                              <div className="flex justify-between gap-4 text-muted-foreground pt-1 border-t border-border/40">
+                                <span>Food Labor:</span>
+                                <span className="font-semibold text-primary">{data.laborHours}h ({data.wagePercent}%)</span>
                               </div>
                             </div>
                           );

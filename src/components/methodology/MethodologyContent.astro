@@ -85,11 +85,11 @@ import { BookOpen, Scale, CheckCircle2, AlertTriangle, ExternalLink, HelpCircle,
       <!-- Formula 3: Labor Hours -->
       <Card className="border-border/80 bg-card/60">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-bold">Labor Hours for Food Basket ($H$)</CardTitle>
+          <CardTitle className="text-sm font-bold">Food Basket Labor Hours (H_food)</CardTitle>
         </CardHeader>
         <CardContent className="text-xs space-y-2">
           <div class="rounded-lg bg-muted/60 p-3 font-mono text-center text-sm font-semibold text-primary">
-            H = B / ( W_median / 160 )
+            H_food = B / ( W_median / 160 )
           </div>
           <p class="text-muted-foreground text-[11px]">
             Assuming a standardized full-time labor benchmark of 160 working hours per month (40 hours/week × 4 weeks).
@@ -97,17 +97,47 @@ import { BookOpen, Scale, CheckCircle2, AlertTriangle, ExternalLink, HelpCircle,
         </CardContent>
       </Card>
 
-      <!-- Formula 4: Item Labor Minutes -->
+      <!-- Formula 4: Housing Rent Burden -->
       <Card className="border-border/80 bg-card/60">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-bold">Granular Item Labor Minutes ($Mᵢ$)</CardTitle>
+          <CardTitle className="text-sm font-bold">Housing Rent Share & Effort (H_rent)</CardTitle>
         </CardHeader>
         <CardContent className="text-xs space-y-2">
-          <div class="rounded-lg bg-muted/60 p-3 font-mono text-center text-sm font-semibold text-primary">
-            Mᵢ = ( pᵢ / W_hourly ) × 60
+          <div class="rounded-lg bg-muted/60 p-3 font-mono text-center text-sm font-semibold text-chart-2">
+            H_rent = Rent_1BR / ( W_median / 160 )
           </div>
           <p class="text-muted-foreground text-[11px]">
-            Calculates the exact minutes of physical labor required to purchase 1 kilogram (or unit) of an individual grocery item.
+            Measures the labor hours required to pay for 1 month of a standard 1-bedroom residential apartment.
+          </p>
+        </CardContent>
+      </Card>
+
+      <!-- Formula 5: Car Purchase Labor Months -->
+      <Card className="border-border/80 bg-card/60">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-bold">Vehicle Purchasing Power (M_car)</CardTitle>
+        </CardHeader>
+        <CardContent className="text-xs space-y-2">
+          <div class="rounded-lg bg-muted/60 p-3 font-mono text-center text-sm font-semibold text-chart-4">
+            M_car = CarPrice / W_median
+          </div>
+          <p class="text-muted-foreground text-[11px]">
+            Number of months of 100% median take-home wage needed to purchase an entry-level compact car (e.g. Toyota Corolla / VW Golf).
+          </p>
+        </CardContent>
+      </Card>
+
+      <!-- Formula 6: Healthcare Diagnostic Checkup -->
+      <Card className="border-border/80 bg-card/60">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-bold">Medical Checkup Effort (H_med)</CardTitle>
+        </CardHeader>
+        <CardContent className="text-xs space-y-2">
+          <div class="rounded-lg bg-muted/60 p-3 font-mono text-center text-sm font-semibold text-rose-500">
+            H_med = MedicalExam / ( W_median / 160 )
+          </div>
+          <p class="text-muted-foreground text-[11px]">
+            Labor hours needed to pay the uninsured outpatient tariff for a clinical consultation + complete blood, glucose, and lipid panel.
           </p>
         </CardContent>
       </Card>

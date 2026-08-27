@@ -114,3 +114,47 @@ export const BASKET_NUTRITION_EXPLANATION = {
   fatShare: "25% - 30% healthy fats from cooking oil, dairy, and eggs",
   micronutrients: "Essential vitamins A, C, potassium, and dietary fiber from produce",
 };
+
+export interface BenchmarkPillarSpec {
+  id: "food" | "rent" | "car" | "medical";
+  name: string;
+  unit: string;
+  description: string;
+  methodologyNote: string;
+  iconName: string;
+}
+
+export const NON_FOOD_BENCHMARKS: BenchmarkPillarSpec[] = [
+  {
+    id: "food",
+    name: "Nutritional Food Basket",
+    unit: "13-Item Monthly Basket",
+    description: "Standardized adult caloric requirement of ~2,300 kcal/day adhering to WHO guidelines.",
+    methodologyNote: "Computed across 13 weighted grocery staples from national price surveys.",
+    iconName: "Utensils",
+  },
+  {
+    id: "rent",
+    name: "1-Bedroom Apartment Rent",
+    unit: "1 Month Rent",
+    description: "Standard median monthly rent for a 1-bedroom residential apartment (national weighted average).",
+    methodologyNote: "Compiled from national tenancy registries, census statistics, and international cost-of-living surveys.",
+    iconName: "Home",
+  },
+  {
+    id: "car",
+    name: "Standard Passenger Car",
+    unit: "1 Vehicle Purchase",
+    description: "Retail purchase price for a new entry-level / compact passenger vehicle (e.g. Toyota Corolla / VW Golf equivalent).",
+    methodologyNote: "Includes standard import tariffs, value-added taxes, and vehicle registration benchmarks.",
+    iconName: "Car",
+  },
+  {
+    id: "medical",
+    name: "Routine Medical Checkup & Lab Exam",
+    unit: "1 Comprehensive Outpatient Checkup",
+    description: "Standard routine health exam: Doctor clinical consultation + Complete Blood Count (CBC) + Fasting Glucose + Lipid Profile + Metabolic Panel.",
+    methodologyNote: "Standard outpatient fee without insurance subsidies from health ministry price lists and WHO health accounts.",
+    iconName: "Stethoscope",
+  },
+];
