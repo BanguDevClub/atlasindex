@@ -3,126 +3,210 @@ import { BASKET_ITEMS } from "../../data/basketDefinition";
 import { RAW_COUNTRIES } from "../../data/countries";
 import { Badge } from "../ui/badge";
 import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
-import { BookOpen, Scale, CheckCircle2, AlertTriangle, ExternalLink, HelpCircle, FileText, Sparkles } from "lucide-react";
+import Latex from "../ui/Latex.astro";
+import {
+  BookOpen,
+  Scale,
+  CheckCircle2,
+  AlertTriangle,
+  ExternalLink,
+  HelpCircle,
+  FileText,
+  Sparkles,
+  Home,
+  Car,
+  Stethoscope,
+  Utensils,
+  Calculator,
+  Globe2,
+  Layers,
+  Activity,
+} from "lucide-react";
 ---
 
-<div class="flex flex-col gap-12 max-w-4xl mx-auto pb-16">
+<div class="flex flex-col gap-14 max-w-4xl mx-auto pb-20">
   <!-- Header -->
   <div class="flex flex-col gap-3">
     <div class="flex items-center gap-2">
-      <Badge variant="outline" className="text-xs bg-primary/10 border-primary/20 text-primary">
-        Documentation & Whitepaper
+      <Badge variant="outline" className="text-xs bg-primary/10 border-primary/20 text-primary gap-1">
+        <Sparkles className="size-3.5" />
+        <span>Scientific Whitepaper & Technical Documentation</span>
       </Badge>
-      <span class="text-xs text-muted-foreground">• Open Scientific Methodology</span>
+      <span class="text-xs text-muted-foreground">• Open Econometric Methodology (2025 Standard)</span>
     </div>
-    <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-foreground">
-      AtlasIndex Methodology & Data Sources
+    <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-foreground leading-tight">
+      AtlasIndex Methodology, Mathematical Formulation & Living Standards
     </h1>
     <p class="text-sm sm:text-base text-muted-foreground leading-relaxed">
-      A transparent framework for measuring real food purchasing power through median wages and standardized nutritional labor effort.
+      A transparent, empirical framework measuring genuine purchasing power across <strong>195 sovereign nations</strong> through standardized median wages, 13-item nutritional baskets, residential housing, private transport, healthcare diagnostics, and the <strong>Atlas Purchasing Power Index (APPI)</strong>.
     </p>
   </div>
 
+  <!-- Table of Contents Quick Nav -->
+  <div class="rounded-2xl border border-border/80 bg-card/60 p-5 backdrop-blur shadow-sm">
+    <div class="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-2">
+      <Layers className="size-4 text-primary" />
+      <span>Table of Contents</span>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 text-xs">
+      <a href="#macro-problem" class="text-muted-foreground hover:text-primary transition-colors flex items-center gap-1.5">
+        <span class="text-primary font-mono font-bold">1.</span> Conventional Metric Limits
+      </a>
+      <a href="#mathematical-models" class="text-muted-foreground hover:text-primary transition-colors flex items-center gap-1.5">
+        <span class="text-primary font-mono font-bold">2.</span> Mathematical Models & Equations
+      </a>
+      <a href="#appi-deep-dive" class="text-muted-foreground hover:text-primary transition-colors flex items-center gap-1.5">
+        <span class="text-primary font-mono font-bold">3.</span> What is APPI & Calculation
+      </a>
+      <a href="#non-food-pillars" class="text-muted-foreground hover:text-primary transition-colors flex items-center gap-1.5">
+        <span class="text-primary font-mono font-bold">4.</span> Housing, Car & Healthcare Rationale
+      </a>
+      <a href="#food-basket" class="text-muted-foreground hover:text-primary transition-colors flex items-center gap-1.5">
+        <span class="text-primary font-mono font-bold">5.</span> Nutritional Basket Composition
+      </a>
+      <a href="#data-sources" class="text-muted-foreground hover:text-primary transition-colors flex items-center gap-1.5">
+        <span class="text-primary font-mono font-bold">6.</span> Data Sources & Verification
+      </a>
+      <a href="#estimations" class="text-muted-foreground hover:text-primary transition-colors flex items-center gap-1.5">
+        <span class="text-primary font-mono font-bold">7.</span> Data-Sparse & Closed Economies
+      </a>
+      <a href="#limitations" class="text-muted-foreground hover:text-primary transition-colors flex items-center gap-1.5">
+        <span class="text-primary font-mono font-bold">8.</span> Caveats & Research Scope
+      </a>
+      <a href="#faq" class="text-muted-foreground hover:text-primary transition-colors flex items-center gap-1.5">
+        <span class="text-primary font-mono font-bold">9.</span> Frequently Asked Questions
+      </a>
+    </div>
+  </div>
+
   <!-- Section 1: Executive Summary & Rationale -->
-  <section class="flex flex-col gap-4 border-t border-border/40 pt-8">
+  <section id="macro-problem" class="flex flex-col gap-4 border-t border-border/40 pt-8">
     <div class="flex items-center gap-2 text-primary font-bold text-sm uppercase tracking-wider">
       <Scale className="size-4" />
-      <span>1. The Problem with Conventional Metrics</span>
+      <span>1. The Problem with Conventional Economic Metrics</span>
     </div>
-    <h2 class="text-2xl font-bold tracking-tight text-foreground">Why GDP & The Big Mac Index Fall Short</h2>
+    <h2 class="text-2xl font-bold tracking-tight text-foreground">Why GDP per Capita & The Big Mac Index Fall Short</h2>
     <div class="prose dark:prose-invert max-w-none text-xs sm:text-sm text-muted-foreground leading-relaxed flex flex-col gap-3">
       <p>
-        Traditional macroeconomic comparisons rely heavily on <strong>Gross Domestic Product (GDP) per capita</strong>. However, GDP per capita aggregates corporate revenues, capital investments, government spending, and top-percentile wealth—frequently masking severe domestic income inequality. A country can boast a high GDP per capita while the median worker struggles to afford daily necessities.
+        Traditional macroeconomic comparative tools rely heavily on <strong>Gross Domestic Product (GDP) per capita</strong>. However, GDP per capita divides aggregate national output (including sovereign debt, corporate resource extraction, capital formation, and extreme top-percentile wealth) across the entire population. Consequently, GDP per capita obscures deep domestic income inequality. A nation with booming commodity export revenues can present an enviable GDP per capita of $40,000 while its median worker earns less than $400 per month and struggles to afford basic sustenance.
       </p>
       <p>
-        Conversely, informal metrics like <em>The Economist's Big Mac Index</em> measure currency valuation through a single franchised fast-food item. A Big Mac involves brand positioning, franchise royalties, local real estate rents, and specific supply chain contracts, making it unrepresentative of genuine household grocery staples.
+        Informal purchasing power parity indicators like <em>The Economist's Big Mac Index</em> attempt to quantify currency valuation through a single branded fast-food sandwich. While engaging, a Big Mac reflects multinational franchise royalties, brand positioning, proprietary supply chain contracts, and commercial inner-city rent overheads. It fails to reflect what actual working families consume: staple grains, cooking oil, fresh produce, dairy, protein, housing, and healthcare.
       </p>
-      <div class="rounded-xl border border-primary/20 bg-primary/5 p-4 text-foreground">
-        <strong>The AtlasIndex Approach:</strong> We measure the exact <strong>hours and minutes of labor</strong> a median-wage worker must perform to purchase a nutritionally complete 13-item monthly grocery basket in their domestic retail market.
+      <div class="rounded-xl border border-primary/20 bg-primary/5 p-4 text-foreground space-y-2">
+        <div class="font-bold flex items-center gap-2">
+          <Globe2 className="size-4 text-primary" />
+          <span>The AtlasIndex Paradigm: Time as the Ultimate Currency</span>
+        </div>
+        <p class="text-xs text-muted-foreground">
+          Instead of measuring abstract monetary sums, AtlasIndex converts domestic consumer prices into the <strong>exact hours, minutes, and months of physical labor</strong> that a median-wage worker must perform in their home economy to afford essential human living pillars: basic nutrition, shelter, mobility, and preventive healthcare.
+        </p>
       </div>
     </div>
   </section>
 
   <!-- Section 2: Mathematical Formulation -->
-  <section class="flex flex-col gap-4 border-t border-border/40 pt-8">
+  <section id="mathematical-models" class="flex flex-col gap-4 border-t border-border/40 pt-8">
     <div class="flex items-center gap-2 text-primary font-bold text-sm uppercase tracking-wider">
       <BookOpen className="size-4" />
-      <span>2. Mathematical Formulation</span>
+      <span>2. Core Mathematical Formulation</span>
     </div>
-    <h2 class="text-2xl font-bold tracking-tight text-foreground">Equations & Definitions</h2>
+    <h2 class="text-2xl font-bold tracking-tight text-foreground">Mathematical Models & Multi-Pillar Equations</h2>
+    <p class="text-xs sm:text-sm text-muted-foreground">
+      Every metric in AtlasIndex is derived from standardized mathematical equations using clean LaTeX formulation:
+    </p>
 
+    <!-- Formula Cards Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-      <!-- Formula 1: Basket Cost -->
+      <!-- Formula 1: Hourly Median Wage -->
       <Card className="border-border/80 bg-card/60">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-bold">Standard Monthly Basket Cost ($B$)</CardTitle>
+          <CardTitle className="text-sm font-bold flex items-center gap-2">
+            <Calculator className="size-4 text-primary" />
+            <span>1. Standard Hourly Median Wage (<Latex formula={String.raw`W_{\text{hourly}}`} />)</span>
+          </CardTitle>
         </CardHeader>
         <CardContent className="text-xs space-y-2">
-          <div class="rounded-lg bg-muted/60 p-3 font-mono text-center text-sm font-semibold text-primary">
-            B = ∑ ( pᵢ × qᵢ )
+          <div class="rounded-lg bg-muted/60 p-3 flex justify-center items-center text-foreground font-semibold">
+            <Latex formula={String.raw`W_{\text{hourly}} = \frac{W_{\text{median}}}{H_{\text{month}}} = \frac{W_{\text{median}}}{160}`} display={true} />
           </div>
           <p class="text-muted-foreground text-[11px]">
-            Where <code class="text-foreground font-mono">pᵢ</code> is the local retail price of item <code class="text-foreground font-mono">i</code> and <code class="text-foreground font-mono">qᵢ</code> is its monthly reference quantity across all 13 staple categories.
+            Where <Latex formula={String.raw`W_{\text{median}}`} /> is the national net take-home median monthly earnings from official labor surveys, standardized to <Latex formula={String.raw`H_{\text{month}} = 160\text{ hours}`} /> (40 hours/week × 4 weeks).
           </p>
         </CardContent>
       </Card>
 
-      <!-- Formula 2: Wage Burden -->
+      <!-- Formula 2: Monthly Basket Cost -->
       <Card className="border-border/80 bg-card/60">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-bold">Wage Burden Share ($\beta$)</CardTitle>
+          <CardTitle className="text-sm font-bold flex items-center gap-2">
+            <Utensils className="size-4 text-primary" />
+            <span>2. Monthly Nutritional Basket Cost (<Latex formula={String.raw`B`} />)</span>
+          </CardTitle>
         </CardHeader>
         <CardContent className="text-xs space-y-2">
-          <div class="rounded-lg bg-muted/60 p-3 font-mono text-center text-sm font-semibold text-primary">
-            β = ( B / W_median ) × 100%
+          <div class="rounded-lg bg-muted/60 p-3 flex justify-center items-center text-foreground font-semibold">
+            <Latex formula={String.raw`B = \sum_{i=1}^{13} \left( p_i \times q_i \right)`} display={true} />
           </div>
           <p class="text-muted-foreground text-[11px]">
-            Where <code class="text-foreground font-mono">W_median</code> is the median monthly take-home/net wage from official national labor surveys.
+            Where <Latex formula={String.raw`p_i`} /> is the domestic retail price for item <Latex formula={String.raw`i`} /> and <Latex formula={String.raw`q_i`} /> is its reference monthly quantity in the standard 13-item adult nutritional baseline (~2,300 kcal/day).
           </p>
         </CardContent>
       </Card>
 
-      <!-- Formula 3: Labor Hours -->
+      <!-- Formula 3: Food Basket Labor Hours & Wage Share -->
       <Card className="border-border/80 bg-card/60">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-bold">Food Basket Labor Hours (H_food)</CardTitle>
+          <CardTitle className="text-sm font-bold flex items-center gap-2">
+            <Utensils className="size-4 text-primary" />
+            <span>3. Food Labor Hours & Wage Burden</span>
+          </CardTitle>
         </CardHeader>
         <CardContent className="text-xs space-y-2">
-          <div class="rounded-lg bg-muted/60 p-3 font-mono text-center text-sm font-semibold text-primary">
-            H_food = B / ( W_median / 160 )
+          <div class="rounded-lg bg-muted/60 p-3 flex flex-col gap-2 justify-center items-center text-foreground font-semibold">
+            <Latex formula={String.raw`H_{\text{food}} = \frac{B}{W_{\text{hourly}}} = \left( \frac{B}{W_{\text{median}}} \right) \times 160`} display={true} />
+            <Latex formula={String.raw`\beta_{\text{food}} = \left( \frac{B}{W_{\text{median}}} \right) \times 100\%`} display={true} />
           </div>
           <p class="text-muted-foreground text-[11px]">
-            Assuming a standardized full-time labor benchmark of 160 working hours per month (40 hours/week × 4 weeks).
+            <Latex formula={String.raw`H_{\text{food}}`} /> gives the absolute monthly work hours required to purchase the basket, while <Latex formula={String.raw`\beta_{\text{food}}`} /> gives food cost as a share of the median paycheck.
           </p>
         </CardContent>
       </Card>
 
-      <!-- Formula 4: Housing Rent Burden -->
+      <!-- Formula 4: Housing Rent Labor Effort -->
       <Card className="border-border/80 bg-card/60">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-bold">Housing Rent Share & Effort (H_rent)</CardTitle>
+          <CardTitle className="text-sm font-bold flex items-center gap-2">
+            <Home className="size-4 text-chart-2" />
+            <span>4. Housing Rent Share & Labor Hours</span>
+          </CardTitle>
         </CardHeader>
         <CardContent className="text-xs space-y-2">
-          <div class="rounded-lg bg-muted/60 p-3 font-mono text-center text-sm font-semibold text-chart-2">
-            H_rent = Rent_1BR / ( W_median / 160 )
+          <div class="rounded-lg bg-muted/60 p-3 flex flex-col gap-2 justify-center items-center text-foreground font-semibold">
+            <Latex formula={String.raw`H_{\text{rent}} = \frac{R_{\text{1BR}}}{W_{\text{hourly}}} = \left( \frac{R_{\text{1BR}}}{W_{\text{median}}} \right) \times 160`} display={true} />
+            <Latex formula={String.raw`\beta_{\text{rent}} = \left( \frac{R_{\text{1BR}}}{W_{\text{median}}} \right) \times 100\%`} display={true} />
           </div>
           <p class="text-muted-foreground text-[11px]">
-            Measures the labor hours required to pay for 1 month of a standard 1-bedroom residential apartment.
+            Measures labor hours and income percentage required to rent a standard 1-bedroom residential apartment (<Latex formula={String.raw`R_{\text{1BR}}`} />) based on national median tenancy contracts.
           </p>
         </CardContent>
       </Card>
 
-      <!-- Formula 5: Car Purchase Labor Months -->
+      <!-- Formula 5: Vehicle Purchasing Power -->
       <Card className="border-border/80 bg-card/60">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-bold">Vehicle Purchasing Power (M_car)</CardTitle>
+          <CardTitle className="text-sm font-bold flex items-center gap-2">
+            <Car className="size-4 text-chart-4" />
+            <span>5. Vehicle Purchasing Power (<Latex formula={String.raw`M_{\text{car}}`} />)</span>
+          </CardTitle>
         </CardHeader>
         <CardContent className="text-xs space-y-2">
-          <div class="rounded-lg bg-muted/60 p-3 font-mono text-center text-sm font-semibold text-chart-4">
-            M_car = CarPrice / W_median
+          <div class="rounded-lg bg-muted/60 p-3 flex flex-col gap-2 justify-center items-center text-foreground font-semibold">
+            <Latex formula={String.raw`M_{\text{car}} = \frac{P_{\text{car}}}{W_{\text{median}}}`} display={true} />
+            <Latex formula={String.raw`H_{\text{car}} = M_{\text{car}} \times 160 = \frac{P_{\text{car}}}{W_{\text{hourly}}}`} display={true} />
           </div>
           <p class="text-muted-foreground text-[11px]">
-            Number of months of 100% median take-home wage needed to purchase an entry-level compact car (e.g. Toyota Corolla / VW Golf).
+            Represents the full months (<Latex formula={String.raw`M_{\text{car}}`} />) and work hours (<Latex formula={String.raw`H_{\text{car}}`} />) of median net income necessary to purchase a standard new compact passenger car (<Latex formula={String.raw`P_{\text{car}}`} />).
           </p>
         </CardContent>
       </Card>
@@ -130,55 +214,261 @@ import { BookOpen, Scale, CheckCircle2, AlertTriangle, ExternalLink, HelpCircle,
       <!-- Formula 6: Healthcare Diagnostic Checkup -->
       <Card className="border-border/80 bg-card/60">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-bold">Medical Checkup Effort (H_med)</CardTitle>
+          <CardTitle className="text-sm font-bold flex items-center gap-2">
+            <Stethoscope className="size-4 text-rose-500" />
+            <span>6. Healthcare Checkup Effort (<Latex formula={String.raw`H_{\text{med}}`} />)</span>
+          </CardTitle>
         </CardHeader>
         <CardContent className="text-xs space-y-2">
-          <div class="rounded-lg bg-muted/60 p-3 font-mono text-center text-sm font-semibold text-rose-500">
-            H_med = MedicalExam / ( W_median / 160 )
+          <div class="rounded-lg bg-muted/60 p-3 flex flex-col gap-2 justify-center items-center text-foreground font-semibold">
+            <Latex formula={String.raw`H_{\text{med}} = \frac{C_{\text{checkup}}}{W_{\text{hourly}}} = \left( \frac{C_{\text{checkup}}}{W_{\text{median}}} \right) \times 160`} display={true} />
+            <Latex formula={String.raw`\beta_{\text{med}} = \left( \frac{C_{\text{checkup}}}{W_{\text{median}}} \right) \times 100\%`} display={true} />
           </div>
           <p class="text-muted-foreground text-[11px]">
-            Labor hours needed to pay the uninsured outpatient tariff for a clinical consultation + complete blood, glucose, and lipid panel.
+            Labor hours and income fraction needed to pay the uninsured outpatient tariff (<Latex formula={String.raw`C_{\text{checkup}}`} />) for a routine physician consultation and complete diagnostic lab panel.
           </p>
         </CardContent>
       </Card>
     </div>
+  </section>
 
-    <!-- Dietary Stress Tiers -->
-    <div class="rounded-xl border border-border/80 bg-card/60 p-5 mt-2">
-      <h3 class="font-bold text-sm text-foreground mb-3">Dietary Stress Classification Scale</h3>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
-        <div class="rounded-lg bg-emerald-500/10 border border-emerald-500/20 p-3 flex flex-col gap-1">
-          <span class="font-bold text-emerald-500">Tier 1: Low Stress (&lt;10%)</span>
-          <span class="text-muted-foreground text-[11px]">Food basket requires under 16 hours of labor per month. High dietary diversity.</span>
+  <!-- Section 3: In-Depth APPI Deep Dive -->
+  <section id="appi-deep-dive" class="flex flex-col gap-5 border-t border-border/40 pt-8">
+    <div class="flex items-center gap-2 text-primary font-bold text-sm uppercase tracking-wider">
+      <Activity className="size-4" />
+      <span>3. The Atlas Purchasing Power Index (APPI)</span>
+    </div>
+    <h2 class="text-2xl font-bold tracking-tight text-foreground">What is APPI and How is it Calculated?</h2>
+    
+    <div class="prose dark:prose-invert max-w-none text-xs sm:text-sm text-muted-foreground leading-relaxed flex flex-col gap-4">
+      <p>
+        The <strong>Atlas Purchasing Power Index (APPI)</strong> is our flagship composite purchasing power metric, normalized on a continuous scale from <strong>1 to 100</strong>. A higher APPI score denotes superior economic resilience, higher real wages, and minimal labor strain required to satisfy baseline human nutritional needs.
+      </p>
+
+      <div class="rounded-2xl border border-primary/30 bg-primary/5 p-6 backdrop-blur space-y-4">
+        <h3 class="text-base font-bold text-foreground flex items-center gap-2">
+          <span>The Master APPI Formula</span>
+        </h3>
+        
+        <div class="bg-background/80 rounded-xl p-4 border border-border/60 text-center">
+          <Latex
+            formula={String.raw`\text{APPI} = \text{clamp}\left( \text{round}\left( 0.70 \times F_{\text{wage}} + 0.30 \times F_{\text{hours}} \right),\, 1,\, 100 \right)`}
+            display={true}
+          />
         </div>
-        <div class="rounded-lg bg-amber-500/10 border border-amber-500/20 p-3 flex flex-col gap-1">
-          <span class="font-bold text-amber-500">Tier 2: Moderate (10–20%)</span>
-          <span class="text-muted-foreground text-[11px]">Food requires 16 to 32 hours of labor. Balanced staple access with moderate strain.</span>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+          <div class="p-3 rounded-lg bg-background/50 border border-border/40 space-y-1">
+            <span class="font-bold text-primary block">Wage Burden Sub-Factor (<Latex formula={String.raw`F_{\text{wage}}`} />):</span>
+            <Latex formula={String.raw`F_{\text{wage}} = \max\left( 0,\, 100 - (\beta_{\text{food}} \times 1.8) \right)`} display={true} />
+            <p class="text-[11px] text-muted-foreground">
+              Evaluates the percentage of monthly median income consumed by food. The multiplier <Latex formula={String.raw`1.8`} /> scales a 55.5% food expenditure down to zero.
+            </p>
+          </div>
+
+          <div class="p-3 rounded-lg bg-background/50 border border-border/40 space-y-1">
+            <span class="font-bold text-primary block">Labor Hours Sub-Factor (<Latex formula={String.raw`F_{\text{hours}}`} />):</span>
+            <Latex formula={String.raw`F_{\text{hours}} = \max\left( 0,\, 100 - (H_{\text{food}} \times 1.0) \right)`} display={true} />
+            <p class="text-[11px] text-muted-foreground">
+              Evaluates absolute monthly hours of physical labor. Scaled so that exceeding 100 hours of labor per month brings this factor to zero.
+            </p>
+          </div>
         </div>
-        <div class="rounded-lg bg-orange-500/10 border border-orange-500/20 p-3 flex flex-col gap-1">
-          <span class="font-bold text-orange-500">Tier 3: High Stress (20–35%)</span>
-          <span class="text-muted-foreground text-[11px]">Food requires 32 to 56 hours of labor. High vulnerability to price inflation.</span>
+
+        <div class="text-xs text-muted-foreground leading-relaxed pt-2 border-t border-border/40">
+          <strong class="text-foreground block mb-1">Why a 70% / 30% Blend?</strong>
+          In microeconomic theory (specifically <em>Engel's Law</em>), the proportion of income spent on food is the single most accurate barometer of living standards. A 70% weight on <Latex formula={String.raw`F_{\text{wage}}`} /> reflects the household budget constraint. The 30% weight on <Latex formula={String.raw`F_{\text{hours}}`} /> incorporates the physical opportunity cost of human labor, penalizing economies where workers must dedicate unsustainable hours to stay nourished.
         </div>
-        <div class="rounded-lg bg-rose-500/10 border border-rose-500/20 p-3 flex flex-col gap-1">
-          <span class="font-bold text-rose-500">Tier 4: Severe Stress (&gt;35%)</span>
-          <span class="text-muted-foreground text-[11px]">Over 56 hours of labor per month. Severe food security pressure on median households.</span>
+      </div>
+
+      <!-- Stress Tier Thresholds Table -->
+      <div class="rounded-xl border border-border/80 bg-card/60 p-5 mt-2">
+        <h3 class="font-bold text-sm text-foreground mb-3">APPI Score & Nutritional Stress Classification</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+          <div class="rounded-lg bg-emerald-500/10 border border-emerald-500/20 p-3 flex flex-col justify-between gap-2">
+            <div>
+              <div class="flex items-center justify-between font-bold text-emerald-500 mb-1">
+                <span>Tier 1: Low Stress</span>
+                <Badge variant="outline" className="text-[10px] bg-emerald-500/20 text-emerald-500 border-emerald-500/30">APPI 75–100</Badge>
+              </div>
+              <span class="text-muted-foreground text-[11px]">Food basket takes &lt;10% of wage (&lt;16 labor hours/mo). High disposable surplus.</span>
+            </div>
+            <span class="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">e.g. Switzerland, USA, Denmark, Qatar</span>
+          </div>
+
+          <div class="rounded-lg bg-amber-500/10 border border-amber-500/20 p-3 flex flex-col justify-between gap-2">
+            <div>
+              <div class="flex items-center justify-between font-bold text-amber-500 mb-1">
+                <span>Tier 2: Moderate</span>
+                <Badge variant="outline" className="text-[10px] bg-amber-500/20 text-amber-500 border-amber-500/30">APPI 55–74</Badge>
+              </div>
+              <span class="text-muted-foreground text-[11px]">Food takes 10%–20% of wage (16–32 labor hours/mo). Adequate access with moderate inflation sensitivity.</span>
+            </div>
+            <span class="text-[10px] text-amber-600 dark:text-amber-400 font-semibold">e.g. Poland, Chile, Portugal, Malaysia</span>
+          </div>
+
+          <div class="rounded-lg bg-orange-500/10 border border-orange-500/20 p-3 flex flex-col justify-between gap-2">
+            <div>
+              <div class="flex items-center justify-between font-bold text-orange-500 mb-1">
+                <span>Tier 3: High Stress</span>
+                <Badge variant="outline" className="text-[10px] bg-orange-500/20 text-orange-500 border-orange-500/30">APPI 30–54</Badge>
+              </div>
+              <span class="text-muted-foreground text-[11px]">Food takes 20%–35% of wage (32–56 labor hours/mo). High household vulnerability.</span>
+            </div>
+            <span class="text-[10px] text-orange-600 dark:text-orange-400 font-semibold">e.g. Brazil, South Africa, Turkey, Thailand</span>
+          </div>
+
+          <div class="rounded-lg bg-rose-500/10 border border-rose-500/20 p-3 flex flex-col justify-between gap-2">
+            <div>
+              <div class="flex items-center justify-between font-bold text-rose-500 mb-1">
+                <span>Tier 4: Severe</span>
+                <Badge variant="outline" className="text-[10px] bg-rose-500/20 text-rose-500 border-rose-500/30">APPI 1–29</Badge>
+              </div>
+              <span class="text-muted-foreground text-[11px]">Food takes &gt;35% of wage (&gt;56 labor hours/mo). Critical economic strain.</span>
+            </div>
+            <span class="text-[10px] text-rose-600 dark:text-rose-400 font-semibold">e.g. Nigeria, Pakistan, Egypt, Cuba</span>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Section 3: Standard Food Basket Composition -->
-  <section class="flex flex-col gap-4 border-t border-border/40 pt-8">
+  <!-- Section 4: Non-Food Pillars (Housing, Car, Healthcare) In-Depth -->
+  <section id="non-food-pillars" class="flex flex-col gap-5 border-t border-border/40 pt-8">
+    <div class="flex items-center gap-2 text-primary font-bold text-sm uppercase tracking-wider">
+      <Home className="size-4" />
+      <span>4. In-Depth Rationale: Housing, Transport & Healthcare</span>
+    </div>
+    <h2 class="text-2xl font-bold tracking-tight text-foreground">Standardization, Decision Framework & Data Sources</h2>
+    
+    <div class="space-y-6 text-xs sm:text-sm text-muted-foreground leading-relaxed">
+      <!-- Pillar A: Housing -->
+      <Card className="border-border/80 bg-card/60 backdrop-blur p-5">
+        <div class="flex items-start gap-3">
+          <div class="size-10 rounded-xl bg-chart-2/10 border border-chart-2/20 flex items-center justify-center text-chart-2 shrink-0">
+            <Home className="size-5" />
+          </div>
+          <div class="space-y-3 w-full">
+            <div>
+              <h3 class="text-base font-bold text-foreground flex items-center justify-between">
+                <span>Pillar 2: Residential Housing (1-Bedroom Apartment Rent)</span>
+                <Badge variant="outline" className="text-[10px] bg-chart-2/10 text-chart-2 border-chart-2/30">1 Month Contract</Badge>
+              </h3>
+              <span class="text-xs text-muted-foreground">National median monthly rent for a 1-bedroom self-contained dwelling</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+              <div class="p-3 rounded-lg bg-background/50 border border-border/40 space-y-1">
+                <strong class="text-foreground block">Primary Data Sources:</strong>
+                <ul class="list-disc list-inside text-muted-foreground space-y-0.5 text-[11px]">
+                  <li>National tenancy registries & census housing surveys (e.g. US Census ACS, Eurostat EU-SILC).</li>
+                  <li>HUD Fair Market Rents, UK ONS Private Rental Market Statistics.</li>
+                  <li>International urban rental audits & real estate registries (Numbeo, Global Property Guide).</li>
+                </ul>
+              </div>
+
+              <div class="p-3 rounded-lg bg-background/50 border border-border/40 space-y-1">
+                <strong class="text-foreground block">Methodological Decisions:</strong>
+                <ul class="list-disc list-inside text-muted-foreground space-y-0.5 text-[11px]">
+                  <li><strong>Why 1-Bedroom?</strong> Represents the universal base unit of independent adult housing without roommate sharing distortions.</li>
+                  <li><strong>National Weighted Average:</strong> We blend capital city, major urban, and provincial rentals weighted by population distribution rather than taking capital-city luxury penthouses.</li>
+                  <li><strong>Exclusion of Variable Utilities:</strong> Utility bills (heating, electricity, broadband) vary drastically by seasonal latitude and are excluded to isolate the pure rental asset cost.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      <!-- Pillar B: Transport -->
+      <Card className="border-border/80 bg-card/60 backdrop-blur p-5">
+        <div class="flex items-start gap-3">
+          <div class="size-10 rounded-xl bg-chart-4/10 border border-chart-4/20 flex items-center justify-center text-chart-4 shrink-0">
+            <Car className="size-5" />
+          </div>
+          <div class="space-y-3 w-full">
+            <div>
+              <h3 class="text-base font-bold text-foreground flex items-center justify-between">
+                <span>Pillar 3: Private Transport (Standard Passenger Car Purchase)</span>
+                <Badge variant="outline" className="text-[10px] bg-chart-4/10 text-chart-4 border-chart-4/30">1 New Vehicle</Badge>
+              </h3>
+              <span class="text-xs text-muted-foreground">Retail purchase price for a standard compact passenger vehicle</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+              <div class="p-3 rounded-lg bg-background/50 border border-border/40 space-y-1">
+                <strong class="text-foreground block">Primary Data Sources:</strong>
+                <ul class="list-disc list-inside text-muted-foreground space-y-0.5 text-[11px]">
+                  <li>Automobile Manufacturers Official Suggested Retail Prices (MSRP).</li>
+                  <li>National Automobile Dealers Associations (e.g. NADA, Fenabrave, VDA).</li>
+                  <li>National Ministry of Transport & Customs Tariff Schedules (OICA global database).</li>
+                </ul>
+              </div>
+
+              <div class="p-3 rounded-lg bg-background/50 border border-border/40 space-y-1">
+                <strong class="text-foreground block">Methodological Decisions:</strong>
+                <ul class="list-disc list-inside text-muted-foreground space-y-0.5 text-[11px]">
+                  <li><strong>Standard Compact Benchmark:</strong> Standardized to C-segment entry compacts (Toyota Corolla 1.6/2.0L, Volkswagen Golf, Hyundai Elantra equivalent).</li>
+                  <li><strong>Why New Purchase?</strong> Used vehicle markets suffer from unstandardized odometer wear, maintenance history, and disparate local lemon laws. New MSRP provides a clean, replicable benchmark.</li>
+                  <li><strong>Full Fiscal Inclusion:</strong> Includes non-recoverable VAT/sales taxes, standard registration, and import tariffs (capturing major fiscal regimes like Singapore's COE, Brazil's IPI/ICMS, and Turkey's SCT).</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      <!-- Pillar C: Healthcare -->
+      <Card className="border-border/80 bg-card/60 backdrop-blur p-5">
+        <div class="flex items-start gap-3">
+          <div class="size-10 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-500 shrink-0">
+            <Stethoscope className="size-5" />
+          </div>
+          <div class="space-y-3 w-full">
+            <div>
+              <h3 class="text-base font-bold text-foreground flex items-center justify-between">
+                <span>Pillar 4: Preventive Healthcare (Routine Medical Checkup & Lab Exam)</span>
+                <Badge variant="outline" className="text-[10px] bg-rose-500/10 text-rose-500 border-rose-500/30">1 Comprehensive Battery</Badge>
+              </h3>
+              <span class="text-xs text-muted-foreground">Standardized clinical outpatient preventive consultation + diagnostic blood panels</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+              <div class="p-3 rounded-lg bg-background/50 border border-border/40 space-y-1">
+                <strong class="text-foreground block">Primary Data Sources:</strong>
+                <ul class="list-disc list-inside text-muted-foreground space-y-0.5 text-[11px]">
+                  <li>National Ministry of Health public/private medical fee schedule registries.</li>
+                  <li>WHO Global Health Expenditure Database (GHED) & Out-of-Pocket Expenditure reports.</li>
+                  <li>OECD Health at a Glance & private clinical diagnostic provider fee sheets.</li>
+                </ul>
+              </div>
+
+              <div class="p-3 rounded-lg bg-background/50 border border-border/40 space-y-1">
+                <strong class="text-foreground block">Methodological Decisions:</strong>
+                <ul class="list-disc list-inside text-muted-foreground space-y-0.5 text-[11px]">
+                  <li><strong>Standard Diagnostic Battery:</strong> Defined as: (1) General Practitioner clinical consultation, (2) Complete Blood Count (CBC/Hemogram), (3) Fasting Blood Glucose, (4) Lipid Profile (Total Cholesterol, HDL, LDL, Triglycerides), and (5) Basic Metabolic/Kidney Panel (Creatinine/Urea).</li>
+                  <li><strong>Unsubsidized Out-of-Pocket Tariff:</strong> While nations with single-payer systems (e.g. UK NHS, Scandinavia) provide this near-free at point of delivery, we track the baseline unsubsidized fee tariff to reflect true diagnostic cost and evaluate out-of-pocket medical vulnerability.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Card>
+    </div>
+  </section>
+
+  <!-- Section 5: Standard Food Basket Composition -->
+  <section id="food-basket" class="flex flex-col gap-4 border-t border-border/40 pt-8">
     <div class="flex items-center gap-2 text-primary font-bold text-sm uppercase tracking-wider">
       <FileText className="size-4" />
-      <span>3. Standardized Monthly Food Basket Composition</span>
+      <span>5. Standardized Monthly Food Basket Composition</span>
     </div>
-    <h2 class="text-2xl font-bold tracking-tight text-foreground">Nutritional Specifications</h2>
+    <h2 class="text-2xl font-bold tracking-tight text-foreground">Nutritional Specifications & Dietary Composition</h2>
     <p class="text-xs sm:text-sm text-muted-foreground">
-      The standard monthly basket represents an adult caloric baseline of ~2,300 kcal/day adhering to WHO/FAO dietary guidelines with balanced macronutrient distributions.
+      The standard monthly food basket satisfies an adult caloric baseline of ~2,300 kcal/day adhering to WHO/FAO dietary guidelines with balanced macronutrient distributions:
     </p>
 
-    <div class="rounded-xl border border-border/80 bg-card/60 overflow-hidden mt-2">
+    <div class="rounded-xl border border-border/80 bg-card/60 overflow-hidden mt-2 shadow-sm">
       <div class="overflow-x-auto">
         <table class="w-full text-xs">
           <thead class="bg-muted/50 border-b border-border/60">
@@ -224,18 +514,18 @@ import { BookOpen, Scale, CheckCircle2, AlertTriangle, ExternalLink, HelpCircle,
     </div>
   </section>
 
-  <!-- Section 4: Data Sources Directory -->
-  <section class="flex flex-col gap-4 border-t border-border/40 pt-8">
+  <!-- Section 6: Data Sources Directory -->
+  <section id="data-sources" class="flex flex-col gap-4 border-t border-border/40 pt-8">
     <div class="flex items-center gap-2 text-primary font-bold text-sm uppercase tracking-wider">
       <CheckCircle2 className="size-4" />
-      <span>4. Primary Data Sources & Auditing</span>
+      <span>6. Primary Data Sources & Auditing</span>
     </div>
     <h2 class="text-2xl font-bold tracking-tight text-foreground">Institutional Citations & Verification</h2>
     <p class="text-xs sm:text-sm text-muted-foreground">
-      AtlasIndex pulls exclusively from verified national statistical institutes, international labor organizations, and rigorous price monitoring censuses:
+      AtlasIndex pulls exclusively from verified national statistical institutes, international labor organizations (ILO), and regular price monitoring censuses:
     </p>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2 max-h-[480px] overflow-y-auto p-1 rounded-xl border border-border/60 bg-muted/10">
       {RAW_COUNTRIES.map((c) => (
         <div class="rounded-xl border border-border/60 bg-card/60 p-3.5 backdrop-blur flex flex-col justify-between text-xs gap-2">
           <div class="flex items-center justify-between">
@@ -243,7 +533,14 @@ import { BookOpen, Scale, CheckCircle2, AlertTriangle, ExternalLink, HelpCircle,
               <span>{c.flag}</span>
               <span>{c.name}</span>
             </span>
-            <span class="text-[10px] text-muted-foreground">{c.dataYear} Data</span>
+            <div class="flex items-center gap-1">
+              {c.isEstimated && (
+                <Badge variant="outline" className="text-[9px] bg-amber-500/10 border-amber-500/30 text-amber-500 py-0">
+                  Est.
+                </Badge>
+              )}
+              <span class="text-[10px] text-muted-foreground">{c.dataYear} Data</span>
+            </div>
           </div>
 
           <div class="space-y-1 text-[11px]">
@@ -270,11 +567,46 @@ import { BookOpen, Scale, CheckCircle2, AlertTriangle, ExternalLink, HelpCircle,
     </div>
   </section>
 
-  <!-- Section 5: Limitations & Known Caveats -->
+  <!-- Section 7: Estimation Methodology for Closed Economies -->
+  <section id="estimations" class="flex flex-col gap-4 border-t border-border/40 pt-8">
+    <div class="flex items-center gap-2 text-primary font-bold text-sm uppercase tracking-wider">
+      <Sparkles className="size-4" />
+      <span>7. Econometric Estimations for Closed & Conflict Economies</span>
+    </div>
+    <h2 class="text-2xl font-bold tracking-tight text-foreground">Estimating Data for Nations with Restricted Reporting</h2>
+
+    <div class="prose dark:prose-invert max-w-none text-xs sm:text-sm text-muted-foreground leading-relaxed flex flex-col gap-3">
+      <p>
+        To ensure complete global coverage across all <strong>195 sovereign nations</strong>, AtlasIndex provides econometric estimates for 19 states where official statistical agencies do not publish standard consumer price indexes or regular labor surveys (such as <strong>North Korea, Eritrea, Syria, Afghanistan, Cuba, Haiti, Somalia, Yemen, and South Sudan</strong>).
+      </p>
+      <p>
+        For these economies, data is derived using a multi-source triangulation framework:
+      </p>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 my-2 text-xs">
+        <div class="p-3 rounded-lg border border-border/60 bg-background/50">
+          <strong class="text-foreground block mb-1">1. UN Humanitarian Monitoring</strong>
+          <span class="text-muted-foreground">Market price surveillance and vulnerability assessments by the UN World Food Programme (WFP VAM) and UN FAO GIEWS.</span>
+        </div>
+        <div class="p-3 rounded-lg border border-border/60 bg-background/50">
+          <strong class="text-foreground block mb-1">2. Regional PPP Parity Models</strong>
+          <span class="text-muted-foreground">World Bank International Comparison Program (ICP) purchasing power parity regression benchmarks and neighboring country baskets.</span>
+        </div>
+        <div class="p-3 rounded-lg border border-border/60 bg-background/50">
+          <strong class="text-foreground block mb-1">3. Cross-Border & Informal Data</strong>
+          <span class="text-muted-foreground">For closed economies like North Korea, informal market surveys (Jangmadang market basket reports from Daily NK / Asia Press) and Bank of Korea models.</span>
+        </div>
+      </div>
+      <p>
+        All estimated economies are explicitly labeled with an <span class="text-amber-500 font-semibold">"Est." badge</span> and detailed disclaimers across all tables, charts, and comparison tools.
+      </p>
+    </div>
+  </section>
+
+  <!-- Section 8: Limitations & Caveats -->
   <section id="limitations" class="flex flex-col gap-4 border-t border-border/40 pt-8">
     <div class="flex items-center gap-2 text-amber-500 font-bold text-sm uppercase tracking-wider">
       <AlertTriangle className="size-4" />
-      <span>5. Known Limitations & Research Scope</span>
+      <span>8. Known Limitations & Research Scope</span>
     </div>
     <h2 class="text-2xl font-bold tracking-tight text-foreground">Methodological Constraints</h2>
 
@@ -302,46 +634,11 @@ import { BookOpen, Scale, CheckCircle2, AlertTriangle, ExternalLink, HelpCircle,
     </div>
   </section>
 
-  <!-- Section 5B: Estimation Methodology for Data-Sparse & Closed Economies -->
-  <section id="estimations" class="flex flex-col gap-4 border-t border-border/40 pt-8">
-    <div class="flex items-center gap-2 text-primary font-bold text-sm uppercase tracking-wider">
-      <Sparkles className="size-4" />
-      <span>6. Econometric Estimations for Closed & Conflict Economies</span>
-    </div>
-    <h2 class="text-2xl font-bold tracking-tight text-foreground">Estimating Data for Nations with Restricted Reporting</h2>
-
-    <div class="prose dark:prose-invert max-w-none text-xs sm:text-sm text-muted-foreground leading-relaxed flex flex-col gap-3">
-      <p>
-        To ensure complete global coverage across all <strong>195 sovereign nations</strong>, AtlasIndex provides rigorous econometric estimates for 19 states where official statistical agencies do not publish standard consumer price indexes or regular labor surveys (such as <strong>North Korea, Eritrea, Syria, Afghanistan, Cuba, Haiti, Somalia, Yemen, and South Sudan</strong>).
-      </p>
-      <p>
-        For these economies, data is derived using a multi-source triangulation framework:
-      </p>
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 my-2 text-xs">
-        <div class="p-3 rounded-lg border border-border/60 bg-background/50">
-          <strong class="text-foreground block mb-1">1. UN Humanitarian Monitoring</strong>
-          <span class="text-muted-foreground">Market price surveillance and vulnerability assessments by the UN World Food Programme (WFP VAM) and UN FAO GIEWS.</span>
-        </div>
-        <div class="p-3 rounded-lg border border-border/60 bg-background/50">
-          <strong class="text-foreground block mb-1">2. Regional PPP Parity Models</strong>
-          <span class="text-muted-foreground">World Bank International Comparison Program (ICP) purchasing power parity regression benchmarks and neighboring country baskets.</span>
-        </div>
-        <div class="p-3 rounded-lg border border-border/60 bg-background/50">
-          <strong class="text-foreground block mb-1">3. Cross-Border & Informal Data</strong>
-          <span class="text-muted-foreground">For closed economies like North Korea, informal market surveys (Jangmadang market basket reports from Daily NK / Asia Press) and Bank of Korea models.</span>
-        </div>
-      </div>
-      <p>
-        All estimated economies are explicitly labeled with an <span class="text-amber-500 font-semibold">"Est." badge</span> and detailed disclaimers across all tables, charts, and comparison tools.
-      </p>
-    </div>
-  </section>
-
-  <!-- Section 6: FAQ Accordion -->
+  <!-- Section 9: FAQ Accordion -->
   <section id="faq" class="flex flex-col gap-4 border-t border-border/40 pt-8">
     <div class="flex items-center gap-2 text-primary font-bold text-sm uppercase tracking-wider">
       <HelpCircle className="size-4" />
-      <span>6. Frequently Asked Questions</span>
+      <span>9. Frequently Asked Questions</span>
     </div>
     <h2 class="text-2xl font-bold tracking-tight text-foreground">Frequently Asked Questions</h2>
 
@@ -352,6 +649,15 @@ import { BookOpen, Scale, CheckCircle2, AlertTriangle, ExternalLink, HelpCircle,
         </CardHeader>
         <CardContent className="text-muted-foreground text-xs leading-relaxed">
           Mean average wages are heavily skewed upwards by ultra-high earners (CEOs, tech executives, financiers). Median wage reflects the 50th percentile—exactly where the middle worker sits in society.
+        </CardContent>
+      </Card>
+
+      <Card className="border-border/80 bg-card/60">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-bold">What is the difference between APPI and PPP (Purchasing Power Parity)?</CardTitle>
+        </CardHeader>
+        <CardContent className="text-muted-foreground text-xs leading-relaxed">
+          Standard World Bank PPP creates an artificial "international dollar" based on a massive hypothetical basket including machinery and government services. APPI grounds purchasing power in <strong>actual median hours of labor</strong> for tangible essentials (food, rent, car, healthcare), making it immediately intuitive and reflective of real citizen purchasing power.
         </CardContent>
       </Card>
 
@@ -375,7 +681,7 @@ import { BookOpen, Scale, CheckCircle2, AlertTriangle, ExternalLink, HelpCircle,
     </div>
   </section>
 
-  <!-- Section 7: Open Source & GitHub Contributions -->
+  <!-- Section 10: Open Source & GitHub Contributions -->
   <section class="flex flex-col gap-4 border-t border-border/40 pt-8">
     <div class="rounded-2xl border border-primary/30 bg-primary/5 p-6 backdrop-blur flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
       <div class="flex flex-col gap-2 max-w-xl">

@@ -1,0 +1,25 @@
+---
+import katex from "katex";
+
+interface Props {
+  formula: string;
+  display?: boolean;
+  className?: string;
+}
+
+const { formula, display = false, className = "" } = Astro.props;
+
+let html = "";
+try {
+  html = katex.renderToString(formula, {
+    displayMode: display,
+    throwOnError: false,
+    output: "htmlAndMathml",
+    strict: false,
+  });
+} catch (e) {
+  html = `<span class="text-destructive font-mono text-xs">${formula}</span>`;
+}
+---
+
+<span class={`katex-wrapper ${display ? "block my-2 overflow-x-auto py-1 text-center" : "inline-block align-middle"} ${className}`} set:html={html} />
