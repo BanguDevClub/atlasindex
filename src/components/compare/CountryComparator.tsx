@@ -6,7 +6,8 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { formatCurrency, formatHours, formatMinutes, formatPercent } from "@/lib/utils";
+import { SearchableSelect, type SearchableSelectOption } from "@/components/ui/SearchableSelect";
+import { formatCurrency, formatHours, formatMinutes, formatPercent, getBasePath } from "@/lib/utils";
 import {
   ResponsiveContainer,
   BarChart,
@@ -27,6 +28,7 @@ import {
   Car,
   Stethoscope,
   Layers,
+  Sparkles,
 } from "lucide-react";
 
 export function CountryComparator() {
@@ -37,6 +39,29 @@ export function CountryComparator() {
   const selectableCountries = useMemo(() => {
     return [worldAvgCountry, ...allCountries];
   }, [worldAvgCountry, allCountries]);
+
+  // Formatted options for SearchableSelect
+  const selectableOptions: SearchableSelectOption[] = useMemo(() => {
+    return selectableCountries.map((c) => ({
+      value: c.id,
+      label: c.name,
+      sublabel:
+        c.id === "world-average"
+          ? "Global Benchmark • $1,022/mo"
+          : `Median: ${formatCurrency(c.monthlyMedianWageUSD, "USD")}/mo • Food: ${c.laborHoursForBasket.toFixed(1)}h`,
+      icon: <span className="text-base">{c.flag}</span>,
+      badge: c.id === "world-average" ? "Benchmark" : c.isEstimated ? "Est." : c.code,
+      badgeVariant: c.id === "world-average" ? "default" : c.isEstimated ? "warning" : "secondary",
+      group: c.id === "world-average" ? "Global Benchmark" : c.continent,
+      keywords: [
+        c.code,
+        c.continent,
+        c.currencyCode,
+        c.isEstimated ? "estimated" : "official",
+        c.id === "world-average" ? "global benchmark average" : "",
+      ],
+    }));
+  }, [selectableCountries]);
 
   const [selectedIds, setSelectedIds] = useState<string[]>(["usa", "brazil", "germany", "world-average"]);
   const [simulatorWageUSD, setSimulatorWageUSD] = useState<number>(3500);
@@ -57,14 +82,26 @@ export function CountryComparator() {
     }
   }, []);
 
+  // Update URL on change
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams();
+      selectedIds.forEach((id, idx) => {
+        params.set(`c${idx + 1}`, id);
+      });
+      const newRelativePathQuery = window.location.pathname + "?" + params.toString();
+      window.history.replaceState(null, "", newRelativePathQuery);
+    }
+  }, [selectedIds]);
+
   const selectedCountries: ProcessedCountryEconomy[] = useMemo(() => {
     return selectedIds
       .map((id) => selectableCountries.find((c) => c.id === id))
       .filter(Boolean) as ProcessedCountryEconomy[];
-  }, [selectableCountries, selectedIds]);
+  }, [selectedIds, selectableCountries]);
 
   const addCountry = (id: string) => {
-    if (!selectedIds.includes(id) && selectedIds.length < 4) {
+    if (selectedIds.length < 4 && !selectedIds.includes(id)) {
       setSelectedIds([...selectedIds, id]);
     }
   };
@@ -76,56 +113,51 @@ export function CountryComparator() {
   };
 
   const changeCountry = (index: number, newId: string) => {
+    if (!newId) return;
     const updated = [...selectedIds];
     updated[index] = newId;
     setSelectedIds(updated);
   };
 
-  // 4 Living Pillars Comparison Data
+  // 1. Data for 4 Living Pillars Comparison Chart
   const pillarsComparisonData = useMemo(() => {
-    const pillars = [
-      { key: "food", name: "Food Basket (hrs)" },
-      { key: "rent", name: "1-BR Rent (hrs)" },
-      { key: "medical", name: "Medical Exam (hrs)" },
-      { key: "car", name: "Car (Labor Months)" },
+    const metrics = [
+      { key: "foodHours", name: "Food Basket (Labor Hours)" },
+      { key: "rentHours", name: "1-BR Rent (Labor Hours)" },
+      { key: "carMonths", name: "Car (Labor Months)" },
+      { key: "medicalHours", name: "Medical Exam (Labor Hours)" },
     ];
 
-    return pillars.map((p) => {
-      const entry: any = { pillar: p.name };
+    return metrics.map((m) => {
+      const entry: any = { pillar: m.name };
       selectedCountries.forEach((c) => {
-        if (p.key === "food") entry[c.name] = parseFloat(c.laborHoursForBasket.toFixed(1));
-        else if (p.key === "rent") entry[c.name] = parseFloat(c.rentLaborHours.toFixed(1));
-        else if (p.key === "medical") entry[c.name] = parseFloat(c.medicalCheckupLaborHours.toFixed(1));
-        else if (p.key === "car") entry[c.name] = parseFloat(c.carLaborMonths.toFixed(1));
+        if (m.key === "foodHours") entry[c.name] = parseFloat(c.laborHoursForBasket.toFixed(1));
+        if (m.key === "rentHours") entry[c.name] = parseFloat(c.rentLaborHours.toFixed(1));
+        if (m.key === "carMonths") entry[c.name] = parseFloat(c.carLaborMonths.toFixed(1));
+        if (m.key === "medicalHours") entry[c.name] = parseFloat(c.medicalCheckupLaborHours.toFixed(1));
       });
       return entry;
     });
   }, [selectedCountries]);
 
-  // Category comparison data
+  // 2. Data for Category Comparison Chart
   const categoryComparisonData = useMemo(() => {
-    const categories = [
-      { key: "staples", name: "Staples & Grains" },
-      { key: "meat", name: "Meat & Poultry" },
-      { key: "dairy", name: "Dairy & Eggs" },
-      { key: "produce", name: "Fresh Produce" },
-      { key: "oil", name: "Cooking Oils" },
-    ];
-
+    const categories = ["grains", "produce", "proteins", "dairy", "fats"];
     return categories.map((cat) => {
-      const entry: any = { category: cat.name };
+      const entry: any = { category: cat.charAt(0).toUpperCase() + cat.slice(1) };
       selectedCountries.forEach((c) => {
-        const hours = (c.categoryLaborHours as any)[cat.key] || 0;
-        entry[c.name] = parseFloat(hours.toFixed(1));
+        const catItems = c.items.filter((i) => i.category === cat);
+        const totalMinutes = catItems.reduce((acc, curr) => acc + curr.minutesOfWorkPerUnit, 0);
+        entry[c.name] = parseFloat((totalMinutes / 60).toFixed(1));
       });
       return entry;
     });
   }, [selectedCountries]);
 
-  // Item Labor Minutes comparison data
+  // 3. Data for Item Breakdown Chart
   const itemComparisonData = useMemo(() => {
-    const keyItems = ["rice", "beef", "chicken", "eggs", "milk", "bread", "potatoes", "oil"];
-    return keyItems.map((itemId) => {
+    const itemIds = ["rice", "bread", "chicken", "beef", "eggs", "milk", "oil"];
+    return itemIds.map((itemId) => {
       const sampleItem = selectedCountries[0]?.items.find((i) => i.itemId === itemId);
       const entry: any = { item: sampleItem ? sampleItem.name.split(" ")[0] : itemId };
       selectedCountries.forEach((c) => {
@@ -153,52 +185,30 @@ export function CountryComparator() {
   };
 
   return (
-    <div className="flex flex-col gap-8 pb-16">
+    <div className="flex flex-col gap-6 sm:gap-8 pb-16">
       {/* Page Header */}
       <div className="flex flex-col gap-2">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <Badge variant="outline" className="text-xs bg-primary/10 border-primary/20 text-primary">
             Head-to-Head Multi-Pillar Analysis
           </Badge>
           <span className="text-xs text-muted-foreground">• Compare 2 to 4 Economies vs Global Average</span>
         </div>
-        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
+        <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-foreground">
           Side-by-Side Living Cost & Labor Effort Comparator
         </h1>
-        <p className="text-sm text-muted-foreground max-w-3xl">
-          Contrast median purchasing power across <strong>Food, Housing (1-BR Rent), Transport (New Car), and Healthcare (Medical Exams)</strong> directly against the <strong>Global Average baseline</strong>.
+        <p className="text-xs sm:text-sm text-muted-foreground max-w-3xl leading-relaxed">
+          Contrast median purchasing power across <strong>Food, Housing (1-BR Rent), Transport (New Car), and Healthcare (Medical Exams)</strong> directly against the <strong>Global Average benchmark</strong>.
         </p>
       </div>
 
-      {/* Country Selectors Bar */}
-      <Card className="border-border/80 bg-card/70 backdrop-blur p-4">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="flex flex-wrap items-center gap-3">
-            {selectedIds.map((id, idx) => (
-              <div key={idx} className="flex items-center gap-1.5 bg-background/80 rounded-lg border border-border/80 p-1.5">
-                <select
-                  value={id}
-                  onChange={(e) => changeCountry(idx, e.target.value)}
-                  className="h-8 bg-transparent text-xs font-semibold focus:outline-none pr-2"
-                >
-                  {selectableCountries.map((c) => (
-                    <option key={c.id} value={c.id}>
-                      {c.flag} {c.name} {c.id === "world-average" ? "(Benchmark)" : ""}
-                    </option>
-                  ))}
-                </select>
-                {selectedIds.length > 2 && (
-                  <button
-                    onClick={() => removeCountry(id)}
-                    className="size-6 rounded hover:bg-muted text-muted-foreground hover:text-destructive flex items-center justify-center"
-                    title="Remove country"
-                  >
-                    <X className="size-3.5" />
-                  </button>
-                )}
-              </div>
-            ))}
-
+      {/* Country Selectors Bar with SearchableSelect */}
+      <Card className="border-border/80 bg-card/70 backdrop-blur p-4 sm:p-5 shadow-sm relative z-30 overflow-visible">
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+              Selected Economies ({selectedCountries.length} / 4 max)
+            </span>
             {selectedIds.length < 4 && (
               <Button
                 variant="outline"
@@ -207,7 +217,7 @@ export function CountryComparator() {
                   const available = selectableCountries.find((c) => !selectedIds.includes(c.id));
                   if (available) addCountry(available.id);
                 }}
-                className="text-xs h-9 gap-1"
+                className="text-xs h-8 gap-1.5 rounded-lg"
               >
                 <Plus className="size-3.5" />
                 <span>Add Country</span>
@@ -215,8 +225,35 @@ export function CountryComparator() {
             )}
           </div>
 
-          <div className="text-xs text-muted-foreground">
-            Comparing <span className="font-semibold text-foreground">{selectedCountries.length}</span> entities
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {selectedIds.map((id, idx) => (
+              <div key={idx} className="flex items-center gap-2 bg-background/50 rounded-xl border border-border/70 p-1.5 shadow-sm relative">
+                <div className="flex-1 min-w-0">
+                  <SearchableSelect
+                    options={selectableOptions}
+                    value={id}
+                    onChange={(newVal) => changeCountry(idx, newVal)}
+                    placeholder="Select country..."
+                    searchPlaceholder="Search country..."
+                    groupByCategory={true}
+                    size="sm"
+                    align={idx >= 2 ? "right" : "left"}
+                    triggerClassName="border-0 bg-transparent shadow-none hover:bg-muted/40"
+                    ariaLabel={`Select Country ${idx + 1}`}
+                  />
+                </div>
+                {selectedIds.length > 2 && (
+                  <button
+                    onClick={() => removeCountry(id)}
+                    className="size-7 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive flex items-center justify-center shrink-0 transition-colors"
+                    title="Remove country"
+                    aria-label={`Remove country ${id}`}
+                  >
+                    <X className="size-3.5" />
+                  </button>
+                )}
+              </div>
+            ))}
           </div>
         </div>
       </Card>
@@ -363,12 +400,12 @@ export function CountryComparator() {
             </CardDescription>
           </div>
 
-          <div className="flex items-center gap-1 rounded-lg bg-muted/60 p-1">
+          <div className="flex items-center gap-1 rounded-lg bg-muted/60 p-1 overflow-x-auto max-w-full">
             <Button
               variant={chartMode === "pillars" ? "default" : "ghost"}
               size="sm"
               onClick={() => setChartMode("pillars")}
-              className="text-xs h-7 px-3"
+              className="text-xs h-7 px-3 shrink-0"
             >
               4 Living Pillars
             </Button>
@@ -376,7 +413,7 @@ export function CountryComparator() {
               variant={chartMode === "items" ? "default" : "ghost"}
               size="sm"
               onClick={() => setChartMode("items")}
-              className="text-xs h-7 px-3"
+              className="text-xs h-7 px-3 shrink-0"
             >
               Food Items (Minutes)
             </Button>
@@ -384,7 +421,7 @@ export function CountryComparator() {
               variant={chartMode === "categories" ? "default" : "ghost"}
               size="sm"
               onClick={() => setChartMode("categories")}
-              className="text-xs h-7 px-3"
+              className="text-xs h-7 px-3 shrink-0"
             >
               Food Categories
             </Button>
@@ -529,9 +566,9 @@ export function CountryComparator() {
           </div>
         </CardHeader>
 
-        <CardContent className="p-6 flex flex-col gap-6">
+        <CardContent className="p-4 sm:p-6 flex flex-col gap-6">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div className="flex flex-col gap-1 max-w-sm">
+            <div className="flex flex-col gap-1 w-full sm:max-w-xs">
               <label className="text-xs font-semibold text-muted-foreground uppercase">
                 Simulated Monthly Budget ($ USD)
               </label>
@@ -541,29 +578,29 @@ export function CountryComparator() {
                   type="number"
                   value={simulatorWageUSD}
                   onChange={(e) => setSimulatorWageUSD(Math.max(100, parseFloat(e.target.value) || 0))}
-                  className="pl-7 bg-background/80 text-sm h-9"
+                  className="pl-7 bg-background/80 text-sm h-9 rounded-lg"
                 />
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs text-muted-foreground">Quick Presets:</span>
-              <Button variant="outline" size="sm" onClick={() => setSimulatorWageUSD(1500)} className="text-xs h-7">
+            <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+              <span className="text-xs text-muted-foreground">Presets:</span>
+              <Button variant="outline" size="sm" onClick={() => setSimulatorWageUSD(1500)} className="text-xs h-7 px-2.5 rounded-lg">
                 $1,500
               </Button>
-              <Button variant="outline" size="sm" onClick={() => setSimulatorWageUSD(3000)} className="text-xs h-7">
+              <Button variant="outline" size="sm" onClick={() => setSimulatorWageUSD(3000)} className="text-xs h-7 px-2.5 rounded-lg">
                 $3,000
               </Button>
-              <Button variant="outline" size="sm" onClick={() => setSimulatorWageUSD(5000)} className="text-xs h-7">
+              <Button variant="outline" size="sm" onClick={() => setSimulatorWageUSD(5000)} className="text-xs h-7 px-2.5 rounded-lg">
                 $5,000
               </Button>
-              <Button variant="outline" size="sm" onClick={() => setSimulatorWageUSD(8000)} className="text-xs h-7">
+              <Button variant="outline" size="sm" onClick={() => setSimulatorWageUSD(8000)} className="text-xs h-7 px-2.5 rounded-lg">
                 $8,000
               </Button>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             {selectedCountries.map((c) => {
               const simulatedFoodHours = (c.monthlyBasketCostUSD / (simulatorWageUSD / 160));
               const simulatedRentHours = (c.rentMonthlyUSD / (simulatorWageUSD / 160));
@@ -571,10 +608,10 @@ export function CountryComparator() {
               const simulatedTotalPercent = (totalEssentialUSD / simulatorWageUSD) * 100;
 
               return (
-                <div key={c.id} className="rounded-xl border border-border/60 bg-background/50 p-4 flex flex-col justify-between gap-2">
+                <div key={c.id} className="rounded-xl border border-border/60 bg-background/50 p-4 flex flex-col justify-between gap-2 shadow-sm">
                   <div className="flex items-center gap-2">
                     <span className="text-xl">{c.flag}</span>
-                    <span className="font-bold text-xs text-foreground">{c.name}</span>
+                    <span className="font-bold text-xs text-foreground truncate">{c.name}</span>
                   </div>
 
                   <div className="space-y-1 my-1 text-xs">

@@ -283,11 +283,11 @@ export function ContinentComparator() {
         </div>
 
         {/* Metric Selector Tabs */}
-        <div className="flex flex-wrap items-center gap-1.5 mb-4 bg-muted/40 p-1.5 rounded-xl">
+        <div className="flex items-center gap-1.5 mb-4 bg-muted/40 p-1.5 rounded-xl overflow-x-auto max-w-full scrollbar-none">
           <Button
             variant={activeMetric === "foodHours" ? "default" : "ghost"}
             size="sm"
-            className="text-xs h-7 px-2.5 gap-1"
+            className="text-xs h-7 px-2.5 gap-1 shrink-0 rounded-lg"
             onClick={() => setActiveMetric("foodHours")}
           >
             <Utensils className="size-3" />
@@ -296,7 +296,7 @@ export function ContinentComparator() {
           <Button
             variant={activeMetric === "foodPercent" ? "default" : "ghost"}
             size="sm"
-            className="text-xs h-7 px-2.5 gap-1"
+            className="text-xs h-7 px-2.5 gap-1 shrink-0 rounded-lg"
             onClick={() => setActiveMetric("foodPercent")}
           >
             <Utensils className="size-3" />
@@ -305,7 +305,7 @@ export function ContinentComparator() {
           <Button
             variant={activeMetric === "rentUSD" ? "default" : "ghost"}
             size="sm"
-            className="text-xs h-7 px-2.5 gap-1"
+            className="text-xs h-7 px-2.5 gap-1 shrink-0 rounded-lg"
             onClick={() => setActiveMetric("rentUSD")}
           >
             <Home className="size-3" />
@@ -314,7 +314,7 @@ export function ContinentComparator() {
           <Button
             variant={activeMetric === "rentPercent" ? "default" : "ghost"}
             size="sm"
-            className="text-xs h-7 px-2.5 gap-1"
+            className="text-xs h-7 px-2.5 gap-1 shrink-0 rounded-lg"
             onClick={() => setActiveMetric("rentPercent")}
           >
             <Home className="size-3" />
@@ -323,7 +323,7 @@ export function ContinentComparator() {
           <Button
             variant={activeMetric === "carMonths" ? "default" : "ghost"}
             size="sm"
-            className="text-xs h-7 px-2.5 gap-1"
+            className="text-xs h-7 px-2.5 gap-1 shrink-0 rounded-lg"
             onClick={() => setActiveMetric("carMonths")}
           >
             <Car className="size-3" />
@@ -332,7 +332,7 @@ export function ContinentComparator() {
           <Button
             variant={activeMetric === "medHours" ? "default" : "ghost"}
             size="sm"
-            className="text-xs h-7 px-2.5 gap-1"
+            className="text-xs h-7 px-2.5 gap-1 shrink-0 rounded-lg"
             onClick={() => setActiveMetric("medHours")}
           >
             <Stethoscope className="size-3" />
@@ -341,7 +341,7 @@ export function ContinentComparator() {
           <Button
             variant={activeMetric === "wageUSD" ? "default" : "ghost"}
             size="sm"
-            className="text-xs h-7 px-2.5 gap-1"
+            className="text-xs h-7 px-2.5 gap-1 shrink-0 rounded-lg"
             onClick={() => setActiveMetric("wageUSD")}
           >
             <span>Monthly Wage ($)</span>

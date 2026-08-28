@@ -19,6 +19,7 @@ import {
   Cell,
   CartesianGrid,
 } from "recharts";
+import { SearchableSelect, type SearchableSelectOption } from "@/components/ui/SearchableSelect";
 import {
   TrendingDown,
   Clock,
@@ -118,27 +119,43 @@ export function DashboardContainer() {
   const continents = ["All", "Europe", "Americas", "Asia", "Oceania", "Africa"];
   const tiers = ["All", "Low", "Moderate", "High", "Severe"];
 
+  const tierFilterOptions: SearchableSelectOption[] = useMemo(() => {
+    return tiers.map((t) => ({
+      value: t,
+      label: t === "All" ? "All Stress Tiers" : `${t} Stress`,
+      badge: t !== "All" ? t : undefined,
+      badgeVariant:
+        t === "Low"
+          ? "success"
+          : t === "Moderate"
+          ? "warning"
+          : t === "High"
+          ? "secondary"
+          : "destructive",
+    }));
+  }, [tiers]);
+
   return (
-    <div className="flex flex-col gap-8 pb-16">
-      {/* Header Summary */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-2">
+    <div className="flex flex-col gap-6 pb-16">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex flex-col gap-1.5">
+          <div className="flex items-center gap-2 flex-wrap">
             <Badge variant="outline" className="text-xs bg-primary/10 border-primary/20 text-primary">
-              AtlasIndex Multi-Pillar Analytics
+              Global Overview Analytics
             </Badge>
             <span className="text-xs text-muted-foreground">• Universal 195 Sovereign Nations Audit</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
+          <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-foreground">
             Global Labor Effort & Living Pillars Dashboard
           </h1>
-          <p className="text-sm text-muted-foreground max-w-3xl">
+          <p className="text-xs sm:text-sm text-muted-foreground max-w-3xl leading-relaxed">
             Compare median purchasing power across Food, Housing (1-BR Rent), Transport (Car Purchase), and Healthcare (Medical Checkups) across all {allCountries.length} countries against the <strong>Global Average benchmark</strong>.
           </p>
         </div>
 
         <a href={getBasePath("/continents")} className="shrink-0">
-          <Button variant="outline" size="sm" className="text-xs gap-1.5 border-primary/30 hover:bg-primary/10 text-primary font-semibold">
+          <Button variant="outline" size="sm" className="text-xs gap-1.5 border-primary/30 hover:bg-primary/10 text-primary font-semibold rounded-xl">
             <span>Continent Breakdown</span>
             <span>→</span>
           </Button>
@@ -146,7 +163,7 @@ export function DashboardContainer() {
       </div>
 
       {/* Global Average Benchmark Banner */}
-      <div className="rounded-2xl border border-primary/30 bg-primary/5 p-5 backdrop-blur">
+      <div className="rounded-2xl border border-primary/30 bg-primary/5 p-4 sm:p-5 backdrop-blur shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-primary/20 pb-4 mb-4">
           <div className="flex items-center gap-2.5">
             <div className="size-9 rounded-xl bg-primary/20 flex items-center justify-center text-primary font-bold">
@@ -202,8 +219,8 @@ export function DashboardContainer() {
       </div>
 
       {/* Aggregate KPI Stat Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="border-border/80 bg-card/60 backdrop-blur p-5 flex flex-col justify-between">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <Card className="border-border/80 bg-card/60 backdrop-blur p-4 sm:p-5 flex flex-col justify-between">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-muted-foreground uppercase">Filtered Food Effort</span>
             <div className="size-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
@@ -211,13 +228,13 @@ export function DashboardContainer() {
             </div>
           </div>
           <div className="my-2">
-            <div className="text-2xl font-extrabold text-foreground">{formatHours(filteredStats.avgFoodHours)}</div>
+            <div className="text-xl sm:text-2xl font-extrabold text-foreground">{formatHours(filteredStats.avgFoodHours)}</div>
             <div className="text-xs text-muted-foreground">≈ {formatPercent(filteredStats.avgFoodPercent)} of median monthly wage</div>
           </div>
           <span className="text-[10px] text-muted-foreground">Global Avg: {formatHours(globalSummary.avgLaborHoursFood)}</span>
         </Card>
 
-        <Card className="border-border/80 bg-card/60 backdrop-blur p-5 flex flex-col justify-between">
+        <Card className="border-border/80 bg-card/60 backdrop-blur p-4 sm:p-5 flex flex-col justify-between">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-muted-foreground uppercase">Top Food Power</span>
             <div className="size-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500">
@@ -225,7 +242,7 @@ export function DashboardContainer() {
             </div>
           </div>
           <div className="my-2">
-            <div className="text-2xl font-extrabold text-emerald-500">
+            <div className="text-xl sm:text-2xl font-extrabold text-emerald-500">
               {globalSummary.bestFoodCountry.flag} {globalSummary.bestFoodCountry.name}
             </div>
             <div className="text-xs text-muted-foreground">
@@ -235,7 +252,7 @@ export function DashboardContainer() {
           <span className="text-[10px] text-muted-foreground">Top global APPI rank #{globalSummary.bestFoodCountry.rank}</span>
         </Card>
 
-        <Card className="border-border/80 bg-card/60 backdrop-blur p-5 flex flex-col justify-between">
+        <Card className="border-border/80 bg-card/60 backdrop-blur p-4 sm:p-5 flex flex-col justify-between">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-muted-foreground uppercase">Top Rent Affordability</span>
             <div className="size-8 rounded-lg bg-chart-2/10 flex items-center justify-center text-chart-2">
@@ -243,7 +260,7 @@ export function DashboardContainer() {
             </div>
           </div>
           <div className="my-2">
-            <div className="text-2xl font-extrabold text-chart-2">
+            <div className="text-xl sm:text-2xl font-extrabold text-chart-2">
               {globalSummary.bestRentCountry.flag} {globalSummary.bestRentCountry.name}
             </div>
             <div className="text-xs text-muted-foreground">
@@ -253,7 +270,7 @@ export function DashboardContainer() {
           <span className="text-[10px] text-muted-foreground">Top Housing Purchasing Power</span>
         </Card>
 
-        <Card className="border-border/80 bg-card/60 backdrop-blur p-5 flex flex-col justify-between">
+        <Card className="border-border/80 bg-card/60 backdrop-blur p-4 sm:p-5 flex flex-col justify-between">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-muted-foreground uppercase">Top Vehicle Purchasing</span>
             <div className="size-8 rounded-lg bg-chart-4/10 flex items-center justify-center text-chart-4">
@@ -261,7 +278,7 @@ export function DashboardContainer() {
             </div>
           </div>
           <div className="my-2">
-            <div className="text-2xl font-extrabold text-foreground">
+            <div className="text-xl sm:text-2xl font-extrabold text-foreground">
               {globalSummary.bestCarCountry.flag} {globalSummary.bestCarCountry.name}
             </div>
             <div className="text-xs text-muted-foreground">{globalSummary.bestCarCountry.carLaborMonths.toFixed(1)} months of median wage</div>
@@ -271,7 +288,7 @@ export function DashboardContainer() {
       </div>
 
       {/* Filter and View Controls */}
-      <Card className="border-border/80 bg-card/70 backdrop-blur p-4">
+      <Card className="border-border/80 bg-card/70 backdrop-blur p-4 sm:p-5 shadow-sm relative z-30 overflow-visible">
         <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4">
           {/* Continent Tabs */}
           <div className="flex items-center gap-1 overflow-x-auto pb-1 lg:pb-0 scrollbar-none">
@@ -281,7 +298,7 @@ export function DashboardContainer() {
                 variant={selectedContinent === cont ? "default" : "outline"}
                 size="sm"
                 onClick={() => setSelectedContinent(cont)}
-                className="text-xs whitespace-nowrap"
+                className="text-xs whitespace-nowrap rounded-lg h-8"
               >
                 {cont}
               </Button>
@@ -289,31 +306,27 @@ export function DashboardContainer() {
           </div>
 
           {/* Tier Filters & Search */}
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <Filter className="size-3.5" />
-              <span>Stress Tier:</span>
-              <select
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            <div className="w-full sm:w-[170px]">
+              <SearchableSelect
+                options={tierFilterOptions}
                 value={selectedTier}
-                onChange={(e) => setSelectedTier(e.target.value)}
-                className="h-8 rounded-md border border-input bg-background px-2 text-xs focus:outline-none focus:ring-1 focus:ring-primary"
-              >
-                {tiers.map((t) => (
-                  <option key={t} value={t}>
-                    {t}
-                  </option>
-                ))}
-              </select>
+                onChange={setSelectedTier}
+                placeholder="Stress Tier..."
+                searchPlaceholder="Search tier..."
+                size="sm"
+                ariaLabel="Filter by Stress Tier"
+              />
             </div>
 
-            <div className="relative min-w-[180px]">
+            <div className="relative flex-1 sm:min-w-[180px]">
               <Search className="size-3.5 absolute left-2.5 top-2.5 text-muted-foreground" />
               <input
                 type="text"
                 placeholder="Search country..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="h-8 w-full rounded-md border border-input bg-background pl-8 pr-3 text-xs focus:outline-none focus:ring-1 focus:ring-primary"
+                className="h-8 w-full rounded-xl border border-input bg-background pl-8 pr-3 text-xs focus:outline-none focus:ring-1 focus:ring-primary shadow-sm"
               />
             </div>
           </div>
@@ -333,12 +346,12 @@ export function DashboardContainer() {
             </CardDescription>
           </div>
 
-          <div className="flex flex-wrap items-center gap-1 rounded-lg bg-muted/60 p-1">
+          <div className="flex items-center gap-1 rounded-xl bg-muted/60 p-1 overflow-x-auto max-w-full scrollbar-none">
             <Button
               variant={activeChartTab === "food" ? "default" : "ghost"}
               size="sm"
               onClick={() => setActiveChartTab("food")}
-              className="text-xs h-7 px-2.5 gap-1"
+              className="text-xs h-7 px-2.5 gap-1 shrink-0 rounded-lg"
             >
               <Utensils className="size-3" />
               <span>Food Labor</span>
@@ -347,7 +360,7 @@ export function DashboardContainer() {
               variant={activeChartTab === "rent" ? "default" : "ghost"}
               size="sm"
               onClick={() => setActiveChartTab("rent")}
-              className="text-xs h-7 px-2.5 gap-1"
+              className="text-xs h-7 px-2.5 gap-1 shrink-0 rounded-lg"
             >
               <Home className="size-3" />
               <span>1-BR Rent</span>
@@ -356,7 +369,7 @@ export function DashboardContainer() {
               variant={activeChartTab === "car" ? "default" : "ghost"}
               size="sm"
               onClick={() => setActiveChartTab("car")}
-              className="text-xs h-7 px-2.5 gap-1"
+              className="text-xs h-7 px-2.5 gap-1 shrink-0 rounded-lg"
             >
               <Car className="size-3" />
               <span>Car (Months)</span>
@@ -365,7 +378,7 @@ export function DashboardContainer() {
               variant={activeChartTab === "medical" ? "default" : "ghost"}
               size="sm"
               onClick={() => setActiveChartTab("medical")}
-              className="text-xs h-7 px-2.5 gap-1"
+              className="text-xs h-7 px-2.5 gap-1 shrink-0 rounded-lg"
             >
               <Stethoscope className="size-3" />
               <span>Medical Exam</span>
@@ -374,18 +387,19 @@ export function DashboardContainer() {
               variant={activeChartTab === "categories" ? "default" : "ghost"}
               size="sm"
               onClick={() => setActiveChartTab("categories")}
-              className="text-xs h-7 px-2.5 gap-1"
+              className="text-xs h-7 px-2.5 gap-1 shrink-0 rounded-lg"
             >
               <Layers className="size-3" />
-              <span>Nutritional Stack</span>
+              <span>Categories</span>
             </Button>
             <Button
               variant={activeChartTab === "scatter" ? "default" : "ghost"}
               size="sm"
               onClick={() => setActiveChartTab("scatter")}
-              className="text-xs h-7 px-2.5"
+              className="text-xs h-7 px-2.5 gap-1 shrink-0 rounded-lg"
             >
-              Wage vs Cost
+              <BarChart3 className="size-3" />
+              <span>Wage vs Cost</span>
             </Button>
           </div>
         </CardHeader>

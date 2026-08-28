@@ -1,26 +1,27 @@
 ---
 import { ThemeToggle } from "./ThemeToggle";
 import { getBasePath } from "../lib/utils";
+import { Compass, BarChart2, Globe, Trophy, Scale, BookOpen } from "lucide-react";
 
 const rawPathname = new URL(Astro.request.url).pathname;
 const normalize = (p: string) => (p.length > 1 && p.endsWith("/") ? p.slice(0, -1) : p);
 const currentNormalized = normalize(rawPathname);
 
 const navLinks = [
-  { name: "Overview", href: getBasePath("/") },
-  { name: "Dashboard", href: getBasePath("/dashboard") },
-  { name: "Continents", href: getBasePath("/continents") },
-  { name: "Global Ranking", href: getBasePath("/ranking") },
-  { name: "Compare", href: getBasePath("/compare") },
-  { name: "Methodology", href: getBasePath("/methodology") },
+  { name: "Overview", href: getBasePath("/"), icon: Compass },
+  { name: "Dashboard", href: getBasePath("/dashboard"), icon: BarChart2 },
+  { name: "Continents", href: getBasePath("/continents"), icon: Globe },
+  { name: "Global Ranking", href: getBasePath("/ranking"), icon: Trophy },
+  { name: "Compare", href: getBasePath("/compare"), icon: Scale },
+  { name: "Methodology", href: getBasePath("/methodology"), icon: BookOpen },
 ];
 ---
 
-<header class="sticky top-0 z-40 w-full glass-nav">
-  <div class="container mx-auto flex h-16 items-center justify-between px-4 sm:px-8">
+<header class="sticky top-0 z-40 w-full glass-nav backdrop-blur-xl border-b border-border/60 bg-background/80">
+  <div class="container mx-auto flex h-16 items-center justify-between px-3 sm:px-6 lg:px-8">
     <!-- Brand -->
-    <a href={getBasePath("/")} class="flex items-center gap-3 group">
-      <div class="size-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary group-hover:scale-105 group-hover:bg-primary/20 transition-all duration-300">
+    <a href={getBasePath("/")} class="flex items-center gap-2.5 sm:gap-3 group">
+      <div class="size-9 sm:size-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary group-hover:scale-105 group-hover:bg-primary/20 transition-all duration-300 shadow-sm">
         <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="10"></circle>
           <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
@@ -28,42 +29,44 @@ const navLinks = [
         </svg>
       </div>
       <div class="flex flex-col">
-        <div class="flex items-center gap-2">
-          <span class="font-heading font-bold text-lg tracking-tight text-foreground">Atlas<span class="text-primary">Index</span></span>
-          <span class="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary border border-primary/20">2025</span>
+        <div class="flex items-center gap-1.5 sm:gap-2">
+          <span class="font-heading font-extrabold text-base sm:text-lg tracking-tight text-foreground">Atlas<span class="text-primary">Index</span></span>
+          <span class="rounded-full bg-primary/10 px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-[10px] font-bold text-primary border border-primary/20">2025</span>
         </div>
-        <span class="text-[11px] text-muted-foreground hidden sm:inline">Labor Effort & Real Food Parity</span>
+        <span class="text-[10px] sm:text-[11px] text-muted-foreground hidden sm:inline">195 Sovereign Nations • 4 Living Pillars</span>
       </div>
     </a>
 
     <!-- Navigation links (Desktop) -->
-    <nav class="hidden md:flex items-center gap-1">
+    <nav class="hidden lg:flex items-center gap-1">
       {navLinks.map((link) => {
         const isActive = currentNormalized === normalize(link.href);
+        const IconComponent = link.icon;
         return (
           <a
             href={link.href}
-            class={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
+            class={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
               isActive
-                ? "bg-primary text-primary-foreground font-semibold shadow-sm"
+                ? "bg-primary text-primary-foreground font-bold shadow-sm"
                 : "text-muted-foreground hover:text-foreground hover:bg-accent/60"
             }`}
           >
-            {link.name}
+            <IconComponent className="size-3.5" />
+            <span>{link.name}</span>
           </a>
         );
       })}
     </nav>
 
     <!-- Theme and Actions -->
-    <div class="flex items-center gap-2 sm:gap-3">
+    <div class="flex items-center gap-1.5 sm:gap-3">
       <ThemeToggle client:load />
 
       <a
         href="https://github.com/BanguDevClub/atlasindex"
         target="_blank"
         rel="noreferrer"
-        class="flex size-9 items-center justify-center rounded-md border border-input bg-card/60 text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+        class="flex size-8 sm:size-9 items-center justify-center rounded-xl border border-input bg-card/60 text-muted-foreground hover:text-foreground hover:bg-accent transition-colors shadow-sm"
         aria-label="GitHub Repository: BanguDevClub/atlasindex"
         title="View source on GitHub"
       >
@@ -74,20 +77,22 @@ const navLinks = [
     </div>
   </div>
 
-  <!-- Mobile navigation bar -->
-  <div class="flex md:hidden overflow-x-auto border-t border-border/40 px-4 py-2 gap-2 scrollbar-none">
+  <!-- Mobile navigation bar (Touch-optimized scrollable pill bar) -->
+  <div class="flex lg:hidden overflow-x-auto border-t border-border/40 px-3 py-2 gap-1.5 scrollbar-none bg-muted/20">
     {navLinks.map((link) => {
       const isActive = currentNormalized === normalize(link.href);
+      const IconComponent = link.icon;
       return (
         <a
           href={link.href}
-          class={`whitespace-nowrap px-3 py-1 rounded-md text-xs font-medium transition-colors ${
+          class={`whitespace-nowrap px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all shrink-0 ${
             isActive
-              ? "bg-primary text-primary-foreground font-semibold"
-              : "text-muted-foreground hover:text-foreground bg-muted/40"
+              ? "bg-primary text-primary-foreground font-bold shadow-sm"
+              : "text-muted-foreground hover:text-foreground bg-background/60 border border-border/50"
           }`}
         >
-          {link.name}
+          <IconComponent className="size-3.5" />
+          <span>{link.name}</span>
         </a>
       );
     })}

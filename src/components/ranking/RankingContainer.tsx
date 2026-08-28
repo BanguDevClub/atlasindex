@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/table";
 import { formatCurrency, formatHours, formatPercent, formatMinutes, getBasePath } from "@/lib/utils";
 
+import { SearchableSelect, type SearchableSelectOption } from "@/components/ui/SearchableSelect";
 import {
   Search,
   Download,
@@ -28,6 +29,7 @@ import {
   Stethoscope,
   Layers,
   Globe,
+  Filter,
 } from "lucide-react";
 
 type PillarView = "overview" | "food" | "rent" | "car" | "medical" | "combined";
@@ -269,6 +271,44 @@ export function RankingContainer() {
   const continents = ["All", "Europe", "Americas", "Asia", "Oceania", "Africa"];
   const tiers = ["All", "Low", "Moderate", "High", "Severe"];
 
+  const continentFilterOptions: SearchableSelectOption[] = useMemo(() => {
+    return continents.map((c) => ({
+      value: c,
+      label: c === "All" ? "All Continents" : c,
+    }));
+  }, [continents]);
+
+  const tierFilterOptions: SearchableSelectOption[] = useMemo(() => {
+    return tiers.map((t) => ({
+      value: t,
+      label: t === "All" ? "All Tiers" : `${t} Stress`,
+      badge: t !== "All" ? t : undefined,
+      badgeVariant:
+        t === "Low"
+          ? "success"
+          : t === "Moderate"
+          ? "warning"
+          : t === "High"
+          ? "secondary"
+          : "destructive",
+    }));
+  }, [tiers]);
+
+  const dataSourceOptions: SearchableSelectOption[] = useMemo(
+    () => [
+      { value: "all", label: "All 195 Nations", sublabel: "176 Official + 19 Estimated" },
+      { value: "official", label: "Official Reports", sublabel: "176 sovereign states" },
+      {
+        value: "estimated",
+        label: "Estimates Only",
+        sublabel: "19 data-sparse states",
+        badge: "Est.",
+        badgeVariant: "warning",
+      },
+    ],
+    []
+  );
+
   return (
     <div className="flex flex-col gap-6 pb-16">
       {/* Header */}
@@ -366,67 +406,69 @@ export function RankingContainer() {
       </div>
 
       {/* Controls Bar */}
-      <Card className="border-border/80 bg-card/70 backdrop-blur p-4">
+      <Card className="border-border/80 bg-card/70 backdrop-blur p-4 sm:p-5 shadow-sm relative z-30 overflow-visible">
         <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4">
           {/* Search */}
-          <div className="relative flex-1 max-w-sm">
+          <div className="relative flex-1 max-w-md">
             <Search className="size-4 absolute left-3 top-2.5 text-muted-foreground" />
             <Input
               type="text"
               placeholder="Search country (e.g. North Korea, Brazil, Japan)..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9 bg-background/80 text-xs h-9"
+              className="pl-9 bg-background/80 text-xs h-9 rounded-xl"
             />
           </div>
 
           {/* Filters */}
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <span>Continent:</span>
-              <select
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3 w-full lg:w-auto">
+            <div className="w-full sm:w-[150px]">
+              <SearchableSelect
+                options={continentFilterOptions}
                 value={selectedContinent}
-                onChange={(e) => setSelectedContinent(e.target.value)}
-                className="h-8 rounded-md border border-input bg-background px-2 text-xs focus:outline-none focus:ring-1 focus:ring-primary"
-              >
-                {continents.map((c) => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
-                ))}
-              </select>
+                onChange={setSelectedContinent}
+                placeholder="Continent..."
+                searchPlaceholder="Search continent..."
+                size="sm"
+                align="left"
+                ariaLabel="Filter by Continent"
+              />
             </div>
 
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <span>Stress Tier:</span>
-              <select
+            <div className="w-full sm:w-[150px]">
+              <SearchableSelect
+                options={tierFilterOptions}
                 value={selectedTier}
-                onChange={(e) => setSelectedTier(e.target.value)}
-                className="h-8 rounded-md border border-input bg-background px-2 text-xs focus:outline-none focus:ring-1 focus:ring-primary"
-              >
-                {tiers.map((t) => (
-                  <option key={t} value={t}>
-                    {t}
-                  </option>
-                ))}
-              </select>
+                onChange={setSelectedTier}
+                placeholder="Stress Tier..."
+                searchPlaceholder="Search tier..."
+                size="sm"
+                align="left"
+                ariaLabel="Filter by Stress Tier"
+              />
             </div>
 
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <span>Data Source:</span>
-              <select
+            <div className="w-full sm:w-[160px]">
+              <SearchableSelect
+                options={dataSourceOptions}
                 value={dataFilter}
-                onChange={(e) => setDataFilter(e.target.value as any)}
-                className="h-8 rounded-md border border-input bg-background px-2 text-xs focus:outline-none focus:ring-1 focus:ring-primary"
-              >
-                <option value="all">All (195 Nations)</option>
-                <option value="official">Official Reports Only (176)</option>
-                <option value="estimated">Econometric Estimates Only (19)</option>
-              </select>
+                onChange={(v) => setDataFilter(v as any)}
+                placeholder="Data Source..."
+                searchPlaceholder="Search source..."
+                size="sm"
+                align="right"
+                ariaLabel="Filter by Data Source"
+              />
             </div>
           </div>
         </div>
       </Card>
+
+      {/* Mobile Horizontal Scroll Tip */}
+      <div className="flex sm:hidden items-center justify-between px-1 text-[11px] text-muted-foreground">
+        <span>Showing {filteredAndSortedCountries.length} countries</span>
+        <span className="font-semibold text-primary">← Swipe table horizontally →</span>
+      </div>
 
       {/* Data Table */}
       <Card className="border-border/80 bg-card/60 backdrop-blur shadow-md overflow-hidden">

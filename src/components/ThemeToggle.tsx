@@ -101,9 +101,9 @@ export function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <div className="h-9 w-[180px] rounded-md border border-input bg-card/50 flex items-center px-3 gap-2 text-xs text-muted-foreground animate-pulse">
-        <Palette className="size-4 opacity-60" />
-        <span>Loading theme...</span>
+      <div className="h-8 sm:h-9 w-[120px] sm:w-[190px] rounded-xl border border-input bg-card/50 flex items-center px-2.5 sm:px-3 gap-2 text-xs text-muted-foreground animate-pulse">
+        <Palette className="size-3.5 opacity-60 shrink-0" />
+        <span className="truncate">Theme...</span>
       </div>
     );
   }
@@ -113,15 +113,15 @@ export function ThemeToggle() {
   return (
     <div className="flex items-center gap-2">
       <Select value={currentTheme} onValueChange={handleChange}>
-        <SelectTrigger className="h-9 w-[190px] bg-card/80 backdrop-blur border-border/80 text-xs font-medium focus:ring-1 focus:ring-primary">
-          <div className="flex items-center gap-2 truncate">
+        <SelectTrigger className="h-8 sm:h-9 w-[120px] sm:w-[190px] bg-card/80 backdrop-blur border-border/80 text-xs font-medium focus:ring-1 focus:ring-primary rounded-xl px-2.5 sm:px-3">
+          <div className="flex items-center gap-1.5 sm:gap-2 truncate">
             <Palette className="size-3.5 text-primary shrink-0" />
             <div className="flex items-center gap-1.5 truncate">
               <span className="truncate">{activeOption.name}</span>
             </div>
           </div>
         </SelectTrigger>
-        <SelectContent align="end" className="w-[240px]">
+        <SelectContent align="end" className="w-[230px] sm:w-[250px] rounded-xl">
           <SelectGroup>
             <SelectLabel className="text-[10px] uppercase tracking-wider text-muted-foreground">
               Standard Themes
