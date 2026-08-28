@@ -69,7 +69,7 @@ export interface ProcessedCountryEconomy {
   hourlyMedianWageLocal: number;
   hourlyMedianWageUSD: number;
   
-  // Total Food Basket Calculations
+  // Pillar 1: Total Food Basket Calculations
   monthlyBasketCostLocal: number;
   monthlyBasketCostUSD: number;
   basketPercentOfWage: number;
@@ -123,10 +123,16 @@ export interface ProcessedCountryEconomy {
   // Detailed items
   items: ProcessedItemBurden[];
 
-  // Indices
-  appiScore: number; // 0-100 Atlas Purchasing Power Index
+  // Indices & APPI Breakdown
+  appiScore: number; // 0-100 Composite APPI: 70% Essentials + 30% Luxury
+  appiEssentials: number; // 0-100 APPI Essentials (Food + Rent)
+  appiLuxury: number; // 0-100 APPI Luxury (Health + Car)
   stressTier: StressTier;
-  rank?: number;
+  
+  // Rankings
+  rank?: number; // Primary Composite APPI Rank
+  essentialsRank?: number; // APPI Essentials Rank
+  luxuryRank?: number; // APPI Luxury Rank
   rentRank?: number;
   carRank?: number;
   medicalRank?: number;
@@ -140,6 +146,22 @@ export interface ProcessedCountryEconomy {
   notes?: string;
   isEstimated?: boolean;
   estimationDisclaimer?: string;
+}
+
+export interface CustomWageResult {
+  basketPercent: number;
+  laborHours: number;
+  rentPercent: number;
+  rentHours: number;
+  carMonths: number;
+  medicalPercent: number;
+  medicalHours: number;
+  totalEssentialPercent: number;
+  totalEssentialHours: number;
+  appiScore: number;
+  appiEssentials: number;
+  appiLuxury: number;
+  stressTier: StressTier;
 }
 
 export interface GlobalEconomySummary {
@@ -165,6 +187,8 @@ export interface GlobalEconomySummary {
   avgTotalEssentialPercentOfWage: number;
 
   avgAppiScore: number;
+  avgAppiEssentials: number;
+  avgAppiLuxury: number;
 
   tierDistribution: {
     Low: number;
@@ -203,6 +227,9 @@ export interface ContinentEconomySummary {
   avgMedicalCheckupPercentOfWage: number;
 
   avgAppiScore: number;
+  avgAppiEssentials: number;
+  avgAppiLuxury: number;
+  
   categoryLaborHours: {
     staples: number;
     meat: number;

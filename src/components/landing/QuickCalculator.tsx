@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { SearchableSelect, type SearchableSelectOption } from "@/components/ui/SearchableSelect";
 import { formatCurrency, formatHours, formatMinutes, formatPercent, getBasePath } from "@/lib/utils";
-import { Calculator, ArrowRight, Utensils, Home, Car, Stethoscope, Info, Sparkles } from "lucide-react";
+import { Calculator, ArrowRight, Utensils, Home, Car, Stethoscope, Info, Sparkles, ShieldCheck } from "lucide-react";
 
 export function QuickCalculator() {
   const allCountries = useMemo(() => getAllProcessedCountries(RAW_COUNTRIES), []);
@@ -36,6 +36,9 @@ export function QuickCalculator() {
       medicalHours: currentCountry.medicalCheckupLaborHours,
       totalEssentialPercent: currentCountry.totalEssentialPercentOfWage,
       totalEssentialHours: currentCountry.totalEssentialLaborHours,
+      appiScore: currentCountry.appiScore,
+      appiEssentials: currentCountry.appiEssentials,
+      appiLuxury: currentCountry.appiLuxury,
       stressTier: currentCountry.stressTier,
     };
   }, [currentCountry, isCustomWage, customWageUSD]);
@@ -45,7 +48,7 @@ export function QuickCalculator() {
     return allCountries.map((c) => ({
       value: c.id,
       label: c.name,
-      sublabel: `Median Wage: ${formatCurrency(c.monthlyMedianWageUSD, "USD")}/mo • Food: ${c.laborHoursForBasket.toFixed(1)}h`,
+      sublabel: `Median Wage: ${formatCurrency(c.monthlyMedianWageUSD, "USD")}/mo • APPI: ${c.appiScore}/100`,
       icon: <span className="text-base">{c.flag}</span>,
       badge: c.isEstimated ? "Est." : c.code,
       badgeVariant: c.isEstimated ? "warning" : "default",
@@ -79,12 +82,17 @@ export function QuickCalculator() {
             </div>
             <div>
               <CardTitle className="text-base font-bold">Multi-Pillar Labor & Living Cost Calculator</CardTitle>
-              <CardDescription className="text-xs">Estimate real nutritional, housing, and healthcare effort for any country or custom wage</CardDescription>
+              <CardDescription className="text-xs">Standardized across APPI Essentials (Food+Rent), APPI Luxury (Health+Car), and 70/30 Composite Score</CardDescription>
             </div>
           </div>
-          <Badge variant={tierBadgeVariant(result.stressTier)} className="text-xs px-2.5 py-1">
-            {result.stressTier} Food Stress
-          </Badge>
+          <div className="flex items-center gap-2">
+            <Badge variant={tierBadgeVariant(result.stressTier)} className="text-xs px-2.5 py-1 font-bold">
+              {result.stressTier} Living Stress
+            </Badge>
+            <div className="px-2.5 py-1 rounded-full bg-primary text-primary-foreground text-xs font-black shadow-xs">
+              APPI {result.appiScore}
+            </div>
+          </div>
         </div>
       </CardHeader>
 
@@ -133,6 +141,45 @@ export function QuickCalculator() {
                 className="pl-7 bg-background/80 text-sm h-10 rounded-xl"
               />
             </div>
+          </div>
+        </div>
+
+        {/* APPI Score Decomposition Banner */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="p-3.5 rounded-xl border border-primary/30 bg-primary/5 flex flex-col justify-between">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-primary flex items-center gap-1.5">
+                <Sparkles className="size-3.5" /> Composite APPI
+              </span>
+              <span className="text-lg font-black text-primary">{result.appiScore} / 100</span>
+            </div>
+            <p className="text-[11px] text-muted-foreground mt-1">
+              70% Essentials ({result.appiEssentials}) + 30% Luxury ({result.appiLuxury})
+            </p>
+          </div>
+
+          <div className="p-3.5 rounded-xl border border-chart-2/30 bg-chart-2/5 flex flex-col justify-between">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-chart-2 flex items-center gap-1.5">
+                <Utensils className="size-3.5" /> APPI Essentials
+              </span>
+              <span className="text-lg font-black text-chart-2">{result.appiEssentials} / 100</span>
+            </div>
+            <p className="text-[11px] text-muted-foreground mt-1">
+              Food ({formatPercent(result.basketPercent)}) + 1-BR Rent ({formatPercent(result.rentPercent)})
+            </p>
+          </div>
+
+          <div className="p-3.5 rounded-xl border border-chart-4/30 bg-chart-4/5 flex flex-col justify-between">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-chart-4 flex items-center gap-1.5">
+                <Car className="size-3.5" /> APPI Luxury
+              </span>
+              <span className="text-lg font-black text-chart-4">{result.appiLuxury} / 100</span>
+            </div>
+            <p className="text-[11px] text-muted-foreground mt-1">
+              Healthcare ({formatPercent(result.medicalPercent)}) + Car ({result.carMonths.toFixed(1)} mos)
+            </p>
           </div>
         </div>
 
@@ -285,7 +332,7 @@ export function QuickCalculator() {
       <CardFooter className="border-t border-border/40 bg-muted/20 px-4 sm:px-6 py-3 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
         <div className="flex items-center gap-1.5 text-muted-foreground text-center sm:text-left">
           <Info className="size-3.5 shrink-0 text-primary" />
-          <span>Full-time baseline standardized to 160 labor hours / month (40h/week).</span>
+          <span>Standardized full-time baseline of 160 labor hours / month (40h/week).</span>
         </div>
         <a
           href={getBasePath(`/compare?c1=${currentCountry.id}&c2=world-average`)}

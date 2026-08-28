@@ -376,11 +376,17 @@ export function CountryComparator() {
                 </div>
               </div>
 
-              <div className="flex justify-between items-center py-1 mt-1 pt-1.5 border-t border-border/40">
-                <span className="text-muted-foreground font-semibold">APPI Score:</span>
-                <span className="font-bold text-xs px-2 py-0.5 rounded bg-primary/10 text-primary border border-primary/20">
-                  {country.appiScore} / 100
-                </span>
+              <div className="p-2 rounded-lg bg-primary/5 border border-primary/20 mt-1 flex flex-col gap-1">
+                <div className="flex justify-between items-center text-[11px] font-bold text-primary">
+                  <span>Composite APPI (70/30):</span>
+                  <span className="px-2 py-0.5 rounded bg-primary/20 text-primary font-black">
+                    {country.appiScore} / 100
+                  </span>
+                </div>
+                <div className="flex justify-between text-[10px] text-muted-foreground pt-1 border-t border-border/40">
+                  <span>Essentials: <strong className="text-chart-2">{country.appiEssentials}</strong></span>
+                  <span>Luxury: <strong className="text-chart-4">{country.appiLuxury}</strong></span>
+                </div>
               </div>
             </CardContent>
           </Card>

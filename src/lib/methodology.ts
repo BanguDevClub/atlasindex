@@ -7,24 +7,72 @@ import type {
   Continent,
   ContinentEconomySummary,
   GlobalEconomySummary,
+  CustomWageResult,
 } from "./types";
 
-export function getStressTier(basketPercentOfWage: number): StressTier {
-  if (basketPercentOfWage < 10) return "Low";
-  if (basketPercentOfWage <= 20) return "Moderate";
-  if (basketPercentOfWage <= 35) return "High";
+/**
+ * Categorizes an APPI score into 4 standard Purchasing Power & Living Stress Tiers.
+ * Tier 1: Low Stress (APPI >= 70)
+ * Tier 2: Moderate Stress (50 <= APPI < 70)
+ * Tier 3: High Stress (25 <= APPI < 50)
+ * Tier 4: Severe Stress (APPI < 25)
+ */
+export function getStressTier(score: number): StressTier {
+  if (score >= 70) return "Low";
+  if (score >= 50) return "Moderate";
+  if (score >= 25) return "High";
   return "Severe";
 }
 
 /**
- * Calculates the Atlas Purchasing Power Index (APPI) on a 0-100 scale.
- * A higher score denotes stronger purchasing power and lower labor effort for nutrition.
+ * Calculates APPI Essentials (Food + 1-BR Housing Rent) on a 1-100 scale.
+ * Weighted 70% on wage share burden (Engel's Law) and 30% on absolute labor hours.
  */
-export function calculateAPPI(basketPercentOfWage: number, laborHours: number): number {
-  const wageBurdenFactor = Math.max(0, 100 - (basketPercentOfWage * 1.8));
-  const hoursFactor = Math.max(0, 100 - (laborHours * 1.0));
+export function calculateAPPIEssentials(essentialPercentOfWage: number, essentialLaborHours: number): number {
+  if (essentialPercentOfWage <= 0 || essentialLaborHours <= 0) return 1;
+  const wageBurdenFactor = Math.max(0, 100 - (essentialPercentOfWage * 0.90));
+  const hoursFactor = Math.max(0, 100 - (essentialLaborHours * 0.55));
   
-  const score = Math.round((wageBurdenFactor * 0.7) + (hoursFactor * 0.3));
+  const score = Math.round((wageBurdenFactor * 0.70) + (hoursFactor * 0.30));
+  return Math.min(100, Math.max(1, score));
+}
+
+/**
+ * Calculates APPI Luxury (Transport Car Purchase + Healthcare Medical Exam) on a 1-100 scale.
+ * Combines labor months for passenger vehicle purchase and labor cost for clinical blood panels.
+ */
+export function calculateAPPILuxury(carLaborMonths: number, medicalPercentOfWage: number): number {
+  if (carLaborMonths <= 0 && medicalPercentOfWage <= 0) return 1;
+  const carFactor = Math.max(0, 100 - (carLaborMonths * 1.25));
+  const medicalFactor = Math.max(0, 100 - (medicalPercentOfWage * 2.5));
+  
+  const score = Math.round((carFactor * 0.60) + (medicalFactor * 0.40));
+  return Math.min(100, Math.max(1, score));
+}
+
+/**
+ * Calculates the Composite Atlas Purchasing Power Index (APPI) on a 1-100 scale:
+ * 70% APPI Essentials (Food + Rent) + 30% APPI Luxury (Health + Car).
+ */
+export function calculateAPPI(
+  essentialPercentOrScore: number,
+  essentialLaborHoursOrLuxuryScore?: number,
+  isDirectComponents: boolean = false
+): number {
+  if (isDirectComponents || (essentialLaborHoursOrLuxuryScore !== undefined && essentialLaborHoursOrLuxuryScore <= 100 && essentialPercentOrScore <= 100 && essentialLaborHoursOrLuxuryScore >= 0)) {
+    const ess = essentialPercentOrScore;
+    const lux = essentialLaborHoursOrLuxuryScore ?? 1;
+    const score = Math.round((ess * 0.70) + (lux * 0.30));
+    return Math.min(100, Math.max(1, score));
+  }
+
+  // Fallback for legacy calls (percent, hours)
+  const essScore = calculateAPPIEssentials(essentialPercentOrScore, essentialLaborHoursOrLuxuryScore ?? 0);
+  return essScore;
+}
+
+export function calculateAPPIComposite(appiEssentials: number, appiLuxury: number): number {
+  const score = Math.round((appiEssentials * 0.70) + (appiLuxury * 0.30));
   return Math.min(100, Math.max(1, score));
 }
 
@@ -100,6 +148,7 @@ export function processCountryEconomy(raw: CountryRawData): ProcessedCountryEcon
     };
   });
 
+  // 1. Food Basket
   const monthlyBasketCostUSD = monthlyBasketCostLocal / raw.exchangeRateToUSD;
   const basketPercentOfWage = raw.monthlyMedianWageLocal > 0 
     ? (monthlyBasketCostLocal / raw.monthlyMedianWageLocal) * 100 
@@ -139,13 +188,18 @@ export function processCountryEconomy(raw: CountryRawData): ProcessedCountryEcon
 
   // Combined Essential Living (Food Basket + Rent)
   const totalEssentialMonthlyCostUSD = monthlyBasketCostUSD + rentMonthlyUSD;
-  const totalEssentialPercentOfWage = raw.monthlyMedianWageUSD > 0
-    ? (totalEssentialMonthlyCostUSD / raw.monthlyMedianWageUSD) * 100
-    : 0;
+  const totalEssentialPercentOfWage = basketPercentOfWage + rentPercentOfWage;
   const totalEssentialLaborHours = laborHoursForBasket + rentLaborHours;
 
-  const appiScore = calculateAPPI(basketPercentOfWage, laborHoursForBasket);
-  const stressTier = getStressTier(basketPercentOfWage);
+  // Compute APPI Essentials (Food + Rent)
+  const appiEssentials = calculateAPPIEssentials(totalEssentialPercentOfWage, totalEssentialLaborHours);
+
+  // Compute APPI Luxury (Health + Car)
+  const appiLuxury = calculateAPPILuxury(carLaborMonths, medicalCheckupPercentOfWage);
+
+  // Compute Composite APPI (70% Essentials + 30% Luxury)
+  const appiScore = calculateAPPIComposite(appiEssentials, appiLuxury);
+  const stressTier = getStressTier(appiScore);
 
   const remainingDisposableWageLocal = Math.max(0, raw.monthlyMedianWageLocal - monthlyBasketCostLocal);
   const remainingDisposableWageUSD = Math.max(0, raw.monthlyMedianWageUSD - monthlyBasketCostUSD);
@@ -192,6 +246,8 @@ export function processCountryEconomy(raw: CountryRawData): ProcessedCountryEcon
     categoryLaborHours,
     items,
     appiScore,
+    appiEssentials,
+    appiLuxury,
     stressTier,
     dataYear: raw.dataYear,
     wageSource: raw.wageSource,
@@ -207,36 +263,50 @@ export function processCountryEconomy(raw: CountryRawData): ProcessedCountryEcon
 export function getAllProcessedCountries(rawCountries: CountryRawData[]): ProcessedCountryEconomy[] {
   const processed = rawCountries.map(processCountryEconomy);
 
-  // 1. Food Rank (Primary default rank)
-  processed.sort((a, b) => a.basketPercentOfWage - b.basketPercentOfWage);
+  // 1. Primary Composite APPI Rank (Highest APPI score = Rank 1)
+  processed.sort((a, b) => b.appiScore - a.appiScore || a.totalEssentialPercentOfWage - b.totalEssentialPercentOfWage);
   processed.forEach((c, idx) => {
     c.rank = idx + 1;
   });
 
-  // 2. Rent Rank
+  // 2. APPI Essentials Rank
+  const byEssentials = [...processed].sort((a, b) => b.appiEssentials - a.appiEssentials || a.totalEssentialPercentOfWage - b.totalEssentialPercentOfWage);
+  byEssentials.forEach((c, idx) => {
+    const found = processed.find((p) => p.id === c.id);
+    if (found) found.essentialsRank = idx + 1;
+  });
+
+  // 3. APPI Luxury Rank
+  const byLuxury = [...processed].sort((a, b) => b.appiLuxury - a.appiLuxury || a.carLaborMonths - b.carLaborMonths);
+  byLuxury.forEach((c, idx) => {
+    const found = processed.find((p) => p.id === c.id);
+    if (found) found.luxuryRank = idx + 1;
+  });
+
+  // 4. Rent Rank
   const byRent = [...processed].sort((a, b) => a.rentPercentOfWage - b.rentPercentOfWage);
   byRent.forEach((c, idx) => {
     const found = processed.find((p) => p.id === c.id);
     if (found) found.rentRank = idx + 1;
   });
 
-  // 3. Car Rank
+  // 5. Car Rank
   const byCar = [...processed].sort((a, b) => a.carLaborMonths - b.carLaborMonths);
   byCar.forEach((c, idx) => {
     const found = processed.find((p) => p.id === c.id);
     if (found) found.carRank = idx + 1;
   });
 
-  // 4. Medical Rank
+  // 6. Medical Rank
   const byMedical = [...processed].sort((a, b) => a.medicalCheckupPercentOfWage - b.medicalCheckupPercentOfWage);
   byMedical.forEach((c, idx) => {
     const found = processed.find((p) => p.id === c.id);
     if (found) found.medicalRank = idx + 1;
   });
 
-  // 5. Combined Essential Rank
-  const byCombined = [...processed].sort((a, b) => a.totalEssentialPercentOfWage - b.totalEssentialPercentOfWage);
-  byCombined.forEach((c, idx) => {
+  // 7. Combined Essential Living Rank
+  const byEssentialCost = [...processed].sort((a, b) => a.totalEssentialPercentOfWage - b.totalEssentialPercentOfWage);
+  byEssentialCost.forEach((c, idx) => {
     const found = processed.find((p) => p.id === c.id);
     if (found) found.combinedRank = idx + 1;
   });
@@ -247,19 +317,24 @@ export function getAllProcessedCountries(rawCountries: CountryRawData[]): Proces
 export function calculateCustomWageEffort(
   country: ProcessedCountryEconomy,
   customMonthlyWageUSD: number
-) {
-  if (customMonthlyWageUSD <= 0) return {
-    basketPercent: 0,
-    laborHours: 0,
-    rentPercent: 0,
-    rentHours: 0,
-    carMonths: 0,
-    medicalPercent: 0,
-    medicalHours: 0,
-    totalEssentialPercent: 0,
-    totalEssentialHours: 0,
-    stressTier: "Low" as StressTier,
-  };
+): CustomWageResult {
+  if (customMonthlyWageUSD <= 0) {
+    return {
+      basketPercent: 0,
+      laborHours: 0,
+      rentPercent: 0,
+      rentHours: 0,
+      carMonths: 0,
+      medicalPercent: 0,
+      medicalHours: 0,
+      totalEssentialPercent: 0,
+      totalEssentialHours: 0,
+      appiScore: 0,
+      appiEssentials: 0,
+      appiLuxury: 0,
+      stressTier: "Severe" as StressTier,
+    };
+  }
 
   const customHourlyWageUSD = customMonthlyWageUSD / 160;
   const basketPercent = (country.monthlyBasketCostUSD / customMonthlyWageUSD) * 100;
@@ -272,6 +347,11 @@ export function calculateCustomWageEffort(
   const totalEssentialPercent = basketPercent + rentPercent;
   const totalEssentialHours = laborHours + rentHours;
 
+  const appiEssentials = calculateAPPIEssentials(totalEssentialPercent, totalEssentialHours);
+  const appiLuxury = calculateAPPILuxury(carMonths, medicalPercent);
+  const appiScore = calculateAPPIComposite(appiEssentials, appiLuxury);
+  const stressTier = getStressTier(appiScore);
+
   return {
     basketPercent,
     laborHours,
@@ -282,7 +362,10 @@ export function calculateCustomWageEffort(
     medicalHours,
     totalEssentialPercent,
     totalEssentialHours,
-    stressTier: getStressTier(basketPercent),
+    appiScore,
+    appiEssentials,
+    appiLuxury,
+    stressTier,
   };
 }
 
@@ -312,7 +395,9 @@ export function getGlobalSummary(processedCountries: ProcessedCountryEconomy[]):
   const avgTotalEssentialLaborHours = processedCountries.reduce((acc, c) => acc + c.totalEssentialLaborHours, 0) / countryCount;
   const avgTotalEssentialPercentOfWage = processedCountries.reduce((acc, c) => acc + c.totalEssentialPercentOfWage, 0) / countryCount;
 
-  const avgAppiScore = Math.round(processedCountries.reduce((acc, c) => acc + c.appiScore, 0) / countryCount);
+  const avgAppiEssentials = Math.round(processedCountries.reduce((acc, c) => acc + c.appiEssentials, 0) / countryCount);
+  const avgAppiLuxury = Math.round(processedCountries.reduce((acc, c) => acc + c.appiLuxury, 0) / countryCount);
+  const avgAppiScore = calculateAPPIComposite(avgAppiEssentials, avgAppiLuxury);
 
   const tierDistribution = {
     Low: processedCountries.filter((c) => c.stressTier === "Low").length,
@@ -344,6 +429,8 @@ export function getGlobalSummary(processedCountries: ProcessedCountryEconomy[]):
     avgTotalEssentialLaborHours,
     avgTotalEssentialPercentOfWage,
     avgAppiScore,
+    avgAppiEssentials,
+    avgAppiLuxury,
     tierDistribution,
     bestFoodCountry: byFood[0],
     worstFoodCountry: byFood[byFood.length - 1],
@@ -445,7 +532,9 @@ export function getWorldAverageCountry(processedCountries: ProcessedCountryEcono
     categoryLaborHours,
     items,
     appiScore: summary.avgAppiScore,
-    stressTier: getStressTier(summary.avgBasketPercentOfWage),
+    appiEssentials: summary.avgAppiEssentials,
+    appiLuxury: summary.avgAppiLuxury,
+    stressTier: getStressTier(summary.avgAppiScore),
     rank: 0,
     dataYear: 2025,
     wageSource: "Global 195 Sovereign Nations Synthesis",
@@ -482,7 +571,9 @@ export function getContinentalSummaries(processedCountries: ProcessedCountryEcon
     const avgMedicalCheckupLaborHours = countries.reduce((acc, c) => acc + c.medicalCheckupLaborHours, 0) / countryCount;
     const avgMedicalCheckupPercentOfWage = countries.reduce((acc, c) => acc + c.medicalCheckupPercentOfWage, 0) / countryCount;
 
-    const avgAppiScore = Math.round(countries.reduce((acc, c) => acc + c.appiScore, 0) / countryCount);
+    const avgAppiEssentials = Math.round(countries.reduce((acc, c) => acc + c.appiEssentials, 0) / countryCount);
+    const avgAppiLuxury = Math.round(countries.reduce((acc, c) => acc + c.appiLuxury, 0) / countryCount);
+    const avgAppiScore = calculateAPPIComposite(avgAppiEssentials, avgAppiLuxury);
 
     const categoryLaborHours = {
       staples: countries.reduce((acc, c) => acc + c.categoryLaborHours.staples, 0) / countryCount,
@@ -499,9 +590,10 @@ export function getContinentalSummaries(processedCountries: ProcessedCountryEcon
       Severe: countries.filter((c) => c.stressTier === "Severe").length,
     };
 
-    // Countries are already sorted by rank / basket percent
-    const bestCountry = countries[0];
-    const worstCountry = countries[countries.length - 1];
+    // Sorted by APPI Composite score
+    const sorted = [...countries].sort((a, b) => b.appiScore - a.appiScore);
+    const bestCountry = sorted[0];
+    const worstCountry = sorted[sorted.length - 1];
 
     return {
       continent,
@@ -519,11 +611,13 @@ export function getContinentalSummaries(processedCountries: ProcessedCountryEcon
       avgMedicalCheckupLaborHours,
       avgMedicalCheckupPercentOfWage,
       avgAppiScore,
+      avgAppiEssentials,
+      avgAppiLuxury,
       categoryLaborHours,
       tierDistribution,
       bestCountry,
       worstCountry,
       countries,
     };
-  }).sort((a, b) => a.avgLaborHours - b.avgLaborHours);
+  }).sort((a, b) => b.avgAppiScore - a.avgAppiScore);
 }

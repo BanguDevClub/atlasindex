@@ -195,8 +195,8 @@ export function ContinentComparator() {
                     <span className="size-3 rounded-full" style={{ backgroundColor: continentColors[summary.continent] }}></span>
                     <h3 className="text-base font-bold text-foreground">{summary.continent}</h3>
                   </div>
-                  <Badge variant="secondary" className="text-[11px] font-semibold">
-                    {summary.countryCount} nations
+                  <Badge variant="outline" className="text-xs bg-background/80 font-bold text-primary border-primary/30">
+                    APPI {summary.avgAppiScore}
                   </Badge>
                 </div>
 
@@ -207,7 +207,7 @@ export function ContinentComparator() {
                       {formatHours(summary.avgLaborHours)}
                     </div>
                     <span className="text-xs text-muted-foreground">
-                      ≈ {formatPercent(summary.avgBasketPercentOfWage)} of median wage
+                      ≈ {formatPercent(summary.avgBasketPercentOfWage)} of median wage • APPI Essentials: <strong className="text-chart-2">{summary.avgAppiEssentials}</strong>
                     </span>
                   </div>
 
@@ -228,8 +228,8 @@ export function ContinentComparator() {
                       <span className="font-semibold text-rose-500">${summary.avgMedicalCheckupUSD.toFixed(0)} ({formatHours(summary.avgMedicalCheckupLaborHours)})</span>
                     </div>
                     <div>
-                      <span className="text-[10px] text-muted-foreground block">Median Wage</span>
-                      <span className="font-semibold text-foreground">${summary.avgMonthlyWageUSD.toFixed(0)}/mo</span>
+                      <span className="text-[10px] text-muted-foreground block">APPI Luxury</span>
+                      <span className="font-semibold text-chart-4">{summary.avgAppiLuxury} / 100</span>
                     </div>
                   </div>
                 </div>

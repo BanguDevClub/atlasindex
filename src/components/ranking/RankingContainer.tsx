@@ -1,38 +1,40 @@
 import React, { useState, useMemo } from "react";
-import { RAW_COUNTRIES } from "@/data/countries";
 import { getAllProcessedCountries, getWorldAverageCountry } from "@/lib/methodology";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
+import { RAW_COUNTRIES } from "@/data/countries";
+import type { ProcessedCountryEconomy, StressTier } from "@/lib/types";
+import { formatCurrency, formatHours, formatMinutes, formatPercent, getBasePath } from "@/lib/utils";
 import {
   Table,
-  TableHeader,
   TableBody,
-  TableRow,
-  TableHead,
   TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
-import { formatCurrency, formatHours, formatPercent, formatMinutes, getBasePath } from "@/lib/utils";
-
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { SearchableSelect, type SearchableSelectOption } from "@/components/ui/SearchableSelect";
 import {
-  Search,
-  Download,
+  ArrowUpDown,
   ArrowUp,
   ArrowDown,
-  ChevronDown,
-  ChevronRight,
+  Search,
+  Download,
   Utensils,
   Home,
   Car,
   Stethoscope,
+  ChevronDown,
+  ChevronRight,
+  Sparkles,
   Layers,
   Globe,
-  Filter,
+  ShieldCheck,
 } from "lucide-react";
 
-type PillarView = "overview" | "food" | "rent" | "car" | "medical" | "combined";
+type PillarView = "overview" | "essentials" | "luxury" | "food" | "rent" | "car" | "medical";
 
 type SortField =
   | "rank"
@@ -50,6 +52,9 @@ type SortField =
   | "medicalPercent"
   | "medicalHours"
   | "totalPercent"
+  | "totalHours"
+  | "appiEssentials"
+  | "appiLuxury"
   | "appiScore";
 
 export function RankingContainer() {
@@ -79,7 +84,8 @@ export function RankingContainer() {
         field === "carMonths" ||
         field === "medicalPercent" ||
         field === "medicalHours" ||
-        field === "totalPercent"
+        field === "totalPercent" ||
+        field === "totalHours"
           ? true
           : false
       );
@@ -162,30 +168,47 @@ export function RankingContainer() {
           valA = a.totalEssentialPercentOfWage;
           valB = b.totalEssentialPercentOfWage;
           break;
+        case "totalHours":
+          valA = a.totalEssentialLaborHours;
+          valB = b.totalEssentialLaborHours;
+          break;
+        case "appiEssentials":
+          valA = a.appiEssentials;
+          valB = b.appiEssentials;
+          break;
+        case "appiLuxury":
+          valA = a.appiLuxury;
+          valB = b.appiLuxury;
+          break;
         case "appiScore":
           valA = a.appiScore;
           valB = b.appiScore;
           break;
+        case "rank":
         default:
-          valA = a.rank || 0;
-          valB = b.rank || 0;
+          valA = a.rank ?? 999;
+          valB = b.rank ?? 999;
+          break;
       }
 
-      if (typeof valA === "string") {
-        return sortAsc ? valA.localeCompare(valB) : valB.localeCompare(valA);
-      }
-      return sortAsc ? valA - valB : valB - valA;
+      if (valA < valB) return sortAsc ? -1 : 1;
+      if (valA > valB) return sortAsc ? 1 : -1;
+      return 0;
     });
 
     return list;
   }, [allCountries, searchQuery, selectedContinent, selectedTier, dataFilter, sortField, sortAsc]);
 
-  const tierBadgeVariant = (tier?: string) => {
+  const tierBadgeVariant = (tier: StressTier) => {
     switch (tier) {
-      case "Low": return "tierLow";
-      case "Moderate": return "tierModerate";
-      case "High": return "tierHigh";
-      default: return "tierSevere";
+      case "Low":
+        return "success";
+      case "Moderate":
+        return "warning";
+      case "High":
+        return "secondary";
+      case "Severe":
+        return "destructive";
     }
   };
 
@@ -195,62 +218,66 @@ export function RankingContainer() {
       "Country",
       "Code",
       "Continent",
-      "Currency",
-      "Median_Wage_Local",
-      "Median_Wage_USD",
-      "Food_Basket_USD",
-      "Food_Percent_Wage",
-      "Food_Labor_Hours",
-      "Rent_1BR_USD",
-      "Rent_Percent_Wage",
-      "Rent_Labor_Hours",
-      "Car_Price_USD",
-      "Car_Labor_Months",
-      "Medical_Checkup_USD",
-      "Medical_Percent_Wage",
-      "Medical_Labor_Hours",
-      "Total_Essential_USD",
-      "Total_Essential_Percent_Wage",
-      "APPI_Score",
-      "Stress_Tier",
-      "Is_Estimated",
-      "Wage_Source",
-      "Price_Source",
+      "Data Type",
+      "Median Wage USD",
+      "APPI Score (70/30)",
+      "APPI Essentials (Food+Rent)",
+      "APPI Luxury (Health+Car)",
+      "Food Basket USD",
+      "Food Basket % of Wage",
+      "Food Labor Hours",
+      "1-BR Rent USD",
+      "Rent % of Wage",
+      "Rent Labor Hours",
+      "Passenger Car USD",
+      "Car Labor Months",
+      "Medical Checkup USD",
+      "Medical % of Wage",
+      "Medical Labor Hours",
+      "Essential Living USD",
+      "Essential % of Wage",
+      "Essential Labor Hours",
+      "Stress Tier",
+      "Wage Source",
+      "Price Source",
+      "Estimation Disclaimer",
     ];
 
     const rows = filteredAndSortedCountries.map((c) => [
       c.rank,
       `"${c.name}"`,
       c.code,
-      `"${c.continent}"`,
-      c.currencyCode,
-      c.monthlyMedianWageLocal,
+      c.continent,
+      c.isEstimated ? "Estimated" : "Official",
       c.monthlyMedianWageUSD.toFixed(2),
+      c.appiScore,
+      c.appiEssentials,
+      c.appiLuxury,
       c.monthlyBasketCostUSD.toFixed(2),
       c.basketPercentOfWage.toFixed(2),
-      c.laborHoursForBasket.toFixed(2),
+      c.laborHoursForBasket.toFixed(1),
       c.rentMonthlyUSD.toFixed(2),
       c.rentPercentOfWage.toFixed(2),
-      c.rentLaborHours.toFixed(2),
+      c.rentLaborHours.toFixed(1),
       c.carPriceUSD.toFixed(2),
-      c.carLaborMonths.toFixed(2),
+      c.carLaborMonths.toFixed(1),
       c.medicalCheckupUSD.toFixed(2),
       c.medicalCheckupPercentOfWage.toFixed(2),
-      c.medicalCheckupLaborHours.toFixed(2),
+      c.medicalCheckupLaborHours.toFixed(1),
       c.totalEssentialMonthlyCostUSD.toFixed(2),
       c.totalEssentialPercentOfWage.toFixed(2),
-      c.appiScore,
+      c.totalEssentialLaborHours.toFixed(1),
       c.stressTier,
-      c.isEstimated ? "YES" : "NO",
       `"${c.wageSource}"`,
       `"${c.priceSource}"`,
+      `"${c.estimationDisclaimer || ""}"`,
     ]);
 
     const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map((e) => e.join(","))].join("\n");
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `atlasindex_multi_pillar_rankings_2025.csv`);
+    link.setAttribute("download", "atlasindex_global_rankings_2025.csv");
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -324,7 +351,7 @@ export function RankingContainer() {
             Global Purchasing Power & Labor Effort Rankings
           </h1>
           <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-            Every country in the world ranked across <strong>Food, Housing (Rent), Transport (Car), and Healthcare (Checkups)</strong> compared to the Global Average.
+            Every country in the world ranked by <strong>APPI Composite (70% Essentials + 30% Luxury)</strong>, Food, 1-BR Rent, Passenger Car, and Medical Exams.
           </p>
         </div>
 
@@ -356,7 +383,25 @@ export function RankingContainer() {
           className="text-xs h-8 px-3 gap-1.5"
         >
           <Layers className="size-3.5" />
-          <span>All Pillars Overview</span>
+          <span>APPI Composite Overview</span>
+        </Button>
+        <Button
+          variant={pillarView === "essentials" ? "default" : "outline"}
+          size="sm"
+          onClick={() => setPillarView("essentials")}
+          className="text-xs h-8 px-3 gap-1.5"
+        >
+          <Utensils className="size-3.5" />
+          <span>APPI Essentials (Food + Rent)</span>
+        </Button>
+        <Button
+          variant={pillarView === "luxury" ? "default" : "outline"}
+          size="sm"
+          onClick={() => setPillarView("luxury")}
+          className="text-xs h-8 px-3 gap-1.5"
+        >
+          <Sparkles className="size-3.5" />
+          <span>APPI Luxury (Health + Car)</span>
         </Button>
         <Button
           variant={pillarView === "food" ? "default" : "outline"}
@@ -383,7 +428,7 @@ export function RankingContainer() {
           className="text-xs h-8 px-3 gap-1.5"
         >
           <Car className="size-3.5" />
-          <span>Car Purchase</span>
+          <span>Passenger Car</span>
         </Button>
         <Button
           variant={pillarView === "medical" ? "default" : "outline"}
@@ -392,16 +437,7 @@ export function RankingContainer() {
           className="text-xs h-8 px-3 gap-1.5"
         >
           <Stethoscope className="size-3.5" />
-          <span>Medical Checkup</span>
-        </Button>
-        <Button
-          variant={pillarView === "combined" ? "default" : "outline"}
-          size="sm"
-          onClick={() => setPillarView("combined")}
-          className="text-xs h-8 px-3 gap-1.5"
-        >
-          <Layers className="size-3.5" />
-          <span>Essential (Food + Rent)</span>
+          <span>Medical Exam</span>
         </Button>
       </div>
 
@@ -464,292 +500,332 @@ export function RankingContainer() {
         </div>
       </Card>
 
-      {/* Mobile Horizontal Scroll Tip */}
-      <div className="flex sm:hidden items-center justify-between px-1 text-[11px] text-muted-foreground">
-        <span>Showing {filteredAndSortedCountries.length} countries</span>
-        <span className="font-semibold text-primary">← Swipe table horizontally →</span>
-      </div>
+      {/* Sticky Table with Frozen Header and Pinned World Average Benchmark */}
+      <Table containerClassName="max-h-[720px] rounded-xl border border-border/80 bg-card/60 backdrop-blur shadow-md scrollbar-thin" className="relative w-full border-collapse">
+        <TableHeader className="sticky top-0 z-30 bg-card/95 backdrop-blur-md shadow-sm border-b border-border">
+          <TableRow className="hover:bg-transparent border-b border-border/80">
+            <TableHead className="w-[70px] cursor-pointer bg-inherit" onClick={() => handleSort("rank")}>
+              <div className="flex items-center gap-1">
+                <span>Rank</span>
+                {sortField === "rank" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
+              </div>
+            </TableHead>
+            <TableHead className="min-w-[180px] cursor-pointer bg-inherit" onClick={() => handleSort("name")}>
+              <div className="flex items-center gap-1">
+                <span>Country</span>
+                {sortField === "name" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
+              </div>
+            </TableHead>
+            <TableHead className="cursor-pointer text-right bg-inherit" onClick={() => handleSort("wageUSD")}>
+              <div className="flex items-center justify-end gap-1">
+                <span>Median Wage</span>
+                {sortField === "wageUSD" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
+              </div>
+            </TableHead>
 
-      {/* Data Table */}
-      <Card className="border-border/80 bg-card/60 backdrop-blur shadow-md overflow-hidden">
-        <Table>
-          <TableHeader className="bg-muted/40">
-            <TableRow>
-              <TableHead className="w-[70px] cursor-pointer" onClick={() => handleSort("rank")}>
-                <div className="flex items-center gap-1">
-                  <span>Rank</span>
-                  {sortField === "rank" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
-                </div>
-              </TableHead>
-              <TableHead className="min-w-[180px] cursor-pointer" onClick={() => handleSort("name")}>
-                <div className="flex items-center gap-1">
-                  <span>Country</span>
-                  {sortField === "name" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
-                </div>
-              </TableHead>
-              <TableHead className="cursor-pointer text-right" onClick={() => handleSort("wageUSD")}>
-                <div className="flex items-center justify-end gap-1">
-                  <span>Median Wage</span>
-                  {sortField === "wageUSD" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
-                </div>
-              </TableHead>
-
-              {/* OVERVIEW MODE COLUMNS */}
-              {pillarView === "overview" && (
-                <>
-                  <TableHead className="cursor-pointer text-right" onClick={() => handleSort("basketPercent")}>
-                    <div className="flex items-center justify-end gap-1">
-                      <span>Food (% / hr)</span>
-                      {sortField === "basketPercent" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
-                    </div>
-                  </TableHead>
-                  <TableHead className="cursor-pointer text-right" onClick={() => handleSort("rentPercent")}>
-                    <div className="flex items-center justify-end gap-1">
-                      <span>1-BR Rent (% / mo)</span>
-                      {sortField === "rentPercent" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
-                    </div>
-                  </TableHead>
-                  <TableHead className="cursor-pointer text-right" onClick={() => handleSort("carMonths")}>
-                    <div className="flex items-center justify-end gap-1">
-                      <span>Car (Months)</span>
-                      {sortField === "carMonths" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
-                    </div>
-                  </TableHead>
-                  <TableHead className="cursor-pointer text-right" onClick={() => handleSort("medicalHours")}>
-                    <div className="flex items-center justify-end gap-1">
-                      <span>Medical (hrs)</span>
-                      {sortField === "medicalHours" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
-                    </div>
-                  </TableHead>
-                  <TableHead className="cursor-pointer text-center" onClick={() => handleSort("appiScore")}>
-                    <div className="flex items-center justify-center gap-1">
-                      <span>APPI</span>
-                      {sortField === "appiScore" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
-                    </div>
-                  </TableHead>
-                </>
-              )}
-
-              {/* FOOD MODE COLUMNS */}
-              {pillarView === "food" && (
-                <>
-                  <TableHead className="cursor-pointer text-right" onClick={() => handleSort("basketUSD")}>
-                    <div className="flex items-center justify-end gap-1">
-                      <span>Food Basket Cost</span>
-                      {sortField === "basketUSD" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
-                    </div>
-                  </TableHead>
-                  <TableHead className="cursor-pointer text-right" onClick={() => handleSort("basketPercent")}>
-                    <div className="flex items-center justify-end gap-1">
-                      <span>Wage Share (%)</span>
-                      {sortField === "basketPercent" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
-                    </div>
-                  </TableHead>
-                  <TableHead className="cursor-pointer text-right" onClick={() => handleSort("laborHours")}>
-                    <div className="flex items-center justify-end gap-1">
-                      <span>Labor Hours</span>
-                      {sortField === "laborHours" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
-                    </div>
-                  </TableHead>
-                  <TableHead className="cursor-pointer text-center" onClick={() => handleSort("appiScore")}>
-                    <div className="flex items-center justify-center gap-1">
-                      <span>APPI Score</span>
-                      {sortField === "appiScore" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
-                    </div>
-                  </TableHead>
-                </>
-              )}
-
-              {/* RENT MODE COLUMNS */}
-              {pillarView === "rent" && (
-                <>
-                  <TableHead className="cursor-pointer text-right" onClick={() => handleSort("rentUSD")}>
-                    <div className="flex items-center justify-end gap-1">
-                      <span>1-BR Rent ($)</span>
-                      {sortField === "rentUSD" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
-                    </div>
-                  </TableHead>
-                  <TableHead className="cursor-pointer text-right" onClick={() => handleSort("rentPercent")}>
-                    <div className="flex items-center justify-end gap-1">
-                      <span>Rent Share (%)</span>
-                      {sortField === "rentPercent" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
-                    </div>
-                  </TableHead>
-                  <TableHead className="cursor-pointer text-right" onClick={() => handleSort("rentHours")}>
-                    <div className="flex items-center justify-end gap-1">
-                      <span>Labor Hours</span>
-                      {sortField === "rentHours" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
-                    </div>
-                  </TableHead>
-                </>
-              )}
-
-              {/* CAR MODE COLUMNS */}
-              {pillarView === "car" && (
-                <>
-                  <TableHead className="cursor-pointer text-right" onClick={() => handleSort("carUSD")}>
-                    <div className="flex items-center justify-end gap-1">
-                      <span>New Car Retail ($)</span>
-                      {sortField === "carUSD" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
-                    </div>
-                  </TableHead>
-                  <TableHead className="cursor-pointer text-right" onClick={() => handleSort("carMonths")}>
-                    <div className="flex items-center justify-end gap-1">
-                      <span>Labor Months</span>
-                      {sortField === "carMonths" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
-                    </div>
-                  </TableHead>
-                </>
-              )}
-
-              {/* MEDICAL MODE COLUMNS */}
-              {pillarView === "medical" && (
-                <>
-                  <TableHead className="cursor-pointer text-right" onClick={() => handleSort("medicalUSD")}>
-                    <div className="flex items-center justify-end gap-1">
-                      <span>Checkup Exam ($)</span>
-                      {sortField === "medicalUSD" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
-                    </div>
-                  </TableHead>
-                  <TableHead className="cursor-pointer text-right" onClick={() => handleSort("medicalPercent")}>
-                    <div className="flex items-center justify-end gap-1">
-                      <span>Wage Share (%)</span>
-                      {sortField === "medicalPercent" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
-                    </div>
-                  </TableHead>
-                  <TableHead className="cursor-pointer text-right" onClick={() => handleSort("medicalHours")}>
-                    <div className="flex items-center justify-end gap-1">
-                      <span>Labor Hours</span>
-                      {sortField === "medicalHours" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
-                    </div>
-                  </TableHead>
-                </>
-              )}
-
-              {/* COMBINED MODE COLUMNS */}
-              {pillarView === "combined" && (
-                <>
-                  <TableHead className="cursor-pointer text-right" onClick={() => handleSort("totalPercent")}>
-                    <div className="flex items-center justify-end gap-1">
-                      <span>Essential Cost ($)</span>
-                    </div>
-                  </TableHead>
-                  <TableHead className="cursor-pointer text-right" onClick={() => handleSort("totalPercent")}>
-                    <div className="flex items-center justify-end gap-1">
-                      <span>Essential Wage Share (%)</span>
-                      {sortField === "totalPercent" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
-                    </div>
-                  </TableHead>
-                  <TableHead className="cursor-pointer text-right" onClick={() => handleSort("laborHours")}>
-                    <div className="flex items-center justify-end gap-1">
-                      <span>Total Labor Hours</span>
-                    </div>
-                  </TableHead>
-                </>
-              )}
-
-              <TableHead className="text-center">Tier</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {/* PINNED GLOBAL AVERAGE ROW */}
-            <TableRow className="bg-primary/10 hover:bg-primary/15 border-b-2 border-primary/30 font-semibold text-xs">
-              <TableCell className="font-bold text-primary">
-                <Globe className="size-3.5 inline mr-1" /> Avg
-              </TableCell>
-              <TableCell>
-                <div className="flex items-center gap-2">
-                  <span className="text-base">{worldAvgCountry.flag}</span>
-                  <div>
-                    <span className="font-bold text-primary">{worldAvgCountry.name}</span>
-                    <span className="text-[10px] text-muted-foreground block">Global 195 Nations Baseline</span>
+            {/* OVERVIEW MODE COLUMNS */}
+            {pillarView === "overview" && (
+              <>
+                <TableHead className="cursor-pointer text-right bg-inherit" onClick={() => handleSort("appiEssentials")}>
+                  <div className="flex items-center justify-end gap-1">
+                    <span>Essentials (Food+Rent)</span>
+                    {sortField === "appiEssentials" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
                   </div>
+                </TableHead>
+                <TableHead className="cursor-pointer text-right bg-inherit" onClick={() => handleSort("appiLuxury")}>
+                  <div className="flex items-center justify-end gap-1">
+                    <span>Luxury (Health+Car)</span>
+                    {sortField === "appiLuxury" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
+                  </div>
+                </TableHead>
+                <TableHead className="cursor-pointer text-right bg-inherit" onClick={() => handleSort("totalHours")}>
+                  <div className="flex items-center justify-end gap-1">
+                    <span>Living Effort (hrs)</span>
+                    {sortField === "totalHours" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
+                  </div>
+                </TableHead>
+                <TableHead className="cursor-pointer text-center bg-inherit" onClick={() => handleSort("appiScore")}>
+                  <div className="flex items-center justify-center gap-1">
+                    <span>APPI (70/30)</span>
+                    {sortField === "appiScore" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
+                  </div>
+                </TableHead>
+              </>
+            )}
+
+            {/* ESSENTIALS MODE COLUMNS */}
+            {pillarView === "essentials" && (
+              <>
+                <TableHead className="cursor-pointer text-right bg-inherit" onClick={() => handleSort("basketPercent")}>
+                  <div className="flex items-center justify-end gap-1">
+                    <span>Food Basket (% / $)</span>
+                    {sortField === "basketPercent" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
+                  </div>
+                </TableHead>
+                <TableHead className="cursor-pointer text-right bg-inherit" onClick={() => handleSort("rentPercent")}>
+                  <div className="flex items-center justify-end gap-1">
+                    <span>1-BR Rent (% / $)</span>
+                    {sortField === "rentPercent" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
+                  </div>
+                </TableHead>
+                <TableHead className="cursor-pointer text-right bg-inherit" onClick={() => handleSort("totalHours")}>
+                  <div className="flex items-center justify-end gap-1">
+                    <span>Total Essential Labor</span>
+                    {sortField === "totalHours" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
+                  </div>
+                </TableHead>
+                <TableHead className="cursor-pointer text-center bg-inherit" onClick={() => handleSort("appiEssentials")}>
+                  <div className="flex items-center justify-center gap-1">
+                    <span>Essentials Score</span>
+                    {sortField === "appiEssentials" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
+                  </div>
+                </TableHead>
+              </>
+            )}
+
+            {/* LUXURY MODE COLUMNS */}
+            {pillarView === "luxury" && (
+              <>
+                <TableHead className="cursor-pointer text-right bg-inherit" onClick={() => handleSort("medicalPercent")}>
+                  <div className="flex items-center justify-end gap-1">
+                    <span>Checkup Exam (% / $)</span>
+                    {sortField === "medicalPercent" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
+                  </div>
+                </TableHead>
+                <TableHead className="cursor-pointer text-right bg-inherit" onClick={() => handleSort("carMonths")}>
+                  <div className="flex items-center justify-end gap-1">
+                    <span>Passenger Car (Mos / $)</span>
+                    {sortField === "carMonths" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
+                  </div>
+                </TableHead>
+                <TableHead className="cursor-pointer text-center bg-inherit" onClick={() => handleSort("appiLuxury")}>
+                  <div className="flex items-center justify-center gap-1">
+                    <span>Luxury Score</span>
+                    {sortField === "appiLuxury" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
+                  </div>
+                </TableHead>
+              </>
+            )}
+
+            {/* FOOD MODE COLUMNS */}
+            {pillarView === "food" && (
+              <>
+                <TableHead className="cursor-pointer text-right bg-inherit" onClick={() => handleSort("basketUSD")}>
+                  <div className="flex items-center justify-end gap-1">
+                    <span>Food Basket Cost</span>
+                    {sortField === "basketUSD" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
+                  </div>
+                </TableHead>
+                <TableHead className="cursor-pointer text-right bg-inherit" onClick={() => handleSort("basketPercent")}>
+                  <div className="flex items-center justify-end gap-1">
+                    <span>Wage Share (%)</span>
+                    {sortField === "basketPercent" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
+                  </div>
+                </TableHead>
+                <TableHead className="cursor-pointer text-right bg-inherit" onClick={() => handleSort("laborHours")}>
+                  <div className="flex items-center justify-end gap-1">
+                    <span>Labor Hours</span>
+                    {sortField === "laborHours" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
+                  </div>
+                </TableHead>
+              </>
+            )}
+
+            {/* RENT MODE COLUMNS */}
+            {pillarView === "rent" && (
+              <>
+                <TableHead className="cursor-pointer text-right bg-inherit" onClick={() => handleSort("rentUSD")}>
+                  <div className="flex items-center justify-end gap-1">
+                    <span>1-BR Monthly Rent</span>
+                    {sortField === "rentUSD" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
+                  </div>
+                </TableHead>
+                <TableHead className="cursor-pointer text-right bg-inherit" onClick={() => handleSort("rentPercent")}>
+                  <div className="flex items-center justify-end gap-1">
+                    <span>Rent Wage Share (%)</span>
+                    {sortField === "rentPercent" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
+                  </div>
+                </TableHead>
+                <TableHead className="cursor-pointer text-right bg-inherit" onClick={() => handleSort("rentHours")}>
+                  <div className="flex items-center justify-end gap-1">
+                    <span>Labor Hours</span>
+                    {sortField === "rentHours" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
+                  </div>
+                </TableHead>
+              </>
+            )}
+
+            {/* CAR MODE COLUMNS */}
+            {pillarView === "car" && (
+              <>
+                <TableHead className="cursor-pointer text-right bg-inherit" onClick={() => handleSort("carUSD")}>
+                  <div className="flex items-center justify-end gap-1">
+                    <span>Car Retail Price ($)</span>
+                    {sortField === "carUSD" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
+                  </div>
+                </TableHead>
+                <TableHead className="cursor-pointer text-right bg-inherit" onClick={() => handleSort("carMonths")}>
+                  <div className="flex items-center justify-end gap-1">
+                    <span>Labor Months</span>
+                    {sortField === "carMonths" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
+                  </div>
+                </TableHead>
+              </>
+            )}
+
+            {/* MEDICAL MODE COLUMNS */}
+            {pillarView === "medical" && (
+              <>
+                <TableHead className="cursor-pointer text-right bg-inherit" onClick={() => handleSort("medicalUSD")}>
+                  <div className="flex items-center justify-end gap-1">
+                    <span>Checkup Exam ($)</span>
+                    {sortField === "medicalUSD" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
+                  </div>
+                </TableHead>
+                <TableHead className="cursor-pointer text-right bg-inherit" onClick={() => handleSort("medicalPercent")}>
+                  <div className="flex items-center justify-end gap-1">
+                    <span>Wage Share (%)</span>
+                    {sortField === "medicalPercent" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
+                  </div>
+                </TableHead>
+                <TableHead className="cursor-pointer text-right bg-inherit" onClick={() => handleSort("medicalHours")}>
+                  <div className="flex items-center justify-end gap-1">
+                    <span>Labor Hours</span>
+                    {sortField === "medicalHours" && (sortAsc ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
+                  </div>
+                </TableHead>
+              </>
+            )}
+
+            <TableHead className="text-center bg-inherit">Tier</TableHead>
+            <TableHead className="text-right bg-inherit">Actions</TableHead>
+          </TableRow>
+
+          {/* PINNED FROZEN GLOBAL AVERAGE BENCHMARK ROW (INSIDE THEAD) */}
+          <TableRow className="bg-primary/20 hover:bg-primary/25 border-b-2 border-primary/50 font-semibold text-xs shadow-xs">
+            <TableCell className="font-bold text-primary bg-card/95 backdrop-blur-md">
+              <Globe className="size-3.5 inline mr-1 text-primary" /> Avg
+            </TableCell>
+            <TableCell className="bg-card/95 backdrop-blur-md">
+              <div className="flex items-center gap-2">
+                <span className="text-base">{worldAvgCountry.flag}</span>
+                <div>
+                  <span className="font-bold text-primary">{worldAvgCountry.name}</span>
+                  <span className="text-[10px] text-muted-foreground block">Global 195 Nations Baseline</span>
                 </div>
-              </TableCell>
-              <TableCell className="text-right font-bold">
-                ${worldAvgCountry.monthlyMedianWageUSD.toFixed(0)}/mo
-              </TableCell>
+              </div>
+            </TableCell>
+            <TableCell className="text-right font-bold bg-card/95 backdrop-blur-md">
+              ${worldAvgCountry.monthlyMedianWageUSD.toFixed(0)}/mo
+            </TableCell>
 
-              {pillarView === "overview" && (
-                <>
-                  <TableCell className="text-right font-bold text-primary">
-                    {worldAvgCountry.basketPercentOfWage.toFixed(1)}% ({worldAvgCountry.laborHoursForBasket.toFixed(1)}h)
-                  </TableCell>
-                  <TableCell className="text-right font-bold text-chart-2">
-                    ${worldAvgCountry.rentMonthlyUSD.toFixed(0)} ({worldAvgCountry.rentPercentOfWage.toFixed(1)}%)
-                  </TableCell>
-                  <TableCell className="text-right font-bold text-chart-4">
-                    {worldAvgCountry.carLaborMonths.toFixed(1)} mos (${worldAvgCountry.carPriceUSD.toFixed(0)})
-                  </TableCell>
-                  <TableCell className="text-right font-bold text-rose-500">
-                    {worldAvgCountry.medicalCheckupLaborHours.toFixed(1)}h (${worldAvgCountry.medicalCheckupUSD.toFixed(1)})
-                  </TableCell>
-                  <TableCell className="text-center">
-                    <span className="px-2 py-0.5 rounded bg-primary/20 text-primary font-bold text-xs">
-                      {worldAvgCountry.appiScore}
-                    </span>
-                  </TableCell>
-                </>
-              )}
+            {/* OVERVIEW GLOBAL ROW */}
+            {pillarView === "overview" && (
+              <>
+                <TableCell className="text-right font-bold text-chart-2 bg-card/95 backdrop-blur-md">
+                  {worldAvgCountry.appiEssentials} <span className="text-[10px] text-muted-foreground font-normal">({worldAvgCountry.totalEssentialPercentOfWage.toFixed(0)}%)</span>
+                </TableCell>
+                <TableCell className="text-right font-bold text-chart-4 bg-card/95 backdrop-blur-md">
+                  {worldAvgCountry.appiLuxury} <span className="text-[10px] text-muted-foreground font-normal">({worldAvgCountry.carLaborMonths.toFixed(0)}mo)</span>
+                </TableCell>
+                <TableCell className="text-right font-bold text-rose-500 bg-card/95 backdrop-blur-md">
+                  {worldAvgCountry.totalEssentialLaborHours.toFixed(0)}h
+                </TableCell>
+                <TableCell className="text-center bg-card/95 backdrop-blur-md">
+                  <span className="px-2 py-0.5 rounded-md bg-primary text-primary-foreground font-extrabold text-xs shadow-sm">
+                    {worldAvgCountry.appiScore}
+                  </span>
+                </TableCell>
+              </>
+            )}
 
-              {pillarView === "food" && (
-                <>
-                  <TableCell className="text-right font-bold">${worldAvgCountry.monthlyBasketCostUSD.toFixed(1)}</TableCell>
-                  <TableCell className="text-right font-bold text-primary">{worldAvgCountry.basketPercentOfWage.toFixed(1)}%</TableCell>
-                  <TableCell className="text-right font-bold">{worldAvgCountry.laborHoursForBasket.toFixed(1)}h</TableCell>
-                  <TableCell className="text-center">
-                    <span className="px-2 py-0.5 rounded bg-primary/20 text-primary font-bold text-xs">
-                      {worldAvgCountry.appiScore}
-                    </span>
-                  </TableCell>
-                </>
-              )}
+            {/* ESSENTIALS GLOBAL ROW */}
+            {pillarView === "essentials" && (
+              <>
+                <TableCell className="text-right font-bold text-primary bg-card/95 backdrop-blur-md">
+                  {worldAvgCountry.basketPercentOfWage.toFixed(1)}% (${worldAvgCountry.monthlyBasketCostUSD.toFixed(0)})
+                </TableCell>
+                <TableCell className="text-right font-bold text-chart-2 bg-card/95 backdrop-blur-md">
+                  {worldAvgCountry.rentPercentOfWage.toFixed(1)}% (${worldAvgCountry.rentMonthlyUSD.toFixed(0)})
+                </TableCell>
+                <TableCell className="text-right font-bold text-rose-500 bg-card/95 backdrop-blur-md">
+                  {worldAvgCountry.totalEssentialLaborHours.toFixed(1)}h
+                </TableCell>
+                <TableCell className="text-center bg-card/95 backdrop-blur-md">
+                  <span className="px-2 py-0.5 rounded bg-chart-2/20 text-chart-2 font-bold text-xs">
+                    {worldAvgCountry.appiEssentials}
+                  </span>
+                </TableCell>
+              </>
+            )}
 
-              {pillarView === "rent" && (
-                <>
-                  <TableCell className="text-right font-bold">${worldAvgCountry.rentMonthlyUSD.toFixed(0)}</TableCell>
-                  <TableCell className="text-right font-bold text-chart-2">{worldAvgCountry.rentPercentOfWage.toFixed(1)}%</TableCell>
-                  <TableCell className="text-right font-bold">{worldAvgCountry.rentLaborHours.toFixed(1)}h</TableCell>
-                </>
-              )}
+            {/* LUXURY GLOBAL ROW */}
+            {pillarView === "luxury" && (
+              <>
+                <TableCell className="text-right font-bold text-rose-500 bg-card/95 backdrop-blur-md">
+                  {worldAvgCountry.medicalCheckupPercentOfWage.toFixed(1)}% (${worldAvgCountry.medicalCheckupUSD.toFixed(0)})
+                </TableCell>
+                <TableCell className="text-right font-bold text-chart-4 bg-card/95 backdrop-blur-md">
+                  {worldAvgCountry.carLaborMonths.toFixed(1)} mos (${worldAvgCountry.carPriceUSD.toFixed(0)})
+                </TableCell>
+                <TableCell className="text-center bg-card/95 backdrop-blur-md">
+                  <span className="px-2 py-0.5 rounded bg-chart-4/20 text-chart-4 font-bold text-xs">
+                    {worldAvgCountry.appiLuxury}
+                  </span>
+                </TableCell>
+              </>
+            )}
 
-              {pillarView === "car" && (
-                <>
-                  <TableCell className="text-right font-bold">${worldAvgCountry.carPriceUSD.toFixed(0)}</TableCell>
-                  <TableCell className="text-right font-bold text-chart-4">{worldAvgCountry.carLaborMonths.toFixed(1)} mos</TableCell>
-                </>
-              )}
+            {/* FOOD GLOBAL ROW */}
+            {pillarView === "food" && (
+              <>
+                <TableCell className="text-right font-bold bg-card/95 backdrop-blur-md">${worldAvgCountry.monthlyBasketCostUSD.toFixed(1)}</TableCell>
+                <TableCell className="text-right font-bold text-primary bg-card/95 backdrop-blur-md">{worldAvgCountry.basketPercentOfWage.toFixed(1)}%</TableCell>
+                <TableCell className="text-right font-bold bg-card/95 backdrop-blur-md">{worldAvgCountry.laborHoursForBasket.toFixed(1)}h</TableCell>
+              </>
+            )}
 
-              {pillarView === "medical" && (
-                <>
-                  <TableCell className="text-right font-bold">${worldAvgCountry.medicalCheckupUSD.toFixed(1)}</TableCell>
-                  <TableCell className="text-right font-bold text-rose-500">{worldAvgCountry.medicalCheckupPercentOfWage.toFixed(1)}%</TableCell>
-                  <TableCell className="text-right font-bold">{worldAvgCountry.medicalCheckupLaborHours.toFixed(1)}h</TableCell>
-                </>
-              )}
+            {/* RENT GLOBAL ROW */}
+            {pillarView === "rent" && (
+              <>
+                <TableCell className="text-right font-bold bg-card/95 backdrop-blur-md">${worldAvgCountry.rentMonthlyUSD.toFixed(0)}</TableCell>
+                <TableCell className="text-right font-bold text-chart-2 bg-card/95 backdrop-blur-md">{worldAvgCountry.rentPercentOfWage.toFixed(1)}%</TableCell>
+                <TableCell className="text-right font-bold bg-card/95 backdrop-blur-md">{worldAvgCountry.rentLaborHours.toFixed(1)}h</TableCell>
+              </>
+            )}
 
-              {pillarView === "combined" && (
-                <>
-                  <TableCell className="text-right font-bold">${worldAvgCountry.totalEssentialMonthlyCostUSD.toFixed(0)}</TableCell>
-                  <TableCell className="text-right font-bold text-primary">{worldAvgCountry.totalEssentialPercentOfWage.toFixed(1)}%</TableCell>
-                  <TableCell className="text-right font-bold">{worldAvgCountry.totalEssentialLaborHours.toFixed(1)}h</TableCell>
-                </>
-              )}
+            {/* CAR GLOBAL ROW */}
+            {pillarView === "car" && (
+              <>
+                <TableCell className="text-right font-bold bg-card/95 backdrop-blur-md">${worldAvgCountry.carPriceUSD.toFixed(0)}</TableCell>
+                <TableCell className="text-right font-bold text-chart-4 bg-card/95 backdrop-blur-md">{worldAvgCountry.carLaborMonths.toFixed(1)} mos</TableCell>
+              </>
+            )}
 
-              <TableCell className="text-center">
-                <Badge variant="outline" className="text-[10px] bg-primary/20 text-primary border-primary/30">
-                  Global
-                </Badge>
-              </TableCell>
-              <TableCell className="text-right">
-                <a href={getBasePath(`compare?c1=world-average&c2=usa`)}>
-                  <Button variant="outline" size="sm" className="h-6 px-2 text-[10px] bg-primary/20 text-primary border-primary/30">
-                    Compare
-                  </Button>
-                </a>
-              </TableCell>
-            </TableRow>
+            {/* MEDICAL GLOBAL ROW */}
+            {pillarView === "medical" && (
+              <>
+                <TableCell className="text-right font-bold bg-card/95 backdrop-blur-md">${worldAvgCountry.medicalCheckupUSD.toFixed(1)}</TableCell>
+                <TableCell className="text-right font-bold text-rose-500 bg-card/95 backdrop-blur-md">{worldAvgCountry.medicalCheckupPercentOfWage.toFixed(1)}%</TableCell>
+                <TableCell className="text-right font-bold bg-card/95 backdrop-blur-md">{worldAvgCountry.medicalCheckupLaborHours.toFixed(1)}h</TableCell>
+              </>
+            )}
+
+            <TableCell className="text-center bg-card/95 backdrop-blur-md">
+              <Badge variant="outline" className="text-[10px] bg-primary/20 text-primary border-primary/30">
+                Global
+              </Badge>
+            </TableCell>
+            <TableCell className="text-right bg-card/95 backdrop-blur-md">
+              <a href={getBasePath(`compare?c1=world-average&c2=usa`)}>
+                <Button variant="outline" size="sm" className="h-6 px-2 text-[10px] bg-primary/20 text-primary border-primary/30">
+                  Compare
+                </Button>
+              </a>
+            </TableCell>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
 
             {filteredAndSortedCountries.length === 0 ? (
               <TableRow>
@@ -803,26 +879,61 @@ export function RankingContainer() {
                       {pillarView === "overview" && (
                         <>
                           <TableCell className="text-right text-xs font-semibold">
-                            <span className={country.basketPercentOfWage < 15 ? "text-emerald-500" : country.basketPercentOfWage < 35 ? "text-amber-500" : "text-rose-500"}>
-                              {formatPercent(country.basketPercentOfWage)}
-                            </span>
-                            <span className="text-[10px] text-muted-foreground block">{formatHours(country.laborHoursForBasket)}</span>
+                            <div className="text-chart-2 font-bold">{country.appiEssentials}</div>
+                            <div className="text-[10px] text-muted-foreground">{formatPercent(country.totalEssentialPercentOfWage)}</div>
+                          </TableCell>
+                          <TableCell className="text-right text-xs font-semibold">
+                            <div className="text-chart-4 font-bold">{country.appiLuxury}</div>
+                            <div className="text-[10px] text-muted-foreground">{country.carLaborMonths.toFixed(1)} mo car</div>
                           </TableCell>
                           <TableCell className="text-right text-xs">
-                            <div className="font-medium text-foreground">${country.rentMonthlyUSD.toFixed(0)}</div>
-                            <div className="text-[10px] text-muted-foreground">{formatPercent(country.rentPercentOfWage)}</div>
-                          </TableCell>
-                          <TableCell className="text-right text-xs">
-                            <div className="font-medium text-foreground">{country.carLaborMonths.toFixed(1)} mo</div>
-                            <div className="text-[10px] text-muted-foreground">${country.carPriceUSD.toFixed(0)}</div>
-                          </TableCell>
-                          <TableCell className="text-right text-xs">
-                            <div className="font-medium text-foreground">{country.medicalCheckupLaborHours.toFixed(1)}h</div>
-                            <div className="text-[10px] text-muted-foreground">${country.medicalCheckupUSD.toFixed(1)}</div>
+                            <div className="font-medium text-foreground">{formatHours(country.totalEssentialLaborHours)}</div>
+                            <div className="text-[10px] text-muted-foreground">${country.totalEssentialMonthlyCostUSD.toFixed(0)}/mo</div>
                           </TableCell>
                           <TableCell className="text-center">
-                            <div className="inline-flex items-center justify-center font-bold text-xs px-2 py-0.5 rounded-md bg-primary/10 text-primary border border-primary/20">
+                            <div className="inline-flex items-center justify-center font-extrabold text-xs px-2.5 py-0.5 rounded-md bg-primary/10 text-primary border border-primary/20 shadow-xs">
                               {country.appiScore}
+                            </div>
+                          </TableCell>
+                        </>
+                      )}
+
+                      {/* ESSENTIALS CELLS */}
+                      {pillarView === "essentials" && (
+                        <>
+                          <TableCell className="text-right text-xs">
+                            <div className="font-semibold text-foreground">{formatPercent(country.basketPercentOfWage)}</div>
+                            <div className="text-[10px] text-muted-foreground">${country.monthlyBasketCostUSD.toFixed(0)}</div>
+                          </TableCell>
+                          <TableCell className="text-right text-xs">
+                            <div className="font-semibold text-foreground">{formatPercent(country.rentPercentOfWage)}</div>
+                            <div className="text-[10px] text-muted-foreground">${country.rentMonthlyUSD.toFixed(0)}</div>
+                          </TableCell>
+                          <TableCell className="text-right text-xs font-semibold text-primary">
+                            {formatHours(country.totalEssentialLaborHours)}
+                          </TableCell>
+                          <TableCell className="text-center">
+                            <div className="inline-flex items-center justify-center font-bold text-xs px-2 py-0.5 rounded-md bg-chart-2/15 text-chart-2 border border-chart-2/20">
+                              {country.appiEssentials}
+                            </div>
+                          </TableCell>
+                        </>
+                      )}
+
+                      {/* LUXURY CELLS */}
+                      {pillarView === "luxury" && (
+                        <>
+                          <TableCell className="text-right text-xs">
+                            <div className="font-semibold text-foreground">{formatPercent(country.medicalCheckupPercentOfWage)}</div>
+                            <div className="text-[10px] text-muted-foreground">${country.medicalCheckupUSD.toFixed(1)}</div>
+                          </TableCell>
+                          <TableCell className="text-right text-xs">
+                            <div className="font-semibold text-foreground">{country.carLaborMonths.toFixed(1)} mo</div>
+                            <div className="text-[10px] text-muted-foreground">${country.carPriceUSD.toFixed(0)}</div>
+                          </TableCell>
+                          <TableCell className="text-center">
+                            <div className="inline-flex items-center justify-center font-bold text-xs px-2 py-0.5 rounded-md bg-chart-4/15 text-chart-4 border border-chart-4/20">
+                              {country.appiLuxury}
                             </div>
                           </TableCell>
                         </>
@@ -844,11 +955,6 @@ export function RankingContainer() {
                           </TableCell>
                           <TableCell className="text-right text-xs font-semibold text-primary">
                             {formatHours(country.laborHoursForBasket)}
-                          </TableCell>
-                          <TableCell className="text-center">
-                            <div className="inline-flex items-center justify-center font-bold text-xs px-2 py-0.5 rounded-md bg-primary/10 text-primary border border-primary/20">
-                              {country.appiScore}
-                            </div>
                           </TableCell>
                         </>
                       )}
@@ -904,22 +1010,6 @@ export function RankingContainer() {
                         </>
                       )}
 
-                      {/* COMBINED CELLS */}
-                      {pillarView === "combined" && (
-                        <>
-                          <TableCell className="text-right text-xs">
-                            <div className="font-medium">${country.totalEssentialMonthlyCostUSD.toFixed(0)}</div>
-                            <div className="text-[10px] text-muted-foreground">Food + 1-BR Rent</div>
-                          </TableCell>
-                          <TableCell className="text-right text-xs font-bold text-primary">
-                            {formatPercent(country.totalEssentialPercentOfWage)}
-                          </TableCell>
-                          <TableCell className="text-right text-xs font-semibold text-primary">
-                            {formatHours(country.totalEssentialLaborHours)}
-                          </TableCell>
-                        </>
-                      )}
-
                       <TableCell className="text-center">
                         <Badge variant={tierBadgeVariant(country.stressTier)} className="text-[10px]">
                           {country.stressTier}
@@ -936,7 +1026,7 @@ export function RankingContainer() {
                       </TableCell>
                     </TableRow>
 
-                    {/* EXPANDED ROW: Granular Multi-Pillar & Nutrition Breakdown */}
+                    {/* EXPANDED ROW: Granular Multi-Pillar & APPI Breakdown */}
                     {isExpanded && (
                       <TableRow className="bg-muted/15">
                         <TableCell colSpan={10} className="p-4">
@@ -944,7 +1034,7 @@ export function RankingContainer() {
                             <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/40 pb-2">
                               <div className="flex items-center gap-2">
                                 <span className="font-bold text-xs text-foreground">
-                                  {country.flag} {country.name} — Full Economic Pillar Breakdown
+                                  {country.flag} {country.name} — Full Economic Pillar & APPI Breakdown
                                 </span>
                                 <span className="text-[10px] text-muted-foreground">
                                   (Hourly median wage: {formatCurrency(country.hourlyMedianWageUSD, "USD")}/hr)
@@ -953,6 +1043,39 @@ export function RankingContainer() {
                               <span className="text-[10px] text-muted-foreground">
                                 Source: {country.wageSource} & {country.priceSource}
                               </span>
+                            </div>
+
+                            {/* APPI Composite Score Cards */}
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                              <div className="p-3 rounded-lg border border-primary/30 bg-primary/5 flex flex-col justify-between">
+                                <div className="text-xs font-bold text-primary flex items-center justify-between">
+                                  <span>Composite APPI (70/30)</span>
+                                  <span className="text-base font-extrabold">{country.appiScore} / 100</span>
+                                </div>
+                                <div className="text-[11px] text-muted-foreground mt-1">
+                                  70% APPI Essentials ({country.appiEssentials}) + 30% APPI Luxury ({country.appiLuxury})
+                                </div>
+                              </div>
+
+                              <div className="p-3 rounded-lg border border-chart-2/30 bg-chart-2/5 flex flex-col justify-between">
+                                <div className="text-xs font-bold text-chart-2 flex items-center justify-between">
+                                  <span>APPI Essentials</span>
+                                  <span className="text-base font-extrabold">{country.appiEssentials} / 100</span>
+                                </div>
+                                <div className="text-[11px] text-muted-foreground mt-1">
+                                  Food ({formatPercent(country.basketPercentOfWage)}) + Rent ({formatPercent(country.rentPercentOfWage)})
+                                </div>
+                              </div>
+
+                              <div className="p-3 rounded-lg border border-chart-4/30 bg-chart-4/5 flex flex-col justify-between">
+                                <div className="text-xs font-bold text-chart-4 flex items-center justify-between">
+                                  <span>APPI Luxury</span>
+                                  <span className="text-base font-extrabold">{country.appiLuxury} / 100</span>
+                                </div>
+                                <div className="text-[11px] text-muted-foreground mt-1">
+                                  Health ({country.medicalCheckupLaborHours.toFixed(1)}h) + Car ({country.carLaborMonths.toFixed(1)} mos)
+                                </div>
+                              </div>
                             </div>
 
                             {/* 4 Pillars Summary Cards */}
@@ -1027,7 +1150,6 @@ export function RankingContainer() {
             )}
           </TableBody>
         </Table>
-      </Card>
 
       {/* Dataset & Estimation Transparency Banner */}
       <Card className="border-border/80 bg-card/60 p-4 rounded-xl text-xs text-muted-foreground space-y-1">
@@ -1036,7 +1158,7 @@ export function RankingContainer() {
           <span>Global 195 Nations Coverage & Multi-Pillar Standards</span>
         </div>
         <p className="leading-relaxed">
-          AtlasIndex standardizes nutritional and living purchasing power across all 193 UN member nations plus 2 permanent observer states. Housing measures a national weighted 1-bedroom apartment rent; Transport reflects an entry-level compact passenger vehicle retail purchase (e.g. Toyota Corolla / VW Golf); Healthcare reflects an uninsured comprehensive medical checkup (doctor consultation + CBC + lipid + metabolic panel).
+          AtlasIndex calculates genuine purchasing power across all 195 sovereign nations using the composite <strong>APPI Standard (70% APPI Essentials: Food + 1-BR Rent, 30% APPI Luxury: Healthcare Checkup + Passenger Car)</strong> compared to the unified 🌐 World Average benchmark.
         </p>
       </Card>
     </div>

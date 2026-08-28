@@ -242,67 +242,97 @@ import {
     
     <div class="prose dark:prose-invert max-w-none text-xs sm:text-sm text-muted-foreground leading-relaxed flex flex-col gap-4">
       <p>
-        The <strong>Atlas Purchasing Power Index (APPI)</strong> is our flagship composite purchasing power metric, normalized on a continuous scale from <strong>1 to 100</strong>. A higher APPI score denotes superior economic resilience, higher real wages, and minimal labor strain required to satisfy baseline human nutritional needs.
+        The <strong>Atlas Purchasing Power Index (APPI)</strong> is our empirical composite purchasing power benchmark, normalized on a continuous scale from <strong>1 to 100</strong> across all 195 sovereign nations. APPI measures standard median earning power by decomposing domestic living into two complementary dimensions: <strong>APPI Essentials</strong> (basic physiological survival) and <strong>APPI Luxury</strong> (aspirational mobility & healthcare).
       </p>
 
       <div class="rounded-2xl border border-primary/30 bg-primary/5 p-6 backdrop-blur space-y-4">
         <h3 class="text-base font-bold text-foreground flex items-center gap-2">
-          <span>The Master APPI Formula</span>
+          <span>The Master APPI Composite Formulation</span>
         </h3>
         
         <div class="bg-background/80 rounded-xl p-4 border border-border/60 text-center">
           <Latex
-            formula={String.raw`\text{APPI} = \text{clamp}\left( \text{round}\left( 0.70 \times F_{\text{wage}} + 0.30 \times F_{\text{hours}} \right),\, 1,\, 100 \right)`}
+            formula={String.raw`\text{APPI} = \text{clamp}\left( \text{round}\left( 0.70 \times \text{APPI}_{\text{essentials}} + 0.30 \times \text{APPI}_{\text{luxury}} \right),\, 1,\, 100 \right)`}
             display={true}
           />
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-          <div class="p-3 rounded-lg bg-background/50 border border-border/40 space-y-1">
-            <span class="font-bold text-primary block">Wage Burden Sub-Factor (<Latex formula={String.raw`F_{\text{wage}}`} />):</span>
-            <Latex formula={String.raw`F_{\text{wage}} = \max\left( 0,\, 100 - (\beta_{\text{food}} \times 1.8) \right)`} display={true} />
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+          <!-- Sub-index 1: APPI Essentials -->
+          <div class="p-4 rounded-xl bg-background/60 border border-chart-2/30 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-chart-2 text-sm flex items-center gap-1.5">
+                <Utensils className="size-3.5" /> 1. APPI Essentials (Food + Rent)
+              </span>
+              <Badge variant="outline" className="text-[10px] bg-chart-2/10 text-chart-2 border-chart-2/30">70% Weight</Badge>
+            </div>
             <p class="text-[11px] text-muted-foreground">
-              Evaluates the percentage of monthly median income consumed by food. The multiplier <Latex formula={String.raw`1.8`} /> scales a 55.5% food expenditure down to zero.
+              Combines monthly 13-item nutritional basket cost (<Latex formula={String.raw`B`} />) and 1-bedroom apartment residential rent (<Latex formula={String.raw`R_{\text{1BR}}`} />):
             </p>
+            <div class="bg-muted/40 p-2.5 rounded-lg text-center font-semibold">
+              <Latex
+                formula={String.raw`\text{APPI}_{\text{essentials}} = \text{clamp}\left( \text{round}\left( 0.70 \times F_{\text{ess\_wage}} + 0.30 \times F_{\text{ess\_hours}} \right),\, 1,\, 100 \right)`}
+                display={true}
+              />
+            </div>
+            <div class="text-[10px] text-muted-foreground space-y-1 pt-1">
+              <div>• <Latex formula={String.raw`F_{\text{ess\_wage}} = \max\left( 0,\, 100 - (\beta_{\text{essentials}} \times 0.90) \right)`} /> where <Latex formula={String.raw`\beta_{\text{essentials}} = \beta_{\text{food}} + \beta_{\text{rent}}`} /></div>
+              <div>• <Latex formula={String.raw`F_{\text{ess\_hours}} = \max\left( 0,\, 100 - (H_{\text{essentials}} \times 0.55) \right)`} /> where <Latex formula={String.raw`H_{\text{essentials}} = H_{\text{food}} + H_{\text{rent}}`} /></div>
+            </div>
           </div>
 
-          <div class="p-3 rounded-lg bg-background/50 border border-border/40 space-y-1">
-            <span class="font-bold text-primary block">Labor Hours Sub-Factor (<Latex formula={String.raw`F_{\text{hours}}`} />):</span>
-            <Latex formula={String.raw`F_{\text{hours}} = \max\left( 0,\, 100 - (H_{\text{food}} \times 1.0) \right)`} display={true} />
+          <!-- Sub-index 2: APPI Luxury -->
+          <div class="p-4 rounded-xl bg-background/60 border border-chart-4/30 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-chart-4 text-sm flex items-center gap-1.5">
+                <Car className="size-3.5" /> 2. APPI Luxury (Health + Car)
+              </span>
+              <Badge variant="outline" className="text-[10px] bg-chart-4/10 text-chart-4 border-chart-4/30">30% Weight</Badge>
+            </div>
             <p class="text-[11px] text-muted-foreground">
-              Evaluates absolute monthly hours of physical labor. Scaled so that exceeding 100 hours of labor per month brings this factor to zero.
+              Combines private compact vehicle purchase labor months (<Latex formula={String.raw`M_{\text{car}}`} />) and routine clinical blood checkup expense (<Latex formula={String.raw`\beta_{\text{med}}`} />):
             </p>
+            <div class="bg-muted/40 p-2.5 rounded-lg text-center font-semibold">
+              <Latex
+                formula={String.raw`\text{APPI}_{\text{luxury}} = \text{clamp}\left( \text{round}\left( 0.60 \times F_{\text{car}} + 0.40 \times F_{\text{med}} \right),\, 1,\, 100 \right)`}
+                display={true}
+              />
+            </div>
+            <div class="text-[10px] text-muted-foreground space-y-1 pt-1">
+              <div>• <Latex formula={String.raw`F_{\text{car}} = \max\left( 0,\, 100 - (M_{\text{car}} \times 1.25) \right)`} /> where <Latex formula={String.raw`M_{\text{car}} = P_{\text{car}} / W_{\text{median}}`} /></div>
+              <div>• <Latex formula={String.raw`F_{\text{med}} = \max\left( 0,\, 100 - (\beta_{\text{med}} \times 2.50) \right)`} /> where <Latex formula={String.raw`\beta_{\text{med}} = (C_{\text{checkup}} / W_{\text{median}}) \times 100\%`} /></div>
+            </div>
           </div>
         </div>
 
         <div class="text-xs text-muted-foreground leading-relaxed pt-2 border-t border-border/40">
-          <strong class="text-foreground block mb-1">Why a 70% / 30% Blend?</strong>
-          In microeconomic theory (specifically <em>Engel's Law</em>), the proportion of income spent on food is the single most accurate barometer of living standards. A 70% weight on <Latex formula={String.raw`F_{\text{wage}}`} /> reflects the household budget constraint. The 30% weight on <Latex formula={String.raw`F_{\text{hours}}`} /> incorporates the physical opportunity cost of human labor, penalizing economies where workers must dedicate unsustainable hours to stay nourished.
+          <strong class="text-foreground block mb-1">Economic Rationale for 70% Essentials + 30% Luxury Decomposition:</strong>
+          In development economics (grounded in <em>Engel's Law</em> and Maslow's physiological foundation), essential living costs (food and residential shelter) are non-negotiable monthly survival requirements; spending over 60% of earnings on essentials signals severe vulnerability. Allocating <strong>70% weight to APPI Essentials</strong> anchors the index in core human survival. Allocating <strong>30% weight to APPI Luxury</strong> captures discretionary mobility, long-term capital accumulation (private vehicle), and preventive health security.
         </div>
       </div>
 
       <!-- Stress Tier Thresholds Table -->
       <div class="rounded-xl border border-border/80 bg-card/60 p-5 mt-2">
-        <h3 class="font-bold text-sm text-foreground mb-3">APPI Score & Nutritional Stress Classification</h3>
+        <h3 class="font-bold text-sm text-foreground mb-3">APPI Score & Living Stress Classification Tiers</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
           <div class="rounded-lg bg-emerald-500/10 border border-emerald-500/20 p-3 flex flex-col justify-between gap-2">
             <div>
               <div class="flex items-center justify-between font-bold text-emerald-500 mb-1">
                 <span>Tier 1: Low Stress</span>
-                <Badge variant="outline" className="text-[10px] bg-emerald-500/20 text-emerald-500 border-emerald-500/30">APPI 75–100</Badge>
+                <Badge variant="outline" className="text-[10px] bg-emerald-500/20 text-emerald-500 border-emerald-500/30">APPI 70–100</Badge>
               </div>
-              <span class="text-muted-foreground text-[11px]">Food basket takes &lt;10% of wage (&lt;16 labor hours/mo). High disposable surplus.</span>
+              <span class="text-muted-foreground text-[11px]">Essentials consume &lt;40% of median wage. High disposable surplus; passenger car affordable in &lt;10 months.</span>
             </div>
-            <span class="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">e.g. Switzerland, USA, Denmark, Qatar</span>
+            <span class="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">e.g. Switzerland, USA, Denmark, Germany</span>
           </div>
 
           <div class="rounded-lg bg-amber-500/10 border border-amber-500/20 p-3 flex flex-col justify-between gap-2">
             <div>
               <div class="flex items-center justify-between font-bold text-amber-500 mb-1">
                 <span>Tier 2: Moderate</span>
-                <Badge variant="outline" className="text-[10px] bg-amber-500/20 text-amber-500 border-amber-500/30">APPI 55–74</Badge>
+                <Badge variant="outline" className="text-[10px] bg-amber-500/20 text-amber-500 border-amber-500/30">APPI 50–69</Badge>
               </div>
-              <span class="text-muted-foreground text-[11px]">Food takes 10%–20% of wage (16–32 labor hours/mo). Adequate access with moderate inflation sensitivity.</span>
+              <span class="text-muted-foreground text-[11px]">Essentials consume 40%–65% of median wage. Stable living with moderate sensitivity to housing or inflation shocks.</span>
             </div>
             <span class="text-[10px] text-amber-600 dark:text-amber-400 font-semibold">e.g. Poland, Chile, Portugal, Malaysia</span>
           </div>
@@ -311,9 +341,9 @@ import {
             <div>
               <div class="flex items-center justify-between font-bold text-orange-500 mb-1">
                 <span>Tier 3: High Stress</span>
-                <Badge variant="outline" className="text-[10px] bg-orange-500/20 text-orange-500 border-orange-500/30">APPI 30–54</Badge>
+                <Badge variant="outline" className="text-[10px] bg-orange-500/20 text-orange-500 border-orange-500/30">APPI 25–49</Badge>
               </div>
-              <span class="text-muted-foreground text-[11px]">Food takes 20%–35% of wage (32–56 labor hours/mo). High household vulnerability.</span>
+              <span class="text-muted-foreground text-[11px]">Essentials consume 65%–90% of median wage. High financial strain; vehicle purchase requires 30–60 months of labor.</span>
             </div>
             <span class="text-[10px] text-orange-600 dark:text-orange-400 font-semibold">e.g. Brazil, South Africa, Turkey, Thailand</span>
           </div>
@@ -322,11 +352,169 @@ import {
             <div>
               <div class="flex items-center justify-between font-bold text-rose-500 mb-1">
                 <span>Tier 4: Severe</span>
-                <Badge variant="outline" className="text-[10px] bg-rose-500/20 text-rose-500 border-rose-500/30">APPI 1–29</Badge>
+                <Badge variant="outline" className="text-[10px] bg-rose-500/20 text-rose-500 border-rose-500/30">APPI 1–24</Badge>
               </div>
-              <span class="text-muted-foreground text-[11px]">Food takes &gt;35% of wage (&gt;56 labor hours/mo). Critical economic strain.</span>
+              <span class="text-muted-foreground text-[11px]">Essentials exceed 90%+ of wage. Critical labor strain where food and rent consume almost all earnings.</span>
             </div>
-            <span class="text-[10px] text-rose-600 dark:text-rose-400 font-semibold">e.g. Nigeria, Pakistan, Egypt, Cuba</span>
+            <span class="text-[10px] text-rose-600 dark:text-rose-400 font-semibold">e.g. Nigeria, Pakistan, Egypt, Cuba, Syria</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 100/100 Perfect Score Benchmark & Real-World Frontier Explainer -->
+      <div class="rounded-2xl border border-primary/30 bg-primary/5 p-6 backdrop-blur space-y-5 mt-3">
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <div class="flex items-center gap-2">
+            <Sparkles className="size-5 text-primary" />
+            <h3 class="text-base font-bold text-foreground">
+              Understanding the 100/100 Benchmark: Real-World Ceiling vs. The Theoretical Ideal
+            </h3>
+          </div>
+          <Badge variant="outline" className="text-xs bg-primary/20 text-primary border-primary/30">
+            Methodology FAQ
+          </Badge>
+        </div>
+
+        <div class="space-y-3 text-xs sm:text-sm text-muted-foreground leading-relaxed">
+          <p>
+            Users frequently ask: <em>"Why does the highest-scoring real economy in the global rankings (the United States at APPI Essentials 68 and Composite APPI 74) not reach a score of 100?"</em>
+          </p>
+          <p>
+            In empirical economics, human physiological survival (food and shelter) is governed by physical resource constraints, agricultural yields, and real-estate land values. Even in the highest-ranked economy on Earth (the United States, where a median worker earns $4,650/month), securing a safe 1-bedroom home ($1,450) and a 30-day nutritionally complete grocery basket ($218) consumes <strong>35.9% of a median full-time paycheck</strong> (equivalent to <strong>57.4 labor hours per month</strong>).
+          </p>
+          <p>
+            An APPI Essentials score of <strong>65 to 68</strong> represents the <strong>empirical frontier of modern human civilization</strong>. A score of <strong>100 / 100</strong> represents a theoretical, post-scarcity economic benchmark where labor cost for basic survival approaches zero.
+          </p>
+        </div>
+
+        <!-- Hypothetical 100/100 Perfect Score Case Study -->
+        <div class="rounded-xl border border-border/80 bg-background/80 p-4 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-foreground text-xs sm:text-sm flex items-center gap-1.5">
+              <CheckCircle2 className="size-4 text-emerald-500" />
+              <span>What Would a 100 / 100 Perfect Score Country Look Like?</span>
+            </span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-emerald-500 text-white">APPI: 100</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+            <div class="p-3 rounded-lg bg-card border border-border/40 space-y-1">
+              <span class="text-muted-foreground text-[10px] uppercase font-bold block">1. Median Net Wage</span>
+              <span class="font-bold text-foreground text-sm">$10,000 / mo</span>
+              <span class="text-[10px] text-muted-foreground block">$62.50 / hour (160h/mo)</span>
+            </div>
+
+            <div class="p-3 rounded-lg bg-card border border-border/40 space-y-1">
+              <span class="text-muted-foreground text-[10px] uppercase font-bold block">2. Essential Living (Food + Rent)</span>
+              <span class="font-bold text-chart-2 text-sm">$150 / mo (1.5% wage)</span>
+              <span class="text-[10px] text-muted-foreground block">Food: $50 • Rent: $100 (2.4h labor)</span>
+              <span class="text-[10px] text-emerald-500 font-semibold block">APPI Essentials: 100 / 100</span>
+            </div>
+
+            <div class="p-3 rounded-lg bg-card border border-border/40 space-y-1">
+              <span class="text-muted-foreground text-[10px] uppercase font-bold block">3. Transport (Passenger Car)</span>
+              <span class="font-bold text-chart-4 text-sm">$8,000 (0.8 months)</span>
+              <span class="text-[10px] text-muted-foreground block">Brand new compact passenger car</span>
+              <span class="text-[10px] text-emerald-500 font-semibold block">Car Score: 100 / 100</span>
+            </div>
+
+            <div class="p-3 rounded-lg bg-card border border-border/40 space-y-1">
+              <span class="text-muted-foreground text-[10px] uppercase font-bold block">4. Healthcare (Blood Panel)</span>
+              <span class="font-bold text-rose-500 text-sm">$20 (0.2% wage)</span>
+              <span class="text-[10px] text-muted-foreground block">Doctor + full lab panels (19 mins labor)</span>
+              <span class="text-[10px] text-emerald-500 font-semibold block">APPI Luxury: 100 / 100</span>
+            </div>
+          </div>
+
+          <p class="text-[11px] text-muted-foreground italic pt-1">
+            *In this theoretical economy, a worker satisfies their entire monthly nutritional needs and apartment rent in just <strong>2.4 hours of work</strong> (under half a single working day), and purchases a brand-new automobile with less than 1 month of savings.
+          </p>
+        </div>
+
+        <!-- Spectrum Comparison Table -->
+        <div class="space-y-2">
+          <h4 class="font-bold text-xs text-foreground uppercase tracking-wider">
+            Real-World Living Spectrum vs. Theoretical Optimum
+          </h4>
+          <div class="overflow-x-auto rounded-lg border border-border/60">
+            <table class="w-full text-xs text-left">
+              <thead class="bg-muted/60 text-muted-foreground border-b border-border/60">
+                <tr>
+                  <th class="p-2.5">Economy / Benchmark</th>
+                  <th class="p-2.5 text-right">Median Wage</th>
+                  <th class="p-2.5 text-right">Essential Living Cost</th>
+                  <th class="p-2.5 text-right">Labor Effort</th>
+                  <th class="p-2.5 text-center">APPI Essentials</th>
+                  <th class="p-2.5 text-center">APPI Luxury</th>
+                  <th class="p-2.5 text-center font-bold">Composite APPI</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-border/40">
+                <tr class="bg-emerald-500/5 font-semibold text-emerald-600 dark:text-emerald-400">
+                  <td class="p-2.5">🌟 Theoretical Ideal ("Post-Scarcity")</td>
+                  <td class="p-2.5 text-right">$10,000.00/mo</td>
+                  <td class="p-2.5 text-right">$150.00/mo (1.5%)</td>
+                  <td class="p-2.5 text-right">2.4h / mo</td>
+                  <td class="p-2.5 text-center font-bold">100</td>
+                  <td class="p-2.5 text-center font-bold">100</td>
+                  <td class="p-2.5 text-center font-extrabold text-emerald-500">100</td>
+                </tr>
+                <tr class="hover:bg-muted/30">
+                  <td class="p-2.5 font-medium">🇺🇸 United States (Rank #1 Overall)</td>
+                  <td class="p-2.5 text-right">$4,650.00/mo</td>
+                  <td class="p-2.5 text-right">$1,667.55/mo (35.9%)</td>
+                  <td class="p-2.5 text-right">57.4h / mo</td>
+                  <td class="p-2.5 text-center font-bold text-chart-2">68</td>
+                  <td class="p-2.5 text-center font-bold text-chart-4">88</td>
+                  <td class="p-2.5 text-center font-bold text-primary">74</td>
+                </tr>
+                <tr class="hover:bg-muted/30">
+                  <td class="p-2.5 font-medium">🇨🇭 Switzerland (Rank #5 Overall, #1 Luxury)</td>
+                  <td class="p-2.5 text-right">$7,893.00/mo</td>
+                  <td class="p-2.5 text-right">$3,420.98/mo (43.3%)</td>
+                  <td class="p-2.5 text-right">69.3h / mo</td>
+                  <td class="p-2.5 text-center font-bold text-chart-2">61</td>
+                  <td class="p-2.5 text-center font-bold text-chart-4">94</td>
+                  <td class="p-2.5 text-center font-bold text-primary">71</td>
+                </tr>
+                <tr class="hover:bg-muted/30">
+                  <td class="p-2.5 font-medium">🇵🇱 Poland (Tier 2 Moderate, Rank #44)</td>
+                  <td class="p-2.5 text-right">$1,443.00/mo</td>
+                  <td class="p-2.5 text-right">$697.37/mo (48.3%)</td>
+                  <td class="p-2.5 text-right">77.3h / mo</td>
+                  <td class="p-2.5 text-center font-bold text-chart-2">57</td>
+                  <td class="p-2.5 text-center font-bold text-chart-4">81</td>
+                  <td class="p-2.5 text-center font-bold text-amber-500">64</td>
+                </tr>
+                <tr class="hover:bg-muted/30">
+                  <td class="p-2.5 font-medium">🇧🇷 Brazil (Tier 3 High Stress, Rank #80)</td>
+                  <td class="p-2.5 text-right">$574.00/mo</td>
+                  <td class="p-2.5 text-right">$356.98/mo (62.2%)</td>
+                  <td class="p-2.5 text-right">99.5h / mo</td>
+                  <td class="p-2.5 text-center font-bold text-chart-2">44</td>
+                  <td class="p-2.5 text-center font-bold text-chart-4">59</td>
+                  <td class="p-2.5 text-center font-bold text-orange-500">49</td>
+                </tr>
+                <tr class="bg-primary/10 hover:bg-primary/15 font-semibold">
+                  <td class="p-2.5 text-primary">🌐 World Average (Global Baseline)</td>
+                  <td class="p-2.5 text-right">$1,022.50/mo</td>
+                  <td class="p-2.5 text-right">$537.10/mo (89.3%)</td>
+                  <td class="p-2.5 text-right">142.9h / mo</td>
+                  <td class="p-2.5 text-center font-bold text-chart-2">20</td>
+                  <td class="p-2.5 text-center font-bold text-chart-4">26</td>
+                  <td class="p-2.5 text-center font-extrabold text-primary">22</td>
+                </tr>
+                <tr class="hover:bg-muted/30 text-rose-500">
+                  <td class="p-2.5 font-medium">🇳🇬 Nigeria (Tier 4 Severe Stress, Rank #189)</td>
+                  <td class="p-2.5 text-right">$55.20/mo</td>
+                  <td class="p-2.5 text-right">$116.26/mo (210.6%)</td>
+                  <td class="p-2.5 text-right">337.0h / mo</td>
+                  <td class="p-2.5 text-center font-bold">1</td>
+                  <td class="p-2.5 text-center font-bold">1</td>
+                  <td class="p-2.5 text-center font-bold">1</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>

@@ -177,8 +177,22 @@ export function DashboardContainer() {
                 </Badge>
               </div>
               <p className="text-xs text-muted-foreground">
-                Arithmetic benchmark across all sovereign UN member states. Median Monthly Wage: <strong>${globalSummary.avgMonthlyWageUSD.toFixed(0)}/mo</strong>
+                Arithmetic benchmark across all 195 sovereign states. Median Monthly Wage: <strong>${globalSummary.avgMonthlyWageUSD.toFixed(0)}/mo</strong> • Composite APPI: <strong className="text-primary">{globalSummary.avgAppiScore} / 100</strong> (Essentials: {globalSummary.avgAppiEssentials}, Luxury: {globalSummary.avgAppiLuxury})
               </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="px-3 py-1 rounded-xl bg-primary/10 border border-primary/20 text-center">
+              <span className="text-[10px] text-muted-foreground block font-medium">Composite APPI</span>
+              <span className="text-sm font-black text-primary">{globalSummary.avgAppiScore}</span>
+            </div>
+            <div className="px-3 py-1 rounded-xl bg-chart-2/10 border border-chart-2/20 text-center">
+              <span className="text-[10px] text-muted-foreground block font-medium">Essentials</span>
+              <span className="text-sm font-black text-chart-2">{globalSummary.avgAppiEssentials}</span>
+            </div>
+            <div className="px-3 py-1 rounded-xl bg-chart-4/10 border border-chart-4/20 text-center">
+              <span className="text-[10px] text-muted-foreground block font-medium">Luxury</span>
+              <span className="text-sm font-black text-chart-4">{globalSummary.avgAppiLuxury}</span>
             </div>
           </div>
         </div>

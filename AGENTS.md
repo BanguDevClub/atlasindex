@@ -110,25 +110,34 @@ $$\beta_{\text{med}} = \left( \frac{C_{\text{checkup}}}{W_{\text{median}}} \righ
 
 ### B. The Atlas Purchasing Power Index (APPI)
 
-APPI is a normalized composite index on a continuous scale of **1 to 100**:
+APPI is a normalized composite index on a continuous scale of **1 to 100** structured into two complementary dimensions:
+1. **🍚🏠 APPI Essentials (Food + Rent)**: Standardized monthly food basket ($B$) plus 1-bedroom apartment rent ($R_{\text{1BR}}$).
+2. **🚗🩺 APPI Luxury (Transport + Healthcare)**: Compact new passenger vehicle MSRP ($P_{\text{car}}$) plus outpatient clinical diagnostic blood panel ($C_{\text{checkup}}$).
 
-$$\text{APPI} = \text{clamp}\Big( \text{round}\left( 0.70 \times F_{\text{wage}} + 0.30 \times F_{\text{hours}} \right),\, 1,\, 100 \Big)$$
+$$\text{APPI} = \text{clamp}\Big( \text{round}\left( 0.70 \times \text{APPI}_{\text{essentials}} + 0.30 \times \text{APPI}_{\text{luxury}} \right),\, 1,\, 100 \Big)$$
 
 where:
-$$F_{\text{wage}} = \max\left( 0,\, 100 - (\beta_{\text{food}} \times 1.8) \right)$$
-$$F_{\text{hours}} = \max\left( 0,\, 100 - (H_{\text{food}} \times 1.0) \right)$$
+$$\text{APPI}_{\text{essentials}} = \text{clamp}\Big( \text{round}\left( 0.70 \times F_{\text{ess\_wage}} + 0.30 \times F_{\text{ess\_hours}} \right),\, 1,\, 100 \Big)$$
+- $F_{\text{ess\_wage}} = \max\left( 0,\, 100 - (\beta_{\text{essentials}} \times 0.90) \right)$ with $\beta_{\text{essentials}} = \beta_{\text{food}} + \beta_{\text{rent}}$
+- $F_{\text{ess\_hours}} = \max\left( 0,\, 100 - (H_{\text{essentials}} \times 0.55) \right)$ with $H_{\text{essentials}} = H_{\text{food}} + H_{\text{rent}}$
+
+$$\text{APPI}_{\text{luxury}} = \text{clamp}\Big( \text{round}\left( 0.60 \times F_{\text{car}} + 0.40 \times F_{\text{med}} \right),\, 1,\, 100 \Big)$$
+- $F_{\text{car}} = \max\left( 0,\, 100 - (M_{\text{car}} \times 1.25) \right)$ with $M_{\text{car}} = P_{\text{car}} / W_{\text{median}}$
+- $F_{\text{med}} = \max\left( 0,\, 100 - (\beta_{\text{med}} \times 2.50) \right)$ with $\beta_{\text{med}} = (C_{\text{checkup}} / W_{\text{median}}) \times 100\%$
 
 #### Weighting Rationale:
-- **70% on Wage Burden ($F_{\text{wage}}$)**: Reflects *Engel's Law*—the share of income dedicated to food is the single most reliable measure of household budget strain.
-- **30% on Absolute Labor Hours ($F_{\text{hours}}$)**: Captures the physical time sacrifice of labor, penalizing economies where workers must work excessive hours to eat.
+- **70% on APPI Essentials**: Anchors the index in basic physiological survival (food security & residential shelter) adhering to *Engel's Law*.
+- **30% on APPI Luxury**: Captures private vehicular mobility and routine diagnostic healthcare security.
 
 #### Classification Tiers:
-| Tier | Wage Share ($\beta_{\text{food}}$) | Monthly Labor ($H_{\text{food}}$) | APPI Range | Exemplar Economies |
-| :--- | :--- | :--- | :--- | :--- |
-| **Tier 1: Low Stress** | $< 10\%$ | $< 16\text{h}$ | **75 – 100** | Switzerland, USA, Denmark, Qatar |
-| **Tier 2: Moderate** | $10\% – 20\%$ | $16\text{h} – 32\text{h}$ | **55 – 74** | Poland, Chile, Portugal, Malaysia |
-| **Tier 3: High Stress** | $20\% – 35\%$ | $32\text{h} – 56\text{h}$ | **30 – 54** | Brazil, South Africa, Turkey, Thailand |
-| **Tier 4: Severe Stress** | $> 35\%$ | $> 56\text{h}$ | **1 – 29** | Nigeria, Pakistan, Egypt, Cuba |
+| Tier | Essential Burden ($\beta_{\text{essentials}}$) | APPI Range | Exemplar Economies |
+| :--- | :--- | :--- | :--- |
+| **Tier 1: Low Stress** | $< 40\%$ | **70 – 100** | USA (74 • Rank #1), UAE (71), Germany (71), Switzerland (71) |
+| **Tier 2: Moderate** | $40\% – 65\%$ | **50 – 69** | Poland (64 • Rank #44), Chile (56), Portugal (56), Malaysia (55) |
+| **Tier 3: High Stress** | $65\% – 90\%$ | **25 – 49** | Brazil (49 • Rank #80), South Africa (40), Thailand (38), Turkey (31) |
+| **Tier 4: Severe Stress** | $> 90\%$ | **1 – 24** | Nigeria (1 • Rank #189), Pakistan (1), Egypt (1), Cuba (1), Syria (1) |
+
+> **Real-World Frontier vs 100/100 Optimum**: Because food and residential housing in market economies require physical land, agriculture, and labor, even the wealthiest countries spend 35%–45% of median earnings on essentials (55–70h labor), yielding top empirical APPI Essentials scores of ~65–68 (e.g. USA at 68). A score of 100/100 represents a post-scarcity theoretical optimum (essentials requiring <1.5% of wage / <2.4h labor).
 
 ---
 
@@ -137,6 +146,7 @@ $$F_{\text{hours}} = \max\left( 0,\, 100 - (H_{\text{food}} \times 1.0) \right)$
 - Synthetic Entity ID: `world-average` (Flag: `🌐`, Code: `GLOBAL`).
 - Global Baselines:
   - **Median Net Wage**: **$1,022.50 / month** ($6.39 / hour).
+  - **Composite APPI**: **22 / 100** (Essentials: 20, Luxury: 26).
   - **Monthly Food Basket**: **$138.00 / month** (67.9h labor • 42.5% of wage).
   - **1-Bedroom Rent**: **$399.10 / month** (74.9h labor • 46.8% of wage).
   - **New Passenger Car**: **$22,682.10** (89.3 months of median wage).
