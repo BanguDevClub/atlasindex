@@ -27,6 +27,7 @@ AtlasIndex is an open-source, empirical economic platform developed by **BanguDe
   - **Continents (`/continents`)**: 5 continental regional benchmarks (Africa, Americas, Asia, Europe, Oceania) side-by-side with the World Average.
   - **Global Rankings (`/ranking`)**: Filterable, sortable 195-nation table with pinned World Average row, expandable scorecards, and one-click CSV/JSON export.
   - **Side-by-Side Comparator (`/compare`)**: Compare 2 to 4 economies head-to-head with radar charts and a relocation salary simulator.
+  - **APPI Sandbox (`/sandbox`)**: Design and simulate custom economies by tweaking wages, 13 grocery prices, residential rent, passenger car costs, and healthcare checkups with real-time global ranking predictions and JSON export.
   - **Methodology & Whitepaper (`/methodology`)**: Comprehensive documentation with server-rendered KaTeX LaTeX mathematical equations, sources, and estimation models.
 - **Multi-Theme Design System**:
   - **Default Light** & **Default Dark**

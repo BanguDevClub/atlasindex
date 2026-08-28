@@ -1,7 +1,7 @@
 ---
 import { ThemeToggle } from "./ThemeToggle";
 import { getBasePath } from "../lib/utils";
-import { Compass, BarChart2, Globe, Trophy, Scale, BookOpen } from "lucide-react";
+import { Compass, BarChart2, Globe, Trophy, Scale, BookOpen, SlidersHorizontal } from "lucide-react";
 
 const rawPathname = new URL(Astro.request.url).pathname;
 const normalize = (p: string) => (p.length > 1 && p.endsWith("/") ? p.slice(0, -1) : p);
@@ -13,6 +13,7 @@ const navLinks = [
   { name: "Continents", href: getBasePath("/continents"), icon: Globe },
   { name: "Global Ranking", href: getBasePath("/ranking"), icon: Trophy },
   { name: "Compare", href: getBasePath("/compare"), icon: Scale },
+  { name: "Sandbox", href: getBasePath("/sandbox"), icon: SlidersHorizontal },
   { name: "Methodology", href: getBasePath("/methodology"), icon: BookOpen },
 ];
 ---

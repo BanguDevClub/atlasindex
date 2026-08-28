@@ -52,6 +52,7 @@ atlasindex/
 │   │   ├── landing/            # HeroSection, QuickCalculator, HighlightsGrid, GlobalOverviewPreview
 │   │   ├── methodology/        # MethodologyContent.astro (whitepaper & LaTeX models)
 │   │   ├── ranking/            # RankingContainer.tsx (sortable 195-nation multi-pillar table)
+│   │   ├── sandbox/            # AppiSandbox.tsx (interactive macroeconomic simulator)
 │   │   └── ui/                 # shadcn UI components + Latex.astro
 │   ├── data/
 │   │   ├── continents/         # 195 nations: africa.ts, americas.ts, asia.ts, europe.ts, oceania.ts
@@ -69,6 +70,7 @@ atlasindex/
 │   │   ├── ranking.astro       # Global rankings with CSV/JSON export
 │   │   ├── compare.astro       # Head-to-head 2-4 country + World Average comparator
 │   │   ├── continents.astro    # 5 continental regions vs World Average
+│   │   ├── sandbox.astro       # Custom country APPI sandbox & parameter simulator
 │   │   └── methodology.astro   # Complete scientific documentation & whitepaper
 │   └── styles/
 │       └── globals.css         # Tailwind directives, KaTeX styles, HSL theme tokens

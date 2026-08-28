@@ -5,7 +5,7 @@ import { QuickCalculator } from "../components/landing/QuickCalculator";
 import HighlightsGrid from "../components/landing/HighlightsGrid.astro";
 import { GlobalOverviewPreview } from "../components/landing/GlobalOverviewPreview";
 import { Button } from "../components/ui/button";
-import { ArrowRight, BookOpen, Compass, Trophy } from "lucide-react";
+import { ArrowRight, BookOpen, Compass, Trophy, SlidersHorizontal } from "lucide-react";
 import { getBasePath } from "../lib/utils";
 ---
 
@@ -119,6 +119,21 @@ import { getBasePath } from "../lib/utils";
           </div>
           <span class="text-xs font-semibold text-primary inline-flex items-center gap-1 mt-4">
             Launch Comparator →
+          </span>
+        </a>
+
+        <a href={getBasePath("/sandbox")} class="group rounded-2xl border border-primary/40 bg-primary/5 p-6 backdrop-blur hover:border-primary transition-all duration-300 flex flex-col justify-between sm:col-span-2 lg:col-span-1">
+          <div>
+            <div class="size-10 rounded-xl bg-primary/20 border border-primary/30 flex items-center justify-center text-primary mb-4 group-hover:scale-110 transition-transform">
+              <SlidersHorizontal className="size-5" />
+            </div>
+            <h3 class="font-bold text-base text-foreground mb-1 group-hover:text-primary transition-colors">APPI Custom Sandbox</h3>
+            <p class="text-xs text-muted-foreground leading-relaxed">
+              Design a custom country with your own wage, rent, car, and checkup values to simulate its real-time APPI score and global rank.
+            </p>
+          </div>
+          <span class="text-xs font-semibold text-primary inline-flex items-center gap-1 mt-4">
+            Open APPI Sandbox →
           </span>
         </a>
       </div>

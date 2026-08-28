@@ -1,0 +1,14 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { AppiSandbox } from "../components/sandbox/AppiSandbox";
+---
+
+<Layout
+  title="APPI Custom Country Sandbox & Macroeconomic Simulator — AtlasIndex"
+  description="Design and test your own custom country or economy in the APPI Sandbox. Tweak median wages, 13-item grocery costs, residential rent, passenger car prices, and clinical checkups to simulate purchasing power and global rankings in real-time."
+  keywords="APPI sandbox, purchasing power simulator, macroeconomic sandbox, custom country economics, cost of living simulator, real wage calculator, labor hours simulator, BanguDevClub"
+>
+  <div class="container mx-auto px-4 sm:px-8 py-8">
+    <AppiSandbox client:load />
+  </div>
+</Layout>
