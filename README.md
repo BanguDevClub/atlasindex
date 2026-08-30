@@ -86,16 +86,15 @@ $$\text{APPI}_{\text{luxury}} = \text{clamp}\Big( \text{round}\left( 0.60 \times
 
 ---
 
-## 🌐 Global Benchmark Baseline (`World Average`)
+## 🌐 Global Benchmark Baseline (`World Average`) — 2025 Median-Net Dataset (corrected)
 
-- **Median Net Wage**: **$1,022.50 / month** ($6.39 / hour).
-- **Composite APPI**: **22 / 100** (Essentials: 20, Luxury: 26).
-- **Monthly Food Basket**: **$138.00 / month** (67.9h labor • 42.5% of wage).
-- **1-Bedroom Rent**: **$399.10 / month** (74.9h labor • 46.8% of wage).
-- **New Passenger Car**: **$22,682.10** (89.3 months of median wage).
-- **Medical Checkup**: **$74.40** (22.3h labor • 13.9% of wage).
-- **Combined Essential Living (Food + Rent)**: **$537.10 / month** (142.9h labor • 89.3% of wage).
-
+- **Median Net Wage**: **$982.50 / month** ($6.14 / hour).
+- **Composite APPI**: **19 / 100** (Essentials: 16, Luxury: 25) — APPI of global mean pillars.
+- **Monthly Food Basket**: **$138.00 / month** (70.6h labor • 44.1% of wage).
+- **1-Bedroom Rent**: **$399.10 / month** (78.9h labor • 49.3% of wage).
+- **New Passenger Car**: **$22,682.10** (93.3 months of median wage).
+- **Medical Checkup**: **$74.40** (23.3h labor • 14.6% of wage).
+- **Combined Essential Living (Food + Rent)**: **$537.10 / month** (149.5h labor • 93.4% of wage).
 ---
 
 ## 🛠️ Technology Stack & Architecture

@@ -54,27 +54,11 @@ export function calculateAPPILuxury(carLaborMonths: number, medicalPercentOfWage
  * Calculates the Composite Atlas Purchasing Power Index (APPI) on a 1-100 scale:
  * 70% APPI Essentials (Food + Rent) + 30% APPI Luxury (Health + Car).
  */
-export function calculateAPPI(
-  essentialPercentOrScore: number,
-  essentialLaborHoursOrLuxuryScore?: number,
-  isDirectComponents: boolean = false
-): number {
-  if (isDirectComponents || (essentialLaborHoursOrLuxuryScore !== undefined && essentialLaborHoursOrLuxuryScore <= 100 && essentialPercentOrScore <= 100 && essentialLaborHoursOrLuxuryScore >= 0)) {
-    const ess = essentialPercentOrScore;
-    const lux = essentialLaborHoursOrLuxuryScore ?? 1;
-    const score = Math.round((ess * 0.70) + (lux * 0.30));
-    return Math.min(100, Math.max(1, score));
-  }
-
-  // Fallback for legacy calls (percent, hours)
-  const essScore = calculateAPPIEssentials(essentialPercentOrScore, essentialLaborHoursOrLuxuryScore ?? 0);
-  return essScore;
-}
-
 export function calculateAPPIComposite(appiEssentials: number, appiLuxury: number): number {
   const score = Math.round((appiEssentials * 0.70) + (appiLuxury * 0.30));
   return Math.min(100, Math.max(1, score));
 }
+
 
 export function processCountryEconomy(raw: CountryRawData): ProcessedCountryEconomy {
   const workHours = raw.workHoursPerMonth || 160;
@@ -395,9 +379,13 @@ export function getGlobalSummary(processedCountries: ProcessedCountryEconomy[]):
   const avgTotalEssentialLaborHours = processedCountries.reduce((acc, c) => acc + c.totalEssentialLaborHours, 0) / countryCount;
   const avgTotalEssentialPercentOfWage = processedCountries.reduce((acc, c) => acc + c.totalEssentialPercentOfWage, 0) / countryCount;
 
-  const avgAppiEssentials = Math.round(processedCountries.reduce((acc, c) => acc + c.appiEssentials, 0) / countryCount);
-  const avgAppiLuxury = Math.round(processedCountries.reduce((acc, c) => acc + c.appiLuxury, 0) / countryCount);
+  // APPI for the global average is the APPI *of* the mean pillar values (not the mean of individual APPI scores).
+  // This keeps the World Average row in the methodology table ($537.10, 89.3%, 142.9h -> 20/26/22) consistent with the synthesis entity,
+  // and preserves the econometric interpretation of “what APPI would a worker earning the global mean wage, paying the global mean basket/rent/car/medical cost, experience?”.
+  const avgAppiEssentials = calculateAPPIEssentials(avgTotalEssentialPercentOfWage, avgTotalEssentialLaborHours);
+  const avgAppiLuxury = calculateAPPILuxury(avgCarLaborMonths, avgMedicalCheckupPercentOfWage);
   const avgAppiScore = calculateAPPIComposite(avgAppiEssentials, avgAppiLuxury);
+
 
   const tierDistribution = {
     Low: processedCountries.filter((c) => c.stressTier === "Low").length,
@@ -571,8 +559,11 @@ export function getContinentalSummaries(processedCountries: ProcessedCountryEcon
     const avgMedicalCheckupLaborHours = countries.reduce((acc, c) => acc + c.medicalCheckupLaborHours, 0) / countryCount;
     const avgMedicalCheckupPercentOfWage = countries.reduce((acc, c) => acc + c.medicalCheckupPercentOfWage, 0) / countryCount;
 
-    const avgAppiEssentials = Math.round(countries.reduce((acc, c) => acc + c.appiEssentials, 0) / countryCount);
-    const avgAppiLuxury = Math.round(countries.reduce((acc, c) => acc + c.appiLuxury, 0) / countryCount);
+    // Continental APPI is the APPI *of* the continental mean pillar values, mirroring getGlobalSummary.
+    const avgTotalEssentialPercent = avgBasketPercentOfWage + avgRentPercentOfWage;
+    const avgTotalEssentialHours = avgLaborHours + avgRentLaborHours;
+    const avgAppiEssentials = calculateAPPIEssentials(avgTotalEssentialPercent, avgTotalEssentialHours);
+    const avgAppiLuxury = calculateAPPILuxury(avgCarLaborMonths, avgMedicalCheckupPercentOfWage);
     const avgAppiScore = calculateAPPIComposite(avgAppiEssentials, avgAppiLuxury);
 
     const categoryLaborHours = {

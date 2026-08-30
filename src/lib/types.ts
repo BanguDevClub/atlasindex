@@ -186,6 +186,7 @@ export interface GlobalEconomySummary {
   avgTotalEssentialLaborHours: number;
   avgTotalEssentialPercentOfWage: number;
 
+  /** APPI *of* the global mean pillar values (20/26/22), not the mean of individual APPI scores (≈34/52/39). See methodology.ts. */
   avgAppiScore: number;
   avgAppiEssentials: number;
   avgAppiLuxury: number;
@@ -226,6 +227,7 @@ export interface ContinentEconomySummary {
   avgMedicalCheckupLaborHours: number;
   avgMedicalCheckupPercentOfWage: number;
 
+  /** APPI *of* the continental mean pillar values, mirroring GlobalEconomySummary. */
   avgAppiScore: number;
   avgAppiEssentials: number;
   avgAppiLuxury: number;

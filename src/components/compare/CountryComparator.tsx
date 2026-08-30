@@ -47,9 +47,8 @@ export function CountryComparator() {
       label: c.name,
       sublabel:
         c.id === "world-average"
-          ? "Global Benchmark • $1,022/mo"
+          ? "Global Benchmark • $982/mo"
           : `Median: ${formatCurrency(c.monthlyMedianWageUSD, "USD")}/mo • Food: ${c.laborHoursForBasket.toFixed(1)}h`,
-      icon: <span className="text-base">{c.flag}</span>,
       badge: c.id === "world-average" ? "Benchmark" : c.isEstimated ? "Est." : c.code,
       badgeVariant: c.id === "world-average" ? "default" : c.isEstimated ? "warning" : "secondary",
       group: c.id === "world-average" ? "Global Benchmark" : c.continent,

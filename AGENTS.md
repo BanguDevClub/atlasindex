@@ -144,25 +144,23 @@ $$\text{APPI}_{\text{luxury}} = \text{clamp}\Big( \text{round}\left( 0.60 \times
 ---
 
 ### C. Global Benchmark (`🌐 World Average`)
-- Represents the unweighted arithmetic mean across all **195 sovereign nations**.
+- Represents the unweighted arithmetic mean across all **195 sovereign nations** (mean pillar costs; APPI is the APPI *of* the mean values: **19 /100** (Essentials: 16, Luxury: 25), distinct from the mean of APPI scores ~32/51/38).
 - Synthetic Entity ID: `world-average` (Flag: `🌐`, Code: `GLOBAL`).
-- Global Baselines:
-  - **Median Net Wage**: **$1,022.50 / month** ($6.39 / hour).
-  - **Composite APPI**: **22 / 100** (Essentials: 20, Luxury: 26).
-  - **Monthly Food Basket**: **$138.00 / month** (67.9h labor • 42.5% of wage).
-  - **1-Bedroom Rent**: **$399.10 / month** (74.9h labor • 46.8% of wage).
-  - **New Passenger Car**: **$22,682.10** (89.3 months of median wage).
-  - **Medical Checkup**: **$74.40** (22.3h labor • 13.9% of wage).
-  - **Essential Living (Food + Rent)**: **$537.10 / month** (142.9h labor • 89.3% of wage).
-
+- Global Baselines (2025 median-net dataset, corrected for median vs average):
+  - **Median Net Wage**: **$982.50 / month** ($6.14 / hour).
+  - **Composite APPI**: **19 / 100** (Essentials: 16, Luxury: 25) — APPI of global mean basket/rent/car/medical.
+  - **Monthly Food Basket**: **$138.00 / month** (70.6h labor • 44.1% of wage).
+  - **1-Bedroom Rent**: **$399.10 / month** (78.9h labor • 49.3% of wage).
+  - **New Passenger Car**: **$22,682.10** (93.3 months of median wage).
+  - **Medical Checkup**: **$74.40** (23.3h labor • 14.6% of wage).
+  - **Essential Living (Food + Rent)**: **$537.10 / month** (149.5h labor • 93.4% of wage).
 ---
 
 ### D. Econometric Estimation Policy for Data-Sparse States
-For 19 states where official statistical agencies do not publish standard consumer price indexes or regular labor surveys (e.g. North Korea, Eritrea, Syria, Afghanistan, Cuba, Haiti, Somalia, Yemen, South Sudan):
+For 19 states where official statistical agencies do not publish standard consumer price indexes or regular labor surveys — the full cohort is **Afghanistan, Central African Republic, Cuba, DR Congo, Eritrea, Haiti, Holy See (Vatican City), Iran, Lebanon, Myanmar, North Korea, Palestine, Somalia, South Sudan, Sudan, Syria, Turkmenistan, Venezuela, Yemen** (illustrative e.g. North Korea, Eritrea, Syria, Afghanistan, Cuba, Haiti, Somalia, Yemen, South Sudan):
 1. Country records must be flagged with `isEstimated: true`.
 2. Must supply an explicit `estimationDisclaimer` detailing the triangulation source (e.g. UN WFP VAM price monitoring, World Bank ICP regional PPP models, or cross-border market surveys).
 3. UI components must display an **"Est."** badge and tooltip disclaimer whenever displaying estimated country data.
-
 ---
 
 ## 5. Development & Code Conventions for Agents

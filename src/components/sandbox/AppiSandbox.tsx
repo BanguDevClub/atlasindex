@@ -523,7 +523,7 @@ export function AppiSandbox() {
               applyPreset({
                 name: "World Average Baseline",
                 flag: "🌐",
-                wage: 1022.5,
+                wage: 982.5,
                 basket: 138,
                 rent: 399.1,
                 car: 22682.1,
@@ -532,7 +532,7 @@ export function AppiSandbox() {
             }
             className="text-[11px] h-8 justify-start hover:bg-primary/10 text-foreground truncate"
           >
-            🌐 World Average (22)
+            🌐 World Average (19)
           </Button>
 
           <Button
@@ -661,7 +661,7 @@ export function AppiSandbox() {
               </div>
               <div className="flex justify-between text-[10px] text-muted-foreground font-mono">
                 <span>$10/mo (Extreme Strain)</span>
-                <span>$1,022/mo (World Avg)</span>
+                <span>$982/mo (World Avg)</span>
                 <span>$4,650/mo (USA)</span>
                 <span>$12,000/mo</span>
               </div>

@@ -108,7 +108,7 @@ export const BASKET_ITEMS: FoodPriceItem[] = [
 ];
 
 export const BASKET_NUTRITION_EXPLANATION = {
-  calorieTarget: "Approx. 2,200 - 2,400 kcal per day per adult",
+  calorieTarget: "Approx. ~2,300 kcal per day per adult (2,200–2,400 range, WHO/FAO guidelines)",
   proteinShare: "15% - 20% total caloric intake from mixed animal and legume proteins",
   carbShare: "50% - 55% complex carbohydrates from cereals, grains, and tubers",
   fatShare: "25% - 30% healthy fats from cooking oil, dairy, and eggs",
