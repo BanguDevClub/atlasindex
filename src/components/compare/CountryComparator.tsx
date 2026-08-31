@@ -31,6 +31,13 @@ import {
   Sparkles,
 } from "lucide-react";
 
+const PILLAR_LABELS = {
+  food: "Nutrition",
+  rent: "Housing",
+  car: "Transport",
+  medical: "Healthcare",
+} as const;
+
 export function CountryComparator() {
   const allCountries = useMemo(() => getAllProcessedCountries(RAW_COUNTRIES), []);
   const worldAvgCountry = useMemo(() => getWorldAverageCountry(allCountries), [allCountries]);
@@ -269,6 +276,35 @@ export function CountryComparator() {
               .map((c) => (
                 <p key={c.id}>
                   <strong>{c.flag} {c.name}:</strong> {c.estimationDisclaimer || "Data is estimated based on regional purchasing power models."}
+                </p>
+              ))}
+          </div>
+        </div>
+      )}
+
+      {/* Pillar Provenance Notice: which pillars are benchmark-modeled rather than surveyed */}
+      {selectedCountries.some((c) => c.pillarQuality && Object.keys(c.pillarQuality).length > 0) && (
+        <div className="rounded-xl border border-border/60 bg-muted/40 p-4 text-xs text-muted-foreground space-y-2">
+          <div className="font-bold flex items-center gap-2 text-sm text-foreground">
+            <span>Pillar Provenance</span>
+          </div>
+          <p>
+            Pillars listed below are derived from regional / income-tier benchmarks rather than a
+            country-specific price observation. Most national statistical offices publish no
+            comparable unit price for a new compact car or a full outpatient checkup, so those two
+            pillars are modeled more often than Nutrition and Housing.
+          </p>
+          <div className="space-y-1">
+            {selectedCountries
+              .filter((c) => c.pillarQuality && Object.keys(c.pillarQuality).length > 0)
+              .map((c) => (
+                <p key={c.id}>
+                  <strong className="text-foreground">{c.flag} {c.name}:</strong>{" "}
+                  {Object.entries(c.pillarQuality!)
+                    .filter(([, v]) => v === "modeled")
+                    .map(([k]) => PILLAR_LABELS[k as keyof typeof PILLAR_LABELS] ?? k)
+                    .join(", ")}{" "}
+                  modeled
                 </p>
               ))}
           </div>

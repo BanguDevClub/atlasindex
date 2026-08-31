@@ -9,9 +9,9 @@ export const OCEANIA_COUNTRIES: CountryRawData[] = [
     continent: "Oceania",
     currencyCode: "AUD",
     currencySymbol: "A$",
-    exchangeRateToUSD: 1.52,
-    monthlyMedianWageLocal: 5600,
-    monthlyMedianWageUSD: 3684,
+    exchangeRateToUSD: 1.552,
+    monthlyMedianWageLocal: 4967,
+    monthlyMedianWageUSD: 3200.39,
     workHoursPerMonth: 160,
     foodPricesLocal: {
       rice: 3.2,
@@ -34,9 +34,10 @@ export const OCEANIA_COUNTRIES: CountryRawData[] = [
     dataYear: 2025,
     wageSource: "Australian Bureau of Statistics (ABS - Employee Earnings)",
     wageSourceUrl: "https://www.abs.gov.au/statistics/labour/earnings-and-working-conditions/employee-earnings/aug-2024",
-    notes: "ABS Aug 2024 median weekly $1,396 gross ($1,126 net after tax/Medicare); monthly net ~$4,875 (1,126*4.333); previous 5,600 was gross.",
+    notes: "Net take-home median. ABS Employee Earnings August 2025 median weekly earnings in main job = AUD 1,425 (=AUD 74,100/yr gross); net after 2025-26 resident tax scale and 2% Medicare levy.",
     priceSource: "ABS Consumer Price Index, Australia",
     priceSourceUrl: "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/consumer-price-index-australia",
+    pillarQuality: { rent: "modeled", car: "modeled", medical: "modeled" },
   },
   {
     id: "fiji",
@@ -46,9 +47,9 @@ export const OCEANIA_COUNTRIES: CountryRawData[] = [
     continent: "Oceania",
     currencyCode: "FJD",
     currencySymbol: "FJ$",
-    exchangeRateToUSD: 2.25,
+    exchangeRateToUSD: 2.299,
     monthlyMedianWageLocal: 1200,
-    monthlyMedianWageUSD: 533.3,
+    monthlyMedianWageUSD: 521.97,
     workHoursPerMonth: 160,
     foodPricesLocal: {
       rice: 3.8,
@@ -73,6 +74,7 @@ export const OCEANIA_COUNTRIES: CountryRawData[] = [
     wageSourceUrl: "https://www.statsfiji.gov.fj",
     priceSource: "FBoS Consumer Price Index",
     priceSourceUrl: "https://www.statsfiji.gov.fj",
+    pillarQuality: { rent: "modeled", car: "modeled", medical: "modeled" },
   },
   {
     id: "kiribati",
@@ -82,9 +84,9 @@ export const OCEANIA_COUNTRIES: CountryRawData[] = [
     continent: "Oceania",
     currencyCode: "AUD",
     currencySymbol: "A$",
-    exchangeRateToUSD: 1.52,
+    exchangeRateToUSD: 1.552,
     monthlyMedianWageLocal: 750,
-    monthlyMedianWageUSD: 493.4,
+    monthlyMedianWageUSD: 483.25,
     workHoursPerMonth: 160,
     foodPricesLocal: {
       rice: 3.1,
@@ -111,6 +113,7 @@ export const OCEANIA_COUNTRIES: CountryRawData[] = [
     priceSourceUrl: "https://nso.gov.ki",
     isEstimated: true,
     estimationDisclaimer: "Kiribati does not publish a regular monthly median wage series; figure is best-estimate from public sector pay scales, minimum-wage schedules, and ILO/IMF modelled wages.",
+    pillarQuality: { rent: "modeled", car: "modeled", medical: "modeled" },
   },
   {
     id: "marshall-islands",
@@ -149,6 +152,7 @@ export const OCEANIA_COUNTRIES: CountryRawData[] = [
     estimationDisclaimer: "Marshall Islands does not publish a regular monthly median wage series; figure is best-estimate from public sector pay scales, minimum-wage schedules, and ILO/IMF modelled wages.",
     priceSource: "EPPSO Consumer Price Index",
     priceSourceUrl: "https://www.eprmarshallislands.org",
+    pillarQuality: { rent: "modeled", car: "modeled", medical: "modeled" },
   },
   {
     id: "micronesia",
@@ -187,6 +191,7 @@ export const OCEANIA_COUNTRIES: CountryRawData[] = [
     priceSourceUrl: "http://www.fsmstatistics.fm",
     isEstimated: true,
     estimationDisclaimer: "Micronesia does not publish a regular monthly median wage series; figure is best-estimate from public sector pay scales, minimum-wage schedules, and ILO/IMF modelled wages.",
+    pillarQuality: { rent: "modeled", car: "modeled", medical: "modeled" },
   },
   {
     id: "nauru",
@@ -196,9 +201,9 @@ export const OCEANIA_COUNTRIES: CountryRawData[] = [
     continent: "Oceania",
     currencyCode: "AUD",
     currencySymbol: "A$",
-    exchangeRateToUSD: 1.52,
+    exchangeRateToUSD: 1.552,
     monthlyMedianWageLocal: 980,
-    monthlyMedianWageUSD: 644.7,
+    monthlyMedianWageUSD: 631.44,
     workHoursPerMonth: 160,
     foodPricesLocal: {
       rice: 3.4,
@@ -225,6 +230,7 @@ export const OCEANIA_COUNTRIES: CountryRawData[] = [
     priceSourceUrl: "https://naurugov.nr",
     isEstimated: true,
     estimationDisclaimer: "Nauru does not publish a regular monthly median wage series; figure is best-estimate from public sector pay scales, minimum-wage schedules, and ILO/IMF modelled wages.",
+    pillarQuality: { rent: "modeled", car: "modeled", medical: "modeled" },
   },
   {
     id: "new-zealand",
@@ -299,6 +305,7 @@ export const OCEANIA_COUNTRIES: CountryRawData[] = [
     priceSourceUrl: "https://www.palaugov.pw",
     isEstimated: true,
     estimationDisclaimer: "Palau does not publish a regular monthly median wage series; figure is best-estimate from public sector pay scales, minimum-wage schedules, and ILO/IMF modelled wages.",
+    pillarQuality: { rent: "modeled", car: "modeled", medical: "modeled" },
   },
   {
     id: "papua-new-guinea",
@@ -308,9 +315,9 @@ export const OCEANIA_COUNTRIES: CountryRawData[] = [
     continent: "Oceania",
     currencyCode: "PGK",
     currencySymbol: "K",
-    exchangeRateToUSD: 3.95,
+    exchangeRateToUSD: 4.123,
     monthlyMedianWageLocal: 1450,
-    monthlyMedianWageUSD: 367.1,
+    monthlyMedianWageUSD: 351.69,
     workHoursPerMonth: 160,
     foodPricesLocal: {
       rice: 7.8,
@@ -337,6 +344,7 @@ export const OCEANIA_COUNTRIES: CountryRawData[] = [
     priceSourceUrl: "https://www.nso.gov.pg",
     isEstimated: true,
     estimationDisclaimer: "Papua New Guinea does not publish a regular monthly median wage series; figure is best-estimate from public sector pay scales, minimum-wage schedules, and ILO/IMF modelled wages.",
+    pillarQuality: { car: "modeled", medical: "modeled" },
   },
   {
     id: "samoa",
@@ -346,9 +354,9 @@ export const OCEANIA_COUNTRIES: CountryRawData[] = [
     continent: "Oceania",
     currencyCode: "WST",
     currencySymbol: "WS$",
-    exchangeRateToUSD: 2.75,
+    exchangeRateToUSD: 2.792,
     monthlyMedianWageLocal: 1650,
-    monthlyMedianWageUSD: 600,
+    monthlyMedianWageUSD: 590.97,
     workHoursPerMonth: 160,
     foodPricesLocal: {
       rice: 5.2,
@@ -375,6 +383,7 @@ export const OCEANIA_COUNTRIES: CountryRawData[] = [
     priceSourceUrl: "https://www.sbs.gov.ws",
     isEstimated: true,
     estimationDisclaimer: "Samoa does not publish a regular monthly median wage series; figure is best-estimate from public sector pay scales, minimum-wage schedules, and ILO/IMF modelled wages.",
+    pillarQuality: { rent: "modeled", car: "modeled", medical: "modeled" },
   },
   {
     id: "solomon-islands",
@@ -384,9 +393,9 @@ export const OCEANIA_COUNTRIES: CountryRawData[] = [
     continent: "Oceania",
     currencyCode: "SBD",
     currencySymbol: "SI$",
-    exchangeRateToUSD: 8.45,
+    exchangeRateToUSD: 8.327,
     monthlyMedianWageLocal: 3200,
-    monthlyMedianWageUSD: 378.7,
+    monthlyMedianWageUSD: 384.29,
     workHoursPerMonth: 160,
     foodPricesLocal: {
       rice: 18.5,
@@ -413,6 +422,7 @@ export const OCEANIA_COUNTRIES: CountryRawData[] = [
     priceSourceUrl: "https://www.statistics.gov.sb",
     isEstimated: true,
     estimationDisclaimer: "Solomon Islands does not publish a regular monthly median wage series; figure is best-estimate from public sector pay scales, minimum-wage schedules, and ILO/IMF modelled wages.",
+    pillarQuality: { car: "modeled", medical: "modeled" },
   },
   {
     id: "tonga",
@@ -422,9 +432,9 @@ export const OCEANIA_COUNTRIES: CountryRawData[] = [
     continent: "Oceania",
     currencyCode: "TOP",
     currencySymbol: "T$",
-    exchangeRateToUSD: 2.38,
+    exchangeRateToUSD: 2.411,
     monthlyMedianWageLocal: 1450,
-    monthlyMedianWageUSD: 609.2,
+    monthlyMedianWageUSD: 601.41,
     workHoursPerMonth: 160,
     foodPricesLocal: {
       rice: 4.8,
@@ -450,6 +460,7 @@ export const OCEANIA_COUNTRIES: CountryRawData[] = [
     wageSourceUrl: "https://tongastats.gov.to",
     priceSource: "TSD Consumer Price Index",
     priceSourceUrl: "https://tongastats.gov.to",
+    pillarQuality: { rent: "modeled", car: "modeled", medical: "modeled" },
   },
   {
     id: "tuvalu",
@@ -459,9 +470,9 @@ export const OCEANIA_COUNTRIES: CountryRawData[] = [
     continent: "Oceania",
     currencyCode: "AUD",
     currencySymbol: "A$",
-    exchangeRateToUSD: 1.55,
+    exchangeRateToUSD: 1.552,
     monthlyMedianWageLocal: 720,
-    monthlyMedianWageUSD: 464.52,
+    monthlyMedianWageUSD: 463.92,
     workHoursPerMonth: 160,
     foodPricesLocal: {
       rice: 3.2,
@@ -486,6 +497,7 @@ export const OCEANIA_COUNTRIES: CountryRawData[] = [
     wageSourceUrl: "https://pacificdata.org/data/tv",
     priceSource: "Tuvalu Consumer Price Index",
     priceSourceUrl: "https://pacificdata.org/data/tv",
+    pillarQuality: { rent: "modeled" },
   },
   {
     id: "vanuatu",
@@ -495,9 +507,9 @@ export const OCEANIA_COUNTRIES: CountryRawData[] = [
     continent: "Oceania",
     currencyCode: "VUV",
     currencySymbol: "VT",
-    exchangeRateToUSD: 119.0,
+    exchangeRateToUSD: 121.3,
     monthlyMedianWageLocal: 68000,
-    monthlyMedianWageUSD: 571.43,
+    monthlyMedianWageUSD: 560.59,
     workHoursPerMonth: 160,
     foodPricesLocal: {
       rice: 260,
@@ -523,5 +535,6 @@ export const OCEANIA_COUNTRIES: CountryRawData[] = [
     wageSourceUrl: "https://vnso.gov.vu",
     priceSource: "VNSO Consumer Price Index",
     priceSourceUrl: "https://vnso.gov.vu",
+    pillarQuality: { rent: "modeled" },
   },
 ];

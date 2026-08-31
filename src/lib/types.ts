@@ -2,6 +2,17 @@ export type Continent = "Africa" | "Americas" | "Asia" | "Europe" | "Oceania";
 
 export type StressTier = "Low" | "Moderate" | "High" | "Severe";
 
+/**
+ * Provenance of an individual pillar value.
+ * - "surveyed": taken from a national price survey, statistical release, or market observation.
+ * - "modeled":  derived from a regional/income-tier benchmark rather than a country-specific
+ *               observation. Applies mainly to the Transport and Healthcare pillars, for which
+ *               most national statistical offices publish no comparable unit price.
+ */
+export type PillarProvenance = "surveyed" | "modeled";
+
+export type PillarQuality = Partial<Record<"food" | "rent" | "car" | "medical", PillarProvenance>>;
+
 export interface FoodPriceItem {
   id: string;
   name: string;
@@ -38,6 +49,8 @@ export interface CountryRawData {
   notes?: string;
   isEstimated?: boolean; // true for economies with restricted reporting (e.g. North Korea)
   estimationDisclaimer?: string; // transparent explanation of econometric estimation
+  /** Per-pillar provenance. Pillars absent from this map are treated as "surveyed". */
+  pillarQuality?: PillarQuality;
 }
 
 export interface ProcessedItemBurden {
@@ -146,6 +159,7 @@ export interface ProcessedCountryEconomy {
   notes?: string;
   isEstimated?: boolean;
   estimationDisclaimer?: string;
+  pillarQuality?: PillarQuality;
 }
 
 export interface CustomWageResult {

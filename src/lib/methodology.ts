@@ -241,6 +241,7 @@ export function processCountryEconomy(raw: CountryRawData): ProcessedCountryEcon
     notes: raw.notes,
     isEstimated: raw.isEstimated,
     estimationDisclaimer: raw.estimationDisclaimer,
+    pillarQuality: raw.pillarQuality,
   };
 }
 

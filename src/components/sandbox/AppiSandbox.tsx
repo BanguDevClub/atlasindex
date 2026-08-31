@@ -445,9 +445,9 @@ export function AppiSandbox() {
             size="sm"
             onClick={() =>
               applyPreset({
-                name: "United States (Rank #1)",
+                name: "United States (Rank #3)",
                 flag: "🇺🇸",
-                wage: 4650,
+                wage: 4187,
                 basket: 217.55,
                 rent: 1450,
                 car: 25500,
@@ -456,7 +456,7 @@ export function AppiSandbox() {
             }
             className="text-[11px] h-8 justify-start hover:bg-primary/10 text-foreground truncate"
           >
-            🇺🇸 USA Baseline (74)
+            🇺🇸 USA Baseline (71)
           </Button>
 
           <Button
@@ -464,18 +464,18 @@ export function AppiSandbox() {
             size="sm"
             onClick={() =>
               applyPreset({
-                name: "Switzerland (Rank #5)",
+                name: "Switzerland (Rank #16)",
                 flag: "🇨🇭",
-                wage: 7893,
-                basket: 421.98,
-                rent: 2999,
-                car: 27500,
-                med: 280,
+                wage: 7818,
+                basket: 436.49,
+                rent: 3102,
+                car: 36084,
+                med: 290,
               })
             }
             className="text-[11px] h-8 justify-start hover:bg-primary/10 text-foreground truncate"
           >
-            🇨🇭 Switzerland (71)
+            🇨🇭 Switzerland (70)
           </Button>
 
           <Button
@@ -485,16 +485,16 @@ export function AppiSandbox() {
               applyPreset({
                 name: "Poland (Tier 2)",
                 flag: "🇵🇱",
-                wage: 1443,
-                basket: 120.37,
-                rent: 577,
-                car: 24000,
-                med: 95,
+                wage: 1569,
+                basket: 126.42,
+                rent: 798,
+                car: 34565,
+                med: 100,
               })
             }
             className="text-[11px] h-8 justify-start hover:bg-primary/10 text-foreground truncate"
           >
-            🇵🇱 Poland (64)
+            🇵🇱 Poland (56)
           </Button>
 
           <Button
@@ -504,16 +504,16 @@ export function AppiSandbox() {
               applyPreset({
                 name: "Brazil (Tier 3)",
                 flag: "🇧🇷",
-                wage: 574,
-                basket: 98.98,
-                rent: 258,
-                car: 22500,
-                med: 65,
+                wage: 394,
+                basket: 95.67,
+                rent: 249,
+                car: 21747,
+                med: 63,
               })
             }
             className="text-[11px] h-8 justify-start hover:bg-primary/10 text-foreground truncate"
           >
-            🇧🇷 Brazil (49)
+            🇧🇷 Brazil (28)
           </Button>
 
           <Button
@@ -523,16 +523,16 @@ export function AppiSandbox() {
               applyPreset({
                 name: "World Average Baseline",
                 flag: "🌐",
-                wage: 982.5,
-                basket: 138,
-                rent: 399.1,
-                car: 22682.1,
-                med: 74.4,
+                wage: 1030.8,
+                basket: 139.8,
+                rent: 411.7,
+                car: 23791.7,
+                med: 75.7,
               })
             }
             className="text-[11px] h-8 justify-start hover:bg-primary/10 text-foreground truncate"
           >
-            🌐 World Average (19)
+            🌐 World Average (20)
           </Button>
 
           <Button
@@ -542,16 +542,16 @@ export function AppiSandbox() {
               applyPreset({
                 name: "Nigeria (Tier 4)",
                 flag: "🇳🇬",
-                wage: 55.2,
-                basket: 80.26,
-                rent: 36,
-                car: 21000,
+                wage: 66,
+                basket: 81.42,
+                rent: 37,
+                car: 21304,
                 med: 22,
               })
             }
             className="text-[11px] h-8 justify-start bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 border-rose-500/30 truncate"
           >
-            🇳🇬 Nigeria (1)
+            🇳🇬 Nigeria (3)
           </Button>
         </div>
 
@@ -661,8 +661,8 @@ export function AppiSandbox() {
               </div>
               <div className="flex justify-between text-[10px] text-muted-foreground font-mono">
                 <span>$10/mo (Extreme Strain)</span>
-                <span>$982/mo (World Avg)</span>
-                <span>$4,650/mo (USA)</span>
+                <span>$1,031/mo (World Avg)</span>
+                <span>$4,187/mo (USA)</span>
                 <span>$12,000/mo</span>
               </div>
             </div>

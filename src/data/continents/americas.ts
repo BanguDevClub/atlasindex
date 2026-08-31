@@ -10,8 +10,8 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     currencyCode: "USD",
     currencySymbol: "$",
     exchangeRateToUSD: 1,
-    monthlyMedianWageLocal: 5174,
-    monthlyMedianWageUSD: 5174,
+    monthlyMedianWageLocal: 4187,
+    monthlyMedianWageUSD: 4187,
     workHoursPerMonth: 160,
     foodPricesLocal: {
       rice: 3.4,
@@ -36,7 +36,7 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     wageSourceUrl: "https://www.bls.gov/news.release/wkyeng.nr0.htm",
     priceSource: "U.S. BLS Consumer Price Index / Numbeo",
     priceSourceUrl: "https://www.bls.gov/cpi/",
-    notes: "Net take-home after federal+state+FICA+Medicare; BLS Q4 2024 weekly $1,142 gross → net ~$3,950.",
+    notes: "Net take-home median. BLS 2025 annual median usual weekly earnings, full-time wage & salary workers = $1,204/wk (=$62,608/yr gross); net after 2025 federal brackets (std. deduction $15,750), FICA 7.65%, and ~3.5% population-weighted state income tax.",
   },
   {
     id: "canada",
@@ -46,9 +46,9 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     continent: "Americas",
     currencyCode: "CAD",
     currencySymbol: "CA$",
-    exchangeRateToUSD: 1.38,
+    exchangeRateToUSD: 1.398,
     monthlyMedianWageLocal: 4200,
-    monthlyMedianWageUSD: 3043.48,
+    monthlyMedianWageUSD: 3004.29,
     workHoursPerMonth: 160,
     foodPricesLocal: {
       rice: 4.6,
@@ -74,6 +74,7 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     priceSource: "Statistics Canada Monthly Food Prices",
     priceSourceUrl: "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810024501",
     notes: "Net after federal+provincial tax+CPP/EI; Statistics Canada 2024 median gross ~CAD 5,400 → net ~CAD 4,200.",
+    pillarQuality: { car: "modeled", medical: "modeled" },
   },
   {
     id: "brazil",
@@ -83,9 +84,9 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     continent: "Americas",
     currencyCode: "BRL",
     currencySymbol: "R$",
-    exchangeRateToUSD: 5.4,
-    monthlyMedianWageLocal: 2100,
-    monthlyMedianWageUSD: 389,
+    exchangeRateToUSD: 5.587,
+    monthlyMedianWageLocal: 2200,
+    monthlyMedianWageUSD: 393.77,
     workHoursPerMonth: 160,
     foodPricesLocal: {
       rice: 6.8,
@@ -108,9 +109,10 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     dataYear: 2025,
     wageSource: "IBGE (PNAD Contínua - Rendimento do Trabalho)",
     wageSourceUrl: "https://www.ibge.gov.br/estatisticas/sociais/trabalho/9171-pesquisa-nacional-por-amostra-de-domicilios-continua-mensal.html",
-    notes: "Median habitual earnings of employed 14+ (≈61.9% of mean R$3,225 in 2024 per FGV IBRE PNAD analysis; previous 3,100 was average). Net take-home median after mandatory deductions.",
+    notes: "Median habitual earnings of employed persons 14+. IBGE PNAD Contínua 2025 mean habitual income from all work = R$3,560; median applied at the 61.9% median/mean ratio observed in PNAD microdata analysis. Net of mandatory deductions.",
     priceSource: "DIEESE (Cesta Básica Nacional) & IBGE IPCA",
     priceSourceUrl: "https://www.dieese.org.br/analisecestabasica/cestaBasica.html",
+    pillarQuality: { car: "modeled", medical: "modeled" },
   },
   {
     id: "mexico",
@@ -120,9 +122,9 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     continent: "Americas",
     currencyCode: "MXN",
     currencySymbol: "Mex$",
-    exchangeRateToUSD: 19.5,
+    exchangeRateToUSD: 19.24,
     monthlyMedianWageLocal: 11200,
-    monthlyMedianWageUSD: 574,
+    monthlyMedianWageUSD: 582.12,
     workHoursPerMonth: 160,
     foodPricesLocal: {
       rice: 32,
@@ -147,6 +149,7 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     wageSourceUrl: "https://www.inegi.org.mx/programas/enoe/15ymas/",
     priceSource: "INEGI Índice Nacional de Precios al Consumidor (INPC)",
     priceSourceUrl: "https://www.inegi.org.mx/temas/inpc/",
+    pillarQuality: { car: "modeled" },
   },
   {
     id: "argentina",
@@ -156,9 +159,9 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     continent: "Americas",
     currencyCode: "ARS",
     currencySymbol: "$",
-    exchangeRateToUSD: 1180,
+    exchangeRateToUSD: 1241,
     monthlyMedianWageLocal: 680000,
-    monthlyMedianWageUSD: 576.27,
+    monthlyMedianWageUSD: 547.95,
     workHoursPerMonth: 160,
     foodPricesLocal: {
       rice: 1850,
@@ -184,6 +187,7 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     priceSource: "INDEC Índice de Precios al Consumidor (IPC)",
     priceSourceUrl: "https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31",
     notes: "Argentina high-inflation 2025 (CPI 30-40%); ARS official mayorista rate ~1,180; blue dollar parallel ~20-30% higher.",
+    pillarQuality: { rent: "modeled" },
   },
   {
     id: "chile",
@@ -193,9 +197,9 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     continent: "Americas",
     currencyCode: "CLP",
     currencySymbol: "CLP$",
-    exchangeRateToUSD: 940,
+    exchangeRateToUSD: 951.3,
     monthlyMedianWageLocal: 611162,
-    monthlyMedianWageUSD: 650.2,
+    monthlyMedianWageUSD: 642.45,
     workHoursPerMonth: 160,
     foodPricesLocal: {
       rice: 1650,
@@ -221,6 +225,7 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     notes: "ESI 2024 median monthly labour income 611,162 CLP (50% of employed earn ≤ this); previous 720,000 was mean (826,535) or inflated.",
     priceSource: "INE Chile Índice de Precios al Consumidor",
     priceSourceUrl: "https://www.ine.gob.cl/estadisticas/economia/indices-de-precio-e-inflacion/indice-de-precios-al-consumidor",
+    pillarQuality: { car: "modeled", medical: "modeled" },
   },
   {
     id: "colombia",
@@ -230,9 +235,9 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     continent: "Americas",
     currencyCode: "COP",
     currencySymbol: "COL$",
-    exchangeRateToUSD: 4250,
+    exchangeRateToUSD: 4053,
     monthlyMedianWageLocal: 1650000,
-    monthlyMedianWageUSD: 388,
+    monthlyMedianWageUSD: 407.11,
     workHoursPerMonth: 160,
     foodPricesLocal: {
       rice: 4800,
@@ -257,6 +262,7 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     wageSourceUrl: "https://www.dane.gov.co/index.php/estadisticas-por-tema/mercado-laboral/empleo-y-desempleo",
     priceSource: "DANE Índice de Precios al Consumidor (IPC)",
     priceSourceUrl: "https://www.dane.gov.co/index.php/estadisticas-por-tema/precios-y-costos/indice-de-precios-al-consumidor-ipc",
+    pillarQuality: { car: "modeled", medical: "modeled" },
   },
   {
     id: "antigua-and-barbuda",
@@ -268,7 +274,7 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     currencySymbol: "EC$",
     exchangeRateToUSD: 2.7,
     monthlyMedianWageLocal: 3200,
-    monthlyMedianWageUSD: 1185,
+    monthlyMedianWageUSD: 1185.19,
     workHoursPerMonth: 160,
     foodPricesLocal: {
       rice: 8.5,
@@ -293,6 +299,7 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     wageSourceUrl: "https://statistics.gov.ag",
     priceSource: "Statistics Division Consumer Price Index",
     priceSourceUrl: "https://statistics.gov.ag",
+    pillarQuality: { rent: "modeled", car: "modeled", medical: "modeled" },
   },
   {
     id: "bahamas",
@@ -329,6 +336,7 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     wageSourceUrl: "https://www.bahamas.gov.bs/wps/portal/public/Department%20of%20Statistics%20of%20The%20Bahamas/",
     priceSource: "BNSI Consumer Price Index",
     priceSourceUrl: "https://www.bahamas.gov.bs",
+    pillarQuality: { rent: "modeled", car: "modeled", medical: "modeled" },
   },
   {
     id: "barbados",
@@ -365,6 +373,7 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     wageSourceUrl: "https://stats.gov.bb",
     priceSource: "BSS Retail Price Index",
     priceSourceUrl: "https://stats.gov.bb",
+    pillarQuality: { rent: "modeled", car: "modeled", medical: "modeled" },
   },
   {
     id: "belize",
@@ -401,6 +410,7 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     wageSourceUrl: "https://sib.org.bz",
     priceSource: "SIB Consumer Price Index",
     priceSourceUrl: "https://sib.org.bz",
+    pillarQuality: { rent: "modeled", car: "modeled", medical: "modeled" },
   },
   {
     id: "bolivia",
@@ -410,9 +420,9 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     continent: "Americas",
     currencyCode: "BOB",
     currencySymbol: "Bs",
-    exchangeRateToUSD: 6.95,
+    exchangeRateToUSD: 6.91,
     monthlyMedianWageLocal: 3400,
-    monthlyMedianWageUSD: 489,
+    monthlyMedianWageUSD: 492.04,
     workHoursPerMonth: 160,
     foodPricesLocal: {
       rice: 9.5,
@@ -437,6 +447,7 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     wageSourceUrl: "https://www.ine.gob.bo",
     priceSource: "INE Índice de Precios al Consumidor",
     priceSourceUrl: "https://www.ine.gob.bo",
+    pillarQuality: { rent: "modeled", car: "modeled", medical: "modeled" },
   },
   {
     id: "costa-rica",
@@ -446,9 +457,9 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     continent: "Americas",
     currencyCode: "CRC",
     currencySymbol: "₡",
-    exchangeRateToUSD: 515,
+    exchangeRateToUSD: 503.5,
     monthlyMedianWageLocal: 460000,
-    monthlyMedianWageUSD: 893,
+    monthlyMedianWageUSD: 913.6,
     workHoursPerMonth: 160,
     foodPricesLocal: {
       rice: 1350,
@@ -473,6 +484,7 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     wageSourceUrl: "https://inec.cr",
     priceSource: "INEC Índice de Precios al Consumidor",
     priceSourceUrl: "https://inec.cr",
+    pillarQuality: { rent: "modeled", car: "modeled", medical: "modeled" },
   },
   {
     id: "cuba",
@@ -482,9 +494,9 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     continent: "Americas",
     currencyCode: "CUP",
     currencySymbol: "₱",
-    exchangeRateToUSD: 320,
+    exchangeRateToUSD: 385,
     monthlyMedianWageLocal: 7200,
-    monthlyMedianWageUSD: 22.5,
+    monthlyMedianWageUSD: 18.7,
     workHoursPerMonth: 160,
     foodPricesLocal: {
       rice: 280,
@@ -511,6 +523,7 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     priceSourceUrl: "https://eltoque.com",
     isEstimated: true,
     estimationDisclaimer: "Calculated using open market (informal exchange rate) prices and state median salaries, accounting for ration subsidy limits and informal market dynamics.",
+    pillarQuality: { car: "modeled", medical: "modeled" },
   },
   {
     id: "dominica",
@@ -522,7 +535,7 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     currencySymbol: "EC$",
     exchangeRateToUSD: 2.7,
     monthlyMedianWageLocal: 2600,
-    monthlyMedianWageUSD: 963,
+    monthlyMedianWageUSD: 962.96,
     workHoursPerMonth: 160,
     foodPricesLocal: {
       rice: 7.8,
@@ -547,6 +560,7 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     wageSourceUrl: "https://stats.gov.dm",
     priceSource: "CSO Consumer Price Index",
     priceSourceUrl: "https://stats.gov.dm",
+    pillarQuality: { rent: "modeled", car: "modeled", medical: "modeled" },
   },
   {
     id: "dominican-republic",
@@ -556,9 +570,9 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     continent: "Americas",
     currencyCode: "DOP",
     currencySymbol: "RD$",
-    exchangeRateToUSD: 60.2,
+    exchangeRateToUSD: 61.99,
     monthlyMedianWageLocal: 27500,
-    monthlyMedianWageUSD: 456.8,
+    monthlyMedianWageUSD: 443.62,
     workHoursPerMonth: 160,
     foodPricesLocal: {
       rice: 58,
@@ -583,6 +597,7 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     wageSourceUrl: "https://www.bancentral.gov.do",
     priceSource: "BCRD Índice de Precios al Consumidor",
     priceSourceUrl: "https://www.bancentral.gov.do",
+    pillarQuality: { car: "modeled", medical: "modeled" },
   },
   {
     id: "ecuador",
@@ -619,6 +634,7 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     wageSourceUrl: "https://www.ecuadorencifras.gob.ec",
     priceSource: "INEC Canasta Familiar Básica",
     priceSourceUrl: "https://www.ecuadorencifras.gob.ec",
+    pillarQuality: { car: "modeled", medical: "modeled" },
   },
   {
     id: "el-salvador",
@@ -655,6 +671,7 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     wageSourceUrl: "https://onec.bcr.gob.sv",
     priceSource: "DIGESTYC / ONEC Canasta Básica Alimentaria",
     priceSourceUrl: "https://onec.bcr.gob.sv",
+    pillarQuality: { rent: "modeled", car: "modeled", medical: "modeled" },
   },
   {
     id: "grenada",
@@ -691,6 +708,7 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     wageSourceUrl: "https://stats.gov.gd",
     priceSource: "CSO Consumer Price Index",
     priceSourceUrl: "https://stats.gov.gd",
+    pillarQuality: { rent: "modeled", car: "modeled", medical: "modeled" },
   },
   {
     id: "guatemala",
@@ -700,9 +718,9 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     continent: "Americas",
     currencyCode: "GTQ",
     currencySymbol: "Q",
-    exchangeRateToUSD: 7.75,
+    exchangeRateToUSD: 7.68,
     monthlyMedianWageLocal: 3600,
-    monthlyMedianWageUSD: 464.5,
+    monthlyMedianWageUSD: 468.75,
     workHoursPerMonth: 160,
     foodPricesLocal: {
       rice: 12.5,
@@ -727,6 +745,7 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     wageSourceUrl: "https://www.ine.gob.gt",
     priceSource: "INE Canasta Básica Alimentaria (CBA)",
     priceSourceUrl: "https://www.ine.gob.gt",
+    pillarQuality: { rent: "modeled", car: "modeled", medical: "modeled" },
   },
   {
     id: "guyana",
@@ -736,9 +755,9 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     continent: "Americas",
     currencyCode: "GYD",
     currencySymbol: "G$",
-    exchangeRateToUSD: 209,
+    exchangeRateToUSD: 208.5,
     monthlyMedianWageLocal: 145000,
-    monthlyMedianWageUSD: 693.8,
+    monthlyMedianWageUSD: 695.44,
     workHoursPerMonth: 160,
     foodPricesLocal: {
       rice: 380,
@@ -763,6 +782,7 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     wageSourceUrl: "https://statisticsguyana.gov.gy",
     priceSource: "Bureau of Statistics Consumer Price Index",
     priceSourceUrl: "https://statisticsguyana.gov.gy",
+    pillarQuality: { rent: "modeled", car: "modeled", medical: "modeled" },
   },
   {
     id: "haiti",
@@ -772,9 +792,9 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     continent: "Americas",
     currencyCode: "HTG",
     currencySymbol: "G",
-    exchangeRateToUSD: 132,
+    exchangeRateToUSD: 130.6,
     monthlyMedianWageLocal: 16500,
-    monthlyMedianWageUSD: 125,
+    monthlyMedianWageUSD: 126.34,
     workHoursPerMonth: 160,
     foodPricesLocal: {
       rice: 240,
@@ -801,6 +821,7 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     priceSourceUrl: "https://cnsa.gouv.ht",
     isEstimated: true,
     estimationDisclaimer: "Modeled using CNSA/WFP Haiti food basket monitoring and port disruption price premiums.",
+    pillarQuality: { car: "modeled", medical: "modeled" },
   },
   {
     id: "honduras",
@@ -810,9 +831,9 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     continent: "Americas",
     currencyCode: "HNL",
     currencySymbol: "L",
-    exchangeRateToUSD: 24.8,
+    exchangeRateToUSD: 25.95,
     monthlyMedianWageLocal: 9800,
-    monthlyMedianWageUSD: 395.2,
+    monthlyMedianWageUSD: 377.65,
     workHoursPerMonth: 160,
     foodPricesLocal: {
       rice: 34,
@@ -837,6 +858,7 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     wageSourceUrl: "https://www.ine.gob.hn",
     priceSource: "Banco Central de Honduras (BCH) IPC",
     priceSourceUrl: "https://www.bch.hn",
+    pillarQuality: { rent: "modeled", car: "modeled", medical: "modeled" },
   },
   {
     id: "jamaica",
@@ -846,9 +868,9 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     continent: "Americas",
     currencyCode: "JMD",
     currencySymbol: "J$",
-    exchangeRateToUSD: 160,
+    exchangeRateToUSD: 159.1,
     monthlyMedianWageLocal: 92000,
-    monthlyMedianWageUSD: 589.7,
+    monthlyMedianWageUSD: 578.25,
     workHoursPerMonth: 160,
     foodPricesLocal: {
       rice: 280,
@@ -882,9 +904,9 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     continent: "Americas",
     currencyCode: "NIO",
     currencySymbol: "C$",
-    exchangeRateToUSD: 36.8,
+    exchangeRateToUSD: 36.62,
     monthlyMedianWageLocal: 11800,
-    monthlyMedianWageUSD: 320.7,
+    monthlyMedianWageUSD: 322.23,
     workHoursPerMonth: 160,
     foodPricesLocal: {
       rice: 38,
@@ -909,6 +931,7 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     wageSourceUrl: "https://www.inide.gob.ni",
     priceSource: "INIDE Canasta Básica de 53 Productos",
     priceSourceUrl: "https://www.inide.gob.ni",
+    pillarQuality: { car: "modeled", medical: "modeled" },
   },
   {
     id: "panama",
@@ -945,6 +968,7 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     wageSourceUrl: "https://www.inec.gob.pa",
     priceSource: "MEF / INEC Canasta Básica Familiar de Alimentos",
     priceSourceUrl: "https://www.mef.gob.pa",
+    pillarQuality: { rent: "modeled", car: "modeled", medical: "modeled" },
   },
   {
     id: "paraguay",
@@ -954,9 +978,9 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     continent: "Americas",
     currencyCode: "PYG",
     currencySymbol: "₲",
-    exchangeRateToUSD: 7650,
+    exchangeRateToUSD: 7545,
     monthlyMedianWageLocal: 3400000,
-    monthlyMedianWageUSD: 444.4,
+    monthlyMedianWageUSD: 450.63,
     workHoursPerMonth: 160,
     foodPricesLocal: {
       rice: 8500,
@@ -981,6 +1005,7 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     wageSourceUrl: "https://www.ine.gov.py",
     priceSource: "Banco Central del Paraguay (BCP) IPC",
     priceSourceUrl: "https://www.bcp.gov.py",
+    pillarQuality: { rent: "modeled", car: "modeled", medical: "modeled" },
   },
   {
     id: "peru",
@@ -990,9 +1015,9 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     continent: "Americas",
     currencyCode: "PEN",
     currencySymbol: "S/",
-    exchangeRateToUSD: 3.65,
+    exchangeRateToUSD: 3.567,
     monthlyMedianWageLocal: 1950,
-    monthlyMedianWageUSD: 520,
+    monthlyMedianWageUSD: 546.68,
     workHoursPerMonth: 160,
     foodPricesLocal: {
       rice: 4.8,
@@ -1017,6 +1042,7 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     wageSourceUrl: "https://www.inei.gob.pe",
     priceSource: "INEI Índice de Precios al Consumidor",
     priceSourceUrl: "https://www.inei.gob.pe",
+    pillarQuality: { rent: "modeled" },
   },
   {
     id: "saint-kitts-and-nevis",
@@ -1028,7 +1054,7 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     currencySymbol: "EC$",
     exchangeRateToUSD: 2.7,
     monthlyMedianWageLocal: 3500,
-    monthlyMedianWageUSD: 1296,
+    monthlyMedianWageUSD: 1296.3,
     workHoursPerMonth: 160,
     foodPricesLocal: {
       rice: 8.2,
@@ -1053,6 +1079,7 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     wageSourceUrl: "https://stats.gov.kn",
     priceSource: "Department of Statistics CPI",
     priceSourceUrl: "https://stats.gov.kn",
+    pillarQuality: { rent: "modeled", car: "modeled", medical: "modeled" },
   },
   {
     id: "saint-lucia",
@@ -1064,7 +1091,7 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     currencySymbol: "EC$",
     exchangeRateToUSD: 2.7,
     monthlyMedianWageLocal: 2800,
-    monthlyMedianWageUSD: 1037,
+    monthlyMedianWageUSD: 1037.04,
     workHoursPerMonth: 160,
     foodPricesLocal: {
       rice: 7.6,
@@ -1089,6 +1116,7 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     wageSourceUrl: "https://stats.gov.lc",
     priceSource: "CSO Saint Lucia Consumer Price Index",
     priceSourceUrl: "https://stats.gov.lc",
+    pillarQuality: { rent: "modeled", car: "modeled", medical: "modeled" },
   },
   {
     id: "saint-vincent-and-the-grenadines",
@@ -1100,7 +1128,7 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     currencySymbol: "EC$",
     exchangeRateToUSD: 2.7,
     monthlyMedianWageLocal: 2500,
-    monthlyMedianWageUSD: 926,
+    monthlyMedianWageUSD: 925.93,
     workHoursPerMonth: 160,
     foodPricesLocal: {
       rice: 7.4,
@@ -1125,6 +1153,7 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     wageSourceUrl: "https://stats.gov.vc",
     priceSource: "Statistical Office Consumer Price Index",
     priceSourceUrl: "https://stats.gov.vc",
+    pillarQuality: { rent: "modeled", car: "modeled", medical: "modeled" },
   },
   {
     id: "suriname",
@@ -1134,9 +1163,9 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     continent: "Americas",
     currencyCode: "SRD",
     currencySymbol: "Sr$",
-    exchangeRateToUSD: 37,
+    exchangeRateToUSD: 37.26,
     monthlyMedianWageLocal: 15500,
-    monthlyMedianWageUSD: 418.92,
+    monthlyMedianWageUSD: 416,
     workHoursPerMonth: 160,
     foodPricesLocal: {
       rice: 65,
@@ -1170,9 +1199,9 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     continent: "Americas",
     currencyCode: "TTD",
     currencySymbol: "TT$",
-    exchangeRateToUSD: 6.78,
+    exchangeRateToUSD: 6.749,
     monthlyMedianWageLocal: 6200,
-    monthlyMedianWageUSD: 914.5,
+    monthlyMedianWageUSD: 918.65,
     workHoursPerMonth: 160,
     foodPricesLocal: {
       rice: 14.5,
@@ -1197,6 +1226,7 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     wageSourceUrl: "https://cso.gov.tt",
     priceSource: "CSO Retail Price Index",
     priceSourceUrl: "https://cso.gov.tt",
+    pillarQuality: { rent: "modeled", car: "modeled", medical: "modeled" },
   },
   {
     id: "uruguay",
@@ -1206,9 +1236,9 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     continent: "Americas",
     currencyCode: "UYU",
     currencySymbol: "$U",
-    exchangeRateToUSD: 40.5,
+    exchangeRateToUSD: 41.19,
     monthlyMedianWageLocal: 42000,
-    monthlyMedianWageUSD: 1012,
+    monthlyMedianWageUSD: 1019.66,
     workHoursPerMonth: 160,
     foodPricesLocal: {
       rice: 72,
@@ -1233,6 +1263,7 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     wageSourceUrl: "https://www.ine.gub.uy",
     priceSource: "INE Uruguay Índice de Precios del Consumo",
     priceSourceUrl: "https://www.ine.gub.uy",
+    pillarQuality: { rent: "modeled" },
   },
   {
     id: "venezuela",
@@ -1271,5 +1302,6 @@ export const AMERICAS_COUNTRIES: CountryRawData[] = [
     priceSourceUrl: "https://observatoriovf.org",
     isEstimated: true,
     estimationDisclaimer: "Calculated using USD-denominated private sector median compensation surveys and supermarket food monitoring due to multi-tier currency volatility.",
+    pillarQuality: { car: "modeled", medical: "modeled" },
   },
 ];
