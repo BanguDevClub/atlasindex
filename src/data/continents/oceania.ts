@@ -241,8 +241,8 @@ export const OCEANIA_COUNTRIES: CountryRawData[] = [
     currencyCode: "NZD",
     currencySymbol: "NZ$",
     exchangeRateToUSD: 1.72,
-    monthlyMedianWageLocal: 5250,
-    monthlyMedianWageUSD: 3052.33,
+    monthlyMedianWageLocal: 4730,
+    monthlyMedianWageUSD: 2750,
     workHoursPerMonth: 160,
     foodPricesLocal: {
       rice: 3.6,
@@ -262,6 +262,7 @@ export const OCEANIA_COUNTRIES: CountryRawData[] = [
     rentMonthlyLocal: 1938.75,
     carPriceLocal: 42900,
     medicalCheckupLocal: 264,
+    notes: "Net take-home median. Stats NZ Labour Market Statistics June 2025 quarter median weekly earnings from wages and salaries = NZD 1,380/wk (=NZD 71,760/yr gross); net after 2025-26 PAYE scale and the 1.67% ACC earner levy.",
     dataYear: 2025,
     wageSource: "Stats NZ (Labour Market Statistics - Income)",
     wageSourceUrl: "https://www.stats.govt.nz",

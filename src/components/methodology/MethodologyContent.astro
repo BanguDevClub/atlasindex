@@ -377,13 +377,13 @@ import {
 
         <div class="space-y-3 text-xs sm:text-sm text-muted-foreground leading-relaxed">
           <p>
-            Users frequently ask: <em>"Why does the highest-scoring real economy in the global rankings (Norway at APPI Essentials 66 and Composite APPI 73) not reach a score of 100?"</em>
+            Users frequently ask: <em>"Why does the highest-scoring real economy in the global rankings (the United States at APPI Essentials 64 and Composite APPI 71) not reach a score of 100?"</em>
           </p>
           <p>
-            In empirical economics, human physiological survival (food and shelter) is governed by physical resource constraints, agricultural yields, and real-estate land values. Even in one of the highest-ranked economies on Earth (the United States, ranked #3, where a median worker takes home $4,187/month net), securing a safe 1-bedroom home ($1,450) and a 30-day nutritionally complete grocery basket ($218) consumes <strong>39.8% of a median full-time paycheck</strong> (equivalent to <strong>63.7 labor hours per month</strong>).
+            In empirical economics, human physiological survival (food and shelter) is governed by physical resource constraints, agricultural yields, and real-estate land values. Even in the highest-ranked economy on Earth (the United States, where a median worker takes home $4,187/month net), securing a safe 1-bedroom home ($1,450) and a 30-day nutritionally complete grocery basket ($218) consumes <strong>39.8% of a median full-time paycheck</strong> (equivalent to <strong>63.7 labor hours per month</strong>).
           </p>
           <p>
-            An APPI Essentials score of <strong>62 to 66</strong> represents the <strong>empirical frontier of modern human civilization</strong>. A score of <strong>100 / 100</strong> represents a theoretical, post-scarcity economic benchmark where labor cost for basic survival approaches zero.
+            An APPI Essentials score of <strong>60 to 64</strong> represents the <strong>empirical frontier of modern human civilization</strong>. A score of <strong>100 / 100</strong> represents a theoretical, post-scarcity economic benchmark where labor cost for basic survival approaches zero.
           </p>
         </div>
 
@@ -460,7 +460,7 @@ import {
                   <td class="p-2.5 text-center font-extrabold text-emerald-500">100</td>
                 </tr>
                 <tr class="hover:bg-muted/30">
-                  <td class="p-2.5 font-medium">🇺🇸 United States (Rank #3 Overall)</td>
+                  <td class="p-2.5 font-medium">🇺🇸 United States (Rank #1 Overall)</td>
                   <td class="p-2.5 text-right">$4,187.00/mo</td>
                   <td class="p-2.5 text-right">$1,667.55/mo (39.8%)</td>
                   <td class="p-2.5 text-right">63.7h / mo</td>
@@ -469,13 +469,13 @@ import {
                   <td class="p-2.5 text-center font-bold text-primary">71</td>
                 </tr>
                 <tr class="hover:bg-muted/30">
-                  <td class="p-2.5 font-medium">🇨🇭 Switzerland (Net Median, Rank #16)</td>
-                  <td class="p-2.5 text-right">$7,818.14/mo</td>
-                  <td class="p-2.5 text-right">$3,538.66/mo (45.3%)</td>
-                  <td class="p-2.5 text-right">72.4h / mo</td>
-                  <td class="p-2.5 text-center font-bold text-chart-2">60</td>
-                  <td class="p-2.5 text-center font-bold text-chart-4">93</td>
-                  <td class="p-2.5 text-center font-bold text-primary">70</td>
+                  <td class="p-2.5 font-medium">🇨🇭 Switzerland (Net Median, Rank #40)</td>
+                  <td class="p-2.5 text-right">$6,615.35/mo</td>
+                  <td class="p-2.5 text-right">$3,538.66/mo (53.5%)</td>
+                  <td class="p-2.5 text-right">85.6h / mo</td>
+                  <td class="p-2.5 text-center font-bold text-chart-2">52</td>
+                  <td class="p-2.5 text-center font-bold text-chart-4">92</td>
+                  <td class="p-2.5 text-center font-bold text-primary">64</td>
                 </tr>
                 <tr class="hover:bg-muted/30">
                   <td class="p-2.5 font-medium">🇵🇱 Poland (Net Median, Tier 2)</td>
@@ -497,9 +497,9 @@ import {
                 </tr>
                 <tr class="bg-primary/10 hover:bg-primary/15 font-semibold">
                   <td class="p-2.5 text-primary">🌐 World Average (Median-Net Baseline)</td>
-                  <td class="p-2.5 text-right">$1,030.76/mo</td>
-                  <td class="p-2.5 text-right">$551.54/mo (91.2%)</td>
-                  <td class="p-2.5 text-right">146.0h / mo</td>
+                  <td class="p-2.5 text-right">$1,001.64/mo</td>
+                  <td class="p-2.5 text-right">$551.54/mo (91.6%)</td>
+                  <td class="p-2.5 text-right">146.6h / mo</td>
                   <td class="p-2.5 text-center font-bold text-chart-2">18</td>
                   <td class="p-2.5 text-center font-bold text-chart-4">26</td>
                   <td class="p-2.5 text-center font-extrabold text-primary">20</td>
@@ -832,8 +832,41 @@ import {
 
       <div class="rounded-xl border border-border/80 bg-card/60 p-4">
         <h4 class="font-bold text-foreground mb-1">2. Net vs Gross Wage Adjustments</h4>
-        <p>
-          Where available, take-home (net) median earnings are utilized. For countries where statistical agencies only publish gross earnings, standard single-earner tax wedges (OECD Taxing Wages model) are applied to arrive at disposable purchasing power.
+        <p class="mb-2">
+          <Latex formula={String.raw`W_{\text{median}}`} /> is always a <strong>net take-home</strong> median. Most
+          statistical agencies publish gross earnings only, so a single-earner tax and social-contribution
+          wedge is applied to reach disposable purchasing power. Mixing a gross figure for one country with
+          net figures for the rest would inflate that country's score by the full size of its tax wedge, so
+          the basis is audited rather than assumed.
+        </p>
+        <p class="mb-2">Audit coverage:</p>
+        <ul class="list-disc pl-5 space-y-0.5">
+          <li>
+            <strong>EU / EEA</strong> — each stored value is cross-checked against Eurostat annual net
+            earnings for a single person without children at 100% of the average wage. A net median is
+            expected to land at roughly 0.75–1.0x that figure; anything above ~1.05x is treated as a
+            suspected gross value and re-derived.
+          </li>
+          <li>
+            <strong>Non-EU economies above $1,200/month</strong> — verified individually against the national
+            statistical office's gross median and re-derived through that country's own tax and
+            social-contribution schedule. All 51 countries in this band carry a documented wage basis.
+          </li>
+          <li>
+            <strong>Zero-income-tax economies</strong> (the Gulf states, the Bahamas, Saint Kitts and Nevis,
+            Monaco) — gross and net coincide. Social insurance in the Gulf applies to nationals only, and
+            expatriates form the majority of those labour forces.
+          </li>
+          <li>
+            <strong>Economies below $1,200/month</strong> — statutory personal allowances commonly exceed the
+            median wage and employee contribution rates are low, so the gross/net gap is small relative to
+            the uncertainty in the underlying wage estimate itself.
+          </li>
+        </ul>
+        <p class="mt-2">
+          One known gap: <strong>Barbados</strong> levies both income tax and an 11.1% employee contribution
+          but publishes no official median earnings series, so its value is not confirmed as net and may
+          overstate take-home pay.
         </p>
       </div>
 

@@ -445,7 +445,7 @@ export function AppiSandbox() {
             size="sm"
             onClick={() =>
               applyPreset({
-                name: "United States (Rank #3)",
+                name: "United States (Rank #1)",
                 flag: "🇺🇸",
                 wage: 4187,
                 basket: 217.55,
@@ -464,9 +464,9 @@ export function AppiSandbox() {
             size="sm"
             onClick={() =>
               applyPreset({
-                name: "Switzerland (Rank #16)",
+                name: "Switzerland (Rank #40)",
                 flag: "🇨🇭",
-                wage: 7818,
+                wage: 6615,
                 basket: 436.49,
                 rent: 3102,
                 car: 36084,
@@ -475,7 +475,7 @@ export function AppiSandbox() {
             }
             className="text-[11px] h-8 justify-start hover:bg-primary/10 text-foreground truncate"
           >
-            🇨🇭 Switzerland (70)
+            🇨🇭 Switzerland (64)
           </Button>
 
           <Button
@@ -523,7 +523,7 @@ export function AppiSandbox() {
               applyPreset({
                 name: "World Average Baseline",
                 flag: "🌐",
-                wage: 1030.8,
+                wage: 1001.6,
                 basket: 139.8,
                 rent: 411.7,
                 car: 23791.7,
@@ -661,7 +661,7 @@ export function AppiSandbox() {
               </div>
               <div className="flex justify-between text-[10px] text-muted-foreground font-mono">
                 <span>$10/mo (Extreme Strain)</span>
-                <span>$1,031/mo (World Avg)</span>
+                <span>$1,002/mo (World Avg)</span>
                 <span>$4,187/mo (USA)</span>
                 <span>$12,000/mo</span>
               </div>
